@@ -34,7 +34,7 @@ A program is composed by a sequence of *chains*, which are executed asynchronous
 1 | print(_);
 2 | print(_);
 ```
-The `_` variable referers to the result of the previous `computation` (literal, function call, variable reference).
+The `_` variable referers to the result of the previous *computation* (literal, function call, variable reference).
 
 
 ## Irony
