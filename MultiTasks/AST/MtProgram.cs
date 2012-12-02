@@ -36,28 +36,28 @@ namespace MultiTasks.AST
             try
             {
                 var programResult = new MtResult();
+                int nbrChains = _chains.Count;
                 
-                for (int i = 0; i < _chains.Count; ++i)
+                for (int i = 0; i < nbrChains; ++i)
                 {
                     var ch = _chains[i];
                     var subthread = ch.NewScriptThread(thread);
                     var chResult = ch.Evaluate(subthread) as MtResult;
 
                     //_chains[i]
-                    if (i == _chains.Count - 1)
+                    //if (i == _chains.Count - 1)
+                    //{
+                    chResult.GetValue(delegate(MtObject x)
                     {
-                        chResult.GetValue(delegate(MtObject x)
+                        // Lookout:
+                        // do not capture anything loop related inside here
+                        if (Interlocked.Decrement(ref nbrChains) == 0)
                         {
-                            // Lookout:
-                            // do not capture anything inside here
-
                             programResult.SetValue(x);
-                        });
-                    }
+                        }
+                    });
+                   // }
                 }
-
-                // Execute all chains!
-                //_chains.ForEach(parseChain);
 
                 // Return value does not matter. This is asynchronous, remember?
                 return programResult; 

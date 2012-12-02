@@ -7,6 +7,7 @@ using Irony.Parsing;
 using Irony.Interpreter;
 using Irony.Interpreter.Ast;
 using System.Threading;
+using MultiTasks.RT;
 
 namespace multitasks
 {
@@ -17,26 +18,20 @@ namespace multitasks
             var src = "\n" +
                 "print | identity(_) | _(\"Hello World 1!\");\n" +
                 "\"Hello World 2!\" | print(_);\n" +
-                "print | _(\"Hello World 3!\");\n" + 
+                "print | _(\"Hello World 3!\");\n" +
                 "print(\"Hello World 4!\");\n" +
                 "\n";
             //--
 
-            var app = MtCompiler.CreateScriptApp();
+            var app = MtCompiler.CreateScriptApp(Console.OpenStandardOutput());
 
-            app.ConsoleWrite += new EventHandler<ConsoleWriteEventArgs>(app_ConsoleWrite);
+            var wait = app.Evaluate(src) as MtResult;
+
+            wait.GetValueSync((o) => { });
             
-            var wait = app.Evaluate(src);
-
-            //Console.WriteLine("Wait some seconds...");
-            //Thread.Sleep(5000);
             Console.WriteLine("Press any to end...");
             Console.ReadKey();
         }
 
-        static void app_ConsoleWrite(object sender, ConsoleWriteEventArgs e)
-        {
-            Console.WriteLine(e.Text);
-        }
     }
 }
