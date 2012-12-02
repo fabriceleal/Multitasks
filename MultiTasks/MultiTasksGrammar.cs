@@ -1,0 +1,160 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Irony.Parsing;
+using Irony.Interpreter;
+using System.Diagnostics;
+using Irony.Ast;
+using Irony.Interpreter.Ast;
+using MultiTasks.AST;
+
+namespace MultiTasks
+{
+
+    public class MtGrammar : InterpretedLanguageGrammar /* Grammar*/
+    {
+
+        public MtGrammar()
+            : base(true)
+        {
+            // Terminals
+            var stringLiteral = new StringLiteral("stringLiteral", "\"", StringOptions.AllowsLineBreak);
+            var nbrLiteral = new NumberLiteral("nbrLiteral");
+            var identifier = new IdentifierTerminal("identifier", IdOptions.IsNotKeyword);
+            
+            // Punctuation terminals; these shouldn't appear on the tree
+            var pipe = ToTerm("|", "pipe");
+            var semicomma = ToTerm(";", "semicomma");
+            var openparen = ToTerm("(", "openparen");
+            var closeparen = ToTerm(")", "closeparen");
+            var bind = ToTerm("=>", "bind");
+            MarkPunctuation(pipe, semicomma, openparen, closeparen, bind);
+
+            // Non Terminals            
+            AstNodeCreator MakeExpressionNode = delegate(AstContext context, ParseTreeNode treeNode)
+            {
+                if (treeNode.ChildNodes.Count != 1)
+                    throw new Exception("Expression expects 1 child (received {0}.)".SafeFormat(treeNode.ChildNodes.Count));
+                                
+                // Check child term name
+                var possibleValid = treeNode.ChildNodes[0];
+                var tag = possibleValid.Term.Name;              
+
+                if (tag == "APPLICATION")
+                {
+                    treeNode.AstNode = _.NewAndInit<MtApplication>(context, possibleValid);
+                }
+                else if (tag == "ATOM")
+                {
+                    treeNode.AstNode = _.NewAndInit<MtAtom>(context, possibleValid);
+                }
+                else if(tag == "identifier") 
+                {
+                    // Do nothing here ...
+                    treeNode.AstNode = _.NewAndInit<Irony.Interpreter.Ast.IdentifierNode>(context, possibleValid);
+                }
+                else
+                {
+                    throw new Exception("Unexpected tag in Expression child: {0}".SafeFormat(tag));
+                }
+            };
+
+            var TOP_CHAIN = new NonTerminal("TOP_CHAIN", delegate(AstContext context, ParseTreeNode treeNode)
+            {
+                if (treeNode.ChildNodes.Count != 1)
+                    throw new Exception("Top chain expects 1 child (received {0}.)".SafeFormat(treeNode.ChildNodes.Count));
+                
+                // Check child term name
+                var possibleValid = treeNode.ChildNodes[0];
+                var tag = possibleValid.Term.Name;      
+
+                if (tag == "CHAIN")
+                {
+                    treeNode.AstNode = _.NewAndInit<MtChain>(context, possibleValid);
+                }
+                else if (tag == "EXPRESSION")
+                {
+                    // HACK
+                    MakeExpressionNode(context, possibleValid);
+                    treeNode.AstNode = possibleValid.AstNode;                    
+                }
+                else
+                {
+                    throw new Exception("Unexpected tag in Expression child: {0}".SafeFormat(tag));
+                }
+            });
+
+            var CHAIN = new NonTerminal("CHAIN", typeof(MtChain));
+            var ATOM = new NonTerminal("ATOM", typeof(MtAtom));          
+            var PROGRAM = new NonTerminal("PROGRAM", typeof(MtProgram));
+            var APPLICATION = new NonTerminal("APPLICATION", typeof(MtApplication));
+            var BIND = new NonTerminal("BIND", typeof(MtBind));
+
+            var FUNCTION = new NonTerminal("FUNCTION", delegate(AstContext context, ParseTreeNode treeNode)
+            {
+                if (treeNode.ChildNodes.Count != 1)
+                    throw new Exception("Function expects 1 child (received {0}.)".SafeFormat(treeNode.ChildNodes.Count));
+
+                // Check child term name
+                var possibleValid = treeNode.ChildNodes[0];
+                var tag = possibleValid.Term.Name;
+
+                if (tag == "APPLICATION")
+                {
+                    treeNode.AstNode = _.NewAndInit<MtApplication>(context, possibleValid);
+                }
+                else if (tag == "identifier")
+                {                    
+                    // This is ugly as fuck, but works
+                    Type t = identifier.AstConfig.NodeType;
+                    treeNode.AstNode = t.GetConstructors()[0].Invoke(new object[]{ });
+                    (treeNode.AstNode as AstNode).Init(context, possibleValid);
+                    // _.NewAndInit<t>(context, possibleValid);
+                }
+                else
+                {
+                    throw new Exception("Unexpected tag in Expression child: {0}".SafeFormat(tag));
+                }
+            });
+
+            var EXPRESSION = new NonTerminal("EXPRESSION", MakeExpressionNode);
+
+            Root = PROGRAM;
+
+            /*
+             * RULES
+             */
+
+            // TODO: ARGLIST 
+
+            PROGRAM.Rule = MakePlusRule(PROGRAM, TOP_CHAIN);
+
+            TOP_CHAIN.Rule = CHAIN + semicomma |
+                            EXPRESSION + semicomma;
+
+            CHAIN.Rule = EXPRESSION + pipe + EXPRESSION |
+                        EXPRESSION + pipe + CHAIN;
+
+            EXPRESSION.Rule = BIND | APPLICATION | ATOM | identifier;
+
+            ATOM.Rule =
+                      nbrLiteral |
+                      stringLiteral /*|
+                      identifier*/;
+
+            APPLICATION.Rule = FUNCTION + openparen + EXPRESSION + closeparen;
+
+            FUNCTION.Rule = identifier | APPLICATION;
+
+            BIND.Rule = identifier + bind + EXPRESSION;
+        }
+
+        public override LanguageRuntime CreateRuntime(LanguageData language)
+        {
+            return new MultiTasksRuntime(language);
+        }
+    }
+
+    
+}
