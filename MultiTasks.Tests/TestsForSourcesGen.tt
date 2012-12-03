@@ -7,6 +7,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiTasks.RT;
 using System;
+using System.IO;
 
 namespace MultiTasks.Tests
 {
@@ -22,20 +23,23 @@ namespace MultiTasks.Tests
 		public void Eval<#=CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Path.GetFileNameWithoutExtension(fname.FullName).Replace("_", " ")).Replace(" ", "")#>()
 		{
 			try 
-			{
+			{				
 				// Read file content (as embedded resource)
 				var src = Utils.ReadSourceFileContent("<#=Path.GetFileName(fname.FullName)#>");
 			
-				// Compile
-				var res = MtCompiler.CreateScriptApp().Evaluate(src) as MtResult;
+				using(Stream str = new FileStream("<#=Path.GetFileName(fname.FullName)#>.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
 
-				// Tests ...
-				Assert.IsNotNull(res);
+					// Tests ...
+					Assert.IsNotNull(res);
 
-				// Wait for end
-				res.GetValueSync((o) => { });
+					// Wait for end
+					res.GetValueSync((o) => { });
 
-				// ... More tests
+					// ... More tests
+				}				
 			} 
 			catch(Exception e)
 			{
