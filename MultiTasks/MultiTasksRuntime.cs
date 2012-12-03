@@ -36,7 +36,8 @@ namespace MultiTasks
 
             ms.GetValue((waitPeriod) =>
             {
-                Thread.Sleep((int)waitPeriod.Value);
+                Thread.Sleep((int)waitPeriod.Value);               
+
                 value.GetValue((retValue) => {
                     result.SetValue(retValue);   
                 });

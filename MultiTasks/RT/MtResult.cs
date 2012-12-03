@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Diagnostics;
 
 namespace MultiTasks.RT
 {
@@ -77,7 +78,10 @@ namespace MultiTasks.RT
                     }
                 };
 
+                //var mainThId = Thread.CurrentThread.ManagedThreadId;
                 waitAndFire.BeginInvoke((IAsyncResult r) => {
+                    //Debug.Print("Main = " + mainThId);
+                    //Debug.Print("Sub = " + Thread.CurrentThread.ManagedThreadId);
                     waitAndFire.EndInvoke(r);
                 }, null);
 
