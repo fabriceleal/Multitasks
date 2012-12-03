@@ -11,7 +11,7 @@ namespace MultiTasks.AST
     public class MtBind : MtAstNode
     {
         private AstNode _targetName;
-        private MtAstNode _tail;
+        private MtAstNode _expression;
 
         public override void Init(Irony.Ast.AstContext context, Irony.Parsing.ParseTreeNode treeNode)
         {            
@@ -27,21 +27,27 @@ namespace MultiTasks.AST
                 throw new Exception("No identifier for Bind!");
 
             // An arbitrary Mt node
-            _tail = AddChild(string.Empty, nodes[1]) as MtAstNode;
-            if (_tail == null)
-                throw new Exception("No tail for Bind!");
+            _expression = AddChild(string.Empty, nodes[1]) as MtAstNode;
+            if (_expression == null)
+                throw new Exception("No expression for Bind!");
             
         }
 
         protected override object DoEvaluate(Irony.Interpreter.ScriptThread thread)
         {
+            thread.CurrentNode = this;
             try
             {
-                //var bindResult = new MtResult();
-                var bindResult = MtResult.CreateAndWrap(123);
+                var bindResult = new MtResult();
+                var exprResult = _expression.Evaluate(thread) as MtResult;
+
+                var accessor = thread.Bind(_targetName.AsString, BindingRequestFlags.Write | BindingRequestFlags.ExistingOrNew);
+                accessor.SetValueRef(thread, bindResult);
                 
-                var accessor = thread.Bind(_targetName.Term.Name, BindingRequestFlags.Write | BindingRequestFlags.ExistingOrNew);
-                accessor.SetValueRef(thread, bindResult);   
+                exprResult.GetValue((o) =>
+                {
+                    bindResult.SetValue(o);
+                });
 
                 return bindResult;
             }
@@ -51,7 +57,7 @@ namespace MultiTasks.AST
             }
             finally
             {
-
+                thread.CurrentNode = Parent;
             }
         }
     }

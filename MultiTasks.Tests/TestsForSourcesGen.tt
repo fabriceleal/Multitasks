@@ -6,6 +6,7 @@
 // Do not change it manually, otherwise you'll lose all your hard work!
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiTasks.RT;
+using System;
 
 namespace MultiTasks.Tests
 {
@@ -20,19 +21,26 @@ namespace MultiTasks.Tests
 		[TestMethod]
 		public void Eval<#=CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Path.GetFileNameWithoutExtension(fname.FullName).Replace("_", " ")).Replace(" ", "")#>()
 		{
-			// Read file content (as embedded resource)
-			var src = Utils.ReadSourceFileContent("<#=Path.GetFileNameWithoutExtension(fname.FullName)#>");
+			try 
+			{
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("<#=Path.GetFileName(fname.FullName)#>");
 			
-			// Compile
-			var res = MtCompiler.CreateScriptApp().Evaluate(src) as MtResult;
+				// Compile
+				var res = MtCompiler.CreateScriptApp().Evaluate(src) as MtResult;
 
-			// Tests ...
-			Assert.IsNotNull(res);
+				// Tests ...
+				Assert.IsNotNull(res);
 
-			// Wait for end
-			res.GetValueSync((o) => { });
+				// Wait for end
+				res.GetValueSync((o) => { });
 
-			// ... More tests
+				// ... More tests
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
 		}
 
 <#
