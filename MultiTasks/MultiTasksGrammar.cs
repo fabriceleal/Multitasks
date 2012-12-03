@@ -55,7 +55,11 @@ namespace MultiTasks
                 {
                     treeNode.AstNode = _.NewAndInit<MtFork>(context, possibleValid);
                 }
-                else if(tag == "identifier") 
+                else if (tag == "BIND")
+                {
+                    treeNode.AstNode = _.NewAndInit<MtBind>(context, possibleValid);
+                }
+                else if (tag == "identifier")
                 {
                     // Do nothing here ...
                     treeNode.AstNode = _.NewAndInit<Irony.Interpreter.Ast.IdentifierNode>(context, possibleValid);
@@ -87,7 +91,7 @@ namespace MultiTasks
                 }
                 else
                 {
-                    throw new Exception("Unexpected tag in Expression child: {0}".SafeFormat(tag));
+                    throw new Exception("Unexpected tag in TOP_CHAIN child: {0}".SafeFormat(tag));
                 }
             });
 
@@ -122,7 +126,7 @@ namespace MultiTasks
                 }
                 else
                 {
-                    throw new Exception("Unexpected tag in Function child: {0}".SafeFormat(tag));
+                    throw new Exception("Unexpected tag in FUNCTION child: {0}".SafeFormat(tag));
                 }
             });
 
@@ -135,9 +139,7 @@ namespace MultiTasks
              */
 
             // TODO: ARGLIST 
-            // TODO: BIND
-            // TODO: FORK
-
+                        
             NCHAINS.Rule = MakePlusRule(NCHAINS, TOP_CHAIN);
                         
             TOP_CHAIN.Rule = CHAIN + semicomma |

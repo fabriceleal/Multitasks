@@ -1,0 +1,43 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Globalization" #>
+<#@ output extension=".cs" #>
+// This file was generated automatically
+// Do not change it manually, otherwise you'll lose all your hard work!
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MultiTasks.RT;
+
+namespace MultiTasks.Tests
+{
+
+    [TestClass]
+    public class TestsForSources
+    {
+<#
+
+		foreach(var fname in (new DirectoryInfo("./MultiTasks.Tests/Examples")).GetFiles("*.mt") ) {
+#>		
+		[TestMethod]
+		public void Eval<#=CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Path.GetFileNameWithoutExtension(fname.FullName).Replace("_", " ")).Replace(" ", "")#>()
+		{
+			// Read file content (as embedded resource)
+			var src = Utils.ReadSourceFileContent("<#=Path.GetFileNameWithoutExtension(fname.FullName)#>");
+			
+			// Compile
+			var res = MtCompiler.CreateScriptApp().Evaluate(src) as MtResult;
+
+			// Tests ...
+			Assert.IsNotNull(res);
+
+			// Wait for end
+			res.GetValueSync((o) => { });
+
+			// ... More tests
+		}
+
+<#
+		}
+#>
+	}
+
+}
