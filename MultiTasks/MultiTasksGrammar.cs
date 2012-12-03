@@ -31,7 +31,8 @@ namespace MultiTasks
             var openbracket = ToTerm("{", "openbracket");
             var closebracket = ToTerm("}", "closebracket");
             var bind = ToTerm("=>", "bind");
-            MarkPunctuation(pipe, semicomma, openparen, closeparen, bind, openbracket, closebracket);
+            var comma = ToTerm(",", "comma");
+            MarkPunctuation(pipe, semicomma, openparen, closeparen, bind, openbracket, closebracket, comma);
 
             // Non Terminals            
             AstNodeCreator MakeExpressionNode = delegate(AstContext context, ParseTreeNode treeNode)
@@ -102,6 +103,7 @@ namespace MultiTasks
             var BIND = new NonTerminal("BIND", typeof(MtBind));
             var FORK = new NonTerminal("FORK", typeof(MtFork));
 
+            var ARGLIST = new NonTerminal("ARGLIST", typeof(MtArguments));
 
             var FUNCTION = new NonTerminal("FUNCTION", delegate(AstContext context, ParseTreeNode treeNode)
             {
@@ -157,7 +159,9 @@ namespace MultiTasks
                       stringLiteral /*|
                       identifier*/;
 
-            APPLICATION.Rule = FUNCTION + openparen + EXPRESSION + closeparen;
+            APPLICATION.Rule = FUNCTION + openparen + ARGLIST + closeparen;
+
+            ARGLIST.Rule = MakeStarRule(ARGLIST, comma, EXPRESSION);
 
             FUNCTION.Rule = identifier | APPLICATION;
 

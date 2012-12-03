@@ -13,35 +13,6 @@ namespace MultiTasks.Tests
     {
 		
 		[TestMethod]
-		public void Eval01Helloworld()
-		{
-			try 
-			{				
-				// Read file content (as embedded resource)
-				var src = Utils.ReadSourceFileContent("01_helloworld.mt");
-			
-				using(Stream str = new FileStream("01_helloworld.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
-				{
-					// Compile
-					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
-
-					// Tests ...
-					Assert.IsNotNull(res);
-
-					// Wait for end
-					res.GetValueSync((o) => { });
-
-					// ... More tests
-				}				
-			} 
-			catch(Exception e)
-			{
-				Assert.Fail(e.Message);
-			}
-		}
-
-		
-		[TestMethod]
 		public void Eval01HelloWorld()
 		{
 			try 
@@ -137,6 +108,35 @@ namespace MultiTasks.Tests
 				var src = Utils.ReadSourceFileContent("04_print_and_bind_print.mt");
 			
 				using(Stream str = new FileStream("04_print_and_bind_print.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval05SleepAndPrint()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("05_sleep_and_print.mt");
+			
+				using(Stream str = new FileStream("05_sleep_and_print.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
 				{
 					// Compile
 					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;

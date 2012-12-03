@@ -7,6 +7,7 @@ using MultiTasks.AST;
 using Irony.Parsing;
 using MultiTasks.RT;
 using System.IO;
+using System.Threading;
 
 namespace MultiTasks
 {
@@ -23,7 +24,25 @@ namespace MultiTasks
             BuiltIns.AddMethod(mtfalse, "false");
             BuiltIns.AddMethod(mttrue, "true");
             BuiltIns.AddMethod(mtidentity, "identity", 1);
+            BuiltIns.AddMethod(mtsleep, "sleep", 1, 2);
             BuiltIns.AddMethod(mtadd, "add");
+        }
+
+        public MtResult mtsleep(ScriptThread thread, object[] args)
+        {
+            var result = new MtResult();
+            var ms = args[0] as MtResult;
+            var value = args.Length > 1 ? args[1] as MtResult : MtResult.True;
+
+            ms.GetValue((waitPeriod) =>
+            {
+                Thread.Sleep((int)waitPeriod.Value);
+                value.GetValue((retValue) => {
+                    result.SetValue(retValue);   
+                });
+            });
+
+            return result;
         }
 
         public MtResult mtadd(ScriptThread thread, object[] args)

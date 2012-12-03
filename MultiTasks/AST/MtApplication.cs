@@ -11,7 +11,8 @@ namespace MultiTasks.AST
     public class MtApplication : MtAstNode
     {
         private AstNode _head;
-        private List<AstNode> _args = new List<AstNode>();
+        //private List<AstNode> _args = new List<AstNode>();
+        private MtArguments _args;
 
         public override void Init(Irony.Ast.AstContext context, Irony.Parsing.ParseTreeNode treeNode)
         {
@@ -21,10 +22,12 @@ namespace MultiTasks.AST
             _head = AddChild(string.Empty, treeNode.ChildNodes[0]);
 
             // Arguments
-            for (int i = 1; i < treeNode.ChildNodes.Count; ++i)
-            {
-                _args.Add(AddChild(string.Empty, treeNode.ChildNodes[i]));
-            }
+            //for (int i = 1; i < treeNode.ChildNodes.Count; ++i)
+            // {
+            //    _args.Add(AddChild(string.Empty, treeNode.ChildNodes[i]));
+            //}
+
+            _args = AddChild(string.Empty, treeNode.ChildNodes[1]) as MtArguments;
 
             AsString = "Application";
         }
@@ -37,19 +40,7 @@ namespace MultiTasks.AST
             {
                 var appResult = new MtResult();
 
-                var ls = new List<MtResult>();
-
-                // Evaluate all args async
-                foreach (var _a in _args)
-                {
-                    var subthread = _a.NewScriptThread(thread);
-                    var _r = _a.Evaluate(subthread) as MtResult;
-                    if (_r == null)
-                    {
-                        throw new Exception("Argument evaluated to null");
-                    }
-                    ls.Add(_r);
-                }
+                MtResult[] args = _args.Evaluate(thread) as MtResult[];
 
                 var subthreadF = _head.NewScriptThread(thread);
                 var headResult = _head.Evaluate(subthreadF);
@@ -63,7 +54,7 @@ namespace MultiTasks.AST
                     if (probableFun as ICallTarget != null)
                     {
                         var wrkFun = probableFun as ICallTarget;
-                        var resultFun = wrkFun.Call(thread, ls.ToArray()) as MtResult;
+                        var resultFun = wrkFun.Call(thread, args) as MtResult;
                         resultFun.GetValue((r3) => {
                             appResult.SetValue(r3);
                         });

@@ -17,7 +17,9 @@ namespace MultiTasks.RT
         private object _sync = new object();
 
         /// <summary>
-        /// Set value (synchronous)
+        /// Set value (synchronous). This should be called only once, 
+        /// by the method / class who created it, when one wishes to signal
+        /// the end of a chain / function / ...
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
