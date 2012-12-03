@@ -156,6 +156,35 @@ namespace MultiTasks.Tests
 			}
 		}
 
+		
+		[TestMethod]
+		public void Eval06SleepAndAdd()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("06_sleep_and_add.mt");
+			
+				using(Stream str = new FileStream("06_sleep_and_add.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
 	}
 
 }

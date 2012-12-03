@@ -79,6 +79,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Examples\04_print_and_bind_print.mt" />
     <EmbeddedResource Include="Examples\05_sleep_and_print.mt" />
+    <EmbeddedResource Include="Examples\06_sleep_and_add.mt" />
     <None Include="TestsForSourcesGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>TestsForSourcesGen.cs</LastGenOutput>
