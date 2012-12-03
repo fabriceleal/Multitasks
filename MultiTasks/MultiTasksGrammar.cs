@@ -28,8 +28,10 @@ namespace MultiTasks
             var semicomma = ToTerm(";", "semicomma");
             var openparen = ToTerm("(", "openparen");
             var closeparen = ToTerm(")", "closeparen");
+            var openbracket = ToTerm("{", "openbracket");
+            var closebracket = ToTerm("}", "closebracket");
             var bind = ToTerm("=>", "bind");
-            MarkPunctuation(pipe, semicomma, openparen, closeparen, bind);
+            MarkPunctuation(pipe, semicomma, openparen, closeparen, bind, openbracket, closebracket);
 
             // Non Terminals            
             AstNodeCreator MakeExpressionNode = delegate(AstContext context, ParseTreeNode treeNode)
@@ -48,6 +50,10 @@ namespace MultiTasks
                 else if (tag == "ATOM")
                 {
                     treeNode.AstNode = _.NewAndInit<MtAtom>(context, possibleValid);
+                }
+                else if (tag == "FORK")
+                {
+                    treeNode.AstNode = _.NewAndInit<MtFork>(context, possibleValid);
                 }
                 else if(tag == "identifier") 
                 {
@@ -86,10 +92,12 @@ namespace MultiTasks
             });
 
             var CHAIN = new NonTerminal("CHAIN", typeof(MtChain));
-            var ATOM = new NonTerminal("ATOM", typeof(MtAtom));          
-            var PROGRAM = new NonTerminal("PROGRAM", typeof(MtProgram));
+            var ATOM = new NonTerminal("ATOM", typeof(MtAtom));
+            var NCHAINS = new NonTerminal("NCHAINS", typeof(MtFork));
             var APPLICATION = new NonTerminal("APPLICATION", typeof(MtApplication));
             var BIND = new NonTerminal("BIND", typeof(MtBind));
+            var FORK = new NonTerminal("FORK", typeof(MtFork));
+
 
             var FUNCTION = new NonTerminal("FUNCTION", delegate(AstContext context, ParseTreeNode treeNode)
             {
@@ -114,29 +122,33 @@ namespace MultiTasks
                 }
                 else
                 {
-                    throw new Exception("Unexpected tag in Expression child: {0}".SafeFormat(tag));
+                    throw new Exception("Unexpected tag in Function child: {0}".SafeFormat(tag));
                 }
             });
 
             var EXPRESSION = new NonTerminal("EXPRESSION", MakeExpressionNode);
 
-            Root = PROGRAM;
+            Root = NCHAINS;
 
             /*
              * RULES
              */
 
             // TODO: ARGLIST 
+            // TODO: BIND
+            // TODO: FORK
 
-            PROGRAM.Rule = MakePlusRule(PROGRAM, TOP_CHAIN);
-
+            NCHAINS.Rule = MakePlusRule(NCHAINS, TOP_CHAIN);
+                        
             TOP_CHAIN.Rule = CHAIN + semicomma |
                             EXPRESSION + semicomma;
-
+                        
             CHAIN.Rule = EXPRESSION + pipe + EXPRESSION |
                         EXPRESSION + pipe + CHAIN;
 
-            EXPRESSION.Rule = BIND | APPLICATION | ATOM | identifier;
+            EXPRESSION.Rule = FORK | BIND | APPLICATION | ATOM | identifier;
+
+            FORK.Rule = openbracket + NCHAINS + closebracket;
 
             ATOM.Rule =
                       nbrLiteral |

@@ -8,15 +8,22 @@ namespace MultiTasks.RT
 {
     public class MtResult
     {
+        public delegate MtResult SetValueDelegate(MtObject o);
+
         private MtObject _o;
         private bool _hasValue = false;
         private ManualResetEvent _receivedValue = new ManualResetEvent(false);
 
-        private object sync = new object();
+        private object _sync = new object();
 
+        /// <summary>
+        /// Set value (synchronous)
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
         public MtResult SetValue(MtObject o)
         {
-            lock (sync) {
+            lock (_sync) {
                 if (o == null)
                     throw new Exception("Do not call MtResult.SetValue with null!");
 
@@ -40,7 +47,11 @@ namespace MultiTasks.RT
             }            
         }
 
-        // Async, of course!
+        /// <summary>
+        /// Get Value (asynchronous)
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <returns></returns>
         public MtResult GetValue(Action<MtObject> callback)
         {
             if (callback == null)
@@ -75,7 +86,12 @@ namespace MultiTasks.RT
                 throw new Exception("Exception on MtResult.GetValue.", e);
             }            
         }
-
+        
+        /// <summary>
+        /// Get Value (synchronous)
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <returns></returns>
         public MtResult GetValueSync(Action<MtObject> callback)
         {
             if (callback == null)
@@ -104,7 +120,7 @@ namespace MultiTasks.RT
                 throw new Exception("Exception on MtResult.GetValue.", e);
             }       
         }
-
+        
         public override string ToString()
         {
             _receivedValue.WaitOne();

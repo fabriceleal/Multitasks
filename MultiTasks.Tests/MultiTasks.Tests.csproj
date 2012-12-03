@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RunTests.cs" />
     <Compile Include="TestsEvaluation.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +63,12 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Examples\01_helloworld.mt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Examples\02_hello_with_fork.mt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

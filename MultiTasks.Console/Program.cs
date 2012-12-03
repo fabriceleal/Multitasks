@@ -8,29 +8,71 @@ using Irony.Interpreter;
 using Irony.Interpreter.Ast;
 using System.Threading;
 using MultiTasks.RT;
+using System.IO;
 
 namespace multitasks
 {
     class Program
     {
+
+        /// <summary>
+        /// Exists with supplied exit code
+        /// </summary>
+        /// <param name="exitCode"></param>
+        static void PrintUsageAndExit(int exitCode)
+        {
+            TextWriter destiny = exitCode == 0 ? Console.Out : Console.Error;
+
+            destiny.WriteLine("Usage:");
+            destiny.WriteLine("\t mts <filename>");
+            destiny.WriteLine("\t mts -h");                
+
+            Environment.Exit(exitCode);
+        }
+
+        /// <summary>
+        /// Exits with exit code -2
+        /// </summary>
+        /// <param name="e"></param>
+        static void PrintExceptionAndExit(Exception e)
+        {
+            Exception _e = e;
+
+            Console.Error.WriteLine("Exception!");
+            while (_e != null)
+            {
+                Console.Error.WriteLine(e.Message);
+                _e = _e.InnerException;
+            }
+
+            Environment.Exit(-2);
+        }
+
         static void Main(string[] args)
         {
-            var src = "\n" +
-                "print | identity(_) | _(\"Hello World 1!\");\n" +
-                "\"Hello World 2!\" | print(_);\n" +
-                "print | _(\"Hello World 3!\");\n" +
-                "print(\"Hello World 4!\");\n" +
-                "\n";
-            //--
+            if (args.Length == 0)
+                PrintUsageAndExit(-1);
 
-            var app = MtCompiler.CreateScriptApp(Console.OpenStandardOutput());
+            if (args[0] == "-h")
+                PrintUsageAndExit(0);
 
-            var wait = app.Evaluate(src) as MtResult;
+            try
+            {
+                // Read file
+                var src = File.ReadAllText(args[0]);
 
-            wait.GetValueSync((o) => { });
-            
-            Console.WriteLine("Press any to end...");
-            Console.ReadKey();
+                var app = MtCompiler.CreateScriptApp(Console.OpenStandardOutput());
+
+                // Evaluate program
+                var wait = app.Evaluate(src) as MtResult;
+                
+                // Wait for the end of the program
+                wait.GetValueSync((o) => { });                
+            }
+            catch (Exception e)
+            {
+                PrintExceptionAndExit(e);
+            }
         }
 
     }
