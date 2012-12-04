@@ -27,8 +27,9 @@ namespace MultiTasks.Tests
 				// Read file content (as embedded resource)
 				var src = Utils.ReadSourceFileContent("<#=Path.GetFileName(fname.FullName)#>");
 			
-				using(Stream str = new FileStream("<#=Path.GetFileName(fname.FullName)#>.log", FileMode.OpenOrCreate, FileAccess.Write))
+				using(FileStream str = new FileStream("<#=Path.GetFileName(fname.FullName)#>.log", FileMode.OpenOrCreate, FileAccess.Write))
 				{
+					
 					// Compile
 					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
 

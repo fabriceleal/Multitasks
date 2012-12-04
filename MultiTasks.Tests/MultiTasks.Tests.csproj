@@ -80,6 +80,16 @@
     <EmbeddedResource Include="Examples\04_print_and_bind_print.mt" />
     <EmbeddedResource Include="Examples\05_sleep_and_print.mt" />
     <EmbeddedResource Include="Examples\06_sleep_and_add.mt" />
+    <EmbeddedResource Include="Examples\07_if_and_prints.mt" />
+    <EmbeddedResource Include="Examples\08_bool_constants_print.mt" />
+    <EmbeddedResource Include="Examples\11_fork_1.mt" />
+    <EmbeddedResource Include="Examples\12_fork_2.mt" />
+    <EmbeddedResource Include="Examples\13_fork_3.mt" />
+    <EmbeddedResource Include="Examples\14_fork_4.mt" />
+    <EmbeddedResource Include="Examples\15_fork_5.mt" />
+    <EmbeddedResource Include="Examples\16_fork_6.mt" />
+    <EmbeddedResource Include="Examples\17_fork_7.mt" />
+    <EmbeddedResource Include="Examples\18_fork_8.mt" />
     <None Include="TestsForSourcesGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>TestsForSourcesGen.cs</LastGenOutput>

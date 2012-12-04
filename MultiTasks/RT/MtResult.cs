@@ -11,6 +11,11 @@ namespace MultiTasks.RT
     {
         public delegate MtResult SetValueDelegate(MtObject o);
 
+        private static long _counter = 0;
+        private long _id;
+        public MtResult() { _id = Interlocked.Increment(ref _counter); }
+
+
         private MtObject _o;
         private bool _hasValue = false;
         private ManualResetEvent _receivedValue = new ManualResetEvent(false);
@@ -64,12 +69,17 @@ namespace MultiTasks.RT
             {
                 Action waitAndFire = () =>
                 {
+                    Debug.Print("MtResult {0} #2 Thread {1} wait signal.", _id, Thread.CurrentThread.ManagedThreadId);
+
                     // Wait event ...
                     _receivedValue.WaitOne();
+
+                    Debug.Print("MtResult {0} #3 Thread {1} received signal.", _id, Thread.CurrentThread.ManagedThreadId);
 
                     // Raise callback
                     try
                     {
+                        Debug.Print("MtResult {0} #4 Thread {1} Callback with value({2})", _id, Thread.CurrentThread.ManagedThreadId, _o.Value);
                         callback(_o);
                     }
                     catch (Exception e)
@@ -78,11 +88,13 @@ namespace MultiTasks.RT
                     }
                 };
 
-                //var mainThId = Thread.CurrentThread.ManagedThreadId;
+                Debug.Print("MtResult {0} #1 Thread {1} starts waiting for value ...", _id, Thread.CurrentThread.ManagedThreadId);
+
                 waitAndFire.BeginInvoke((IAsyncResult r) => {
-                    //Debug.Print("Main = " + mainThId);
-                    //Debug.Print("Sub = " + Thread.CurrentThread.ManagedThreadId);
                     waitAndFire.EndInvoke(r);
+                    
+                    Debug.Print("MtResult {0} #5 Thread {1} has value({2}).", _id, Thread.CurrentThread.ManagedThreadId, _o.Value);
+
                 }, null);
 
                 return this;
@@ -135,22 +147,25 @@ namespace MultiTasks.RT
 
         #region "Static"
 
-        public static MtResult CreateAndWrap(object o)
+        public static MtResult CreateAndWrap(MtObject o)
         {
-            return (new MtResult().SetValue(new MtObject(o)));
+            return (new MtResult().SetValue(o));
         }
 
-        private static MtResult _true;
+        public static MtResult CreateAndWrap(object o)
+        {
+            if (o as MtObject != null)
+                throw new Exception("Wrong method called! Call CreateAndWrap(MtObject)");
 
-        private static MtResult _false;
+            return (new MtResult().SetValue(new MtObject(o)));
+        }
 
         public static MtResult True
         {
             get
             {
-                if (_true == null)
-                    _true = (new MtResult()).SetValue(MtObject.True);
-                return _true;
+                // Always create new instances of MtResult!
+                return CreateAndWrap(MtObject.True);
             }
         }
         
@@ -158,9 +173,8 @@ namespace MultiTasks.RT
         {
             get
             {
-                if (_false == null)
-                    _false = (new MtResult()).SetValue(MtObject.False);
-                return _false;
+                // Always create new instances of MtResult!
+                return CreateAndWrap(MtObject.False);
             }
         }
 

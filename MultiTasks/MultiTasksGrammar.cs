@@ -32,7 +32,8 @@ namespace MultiTasks
             var closebracket = ToTerm("}", "closebracket");
             var bind = ToTerm("=>", "bind");
             var comma = ToTerm(",", "comma");
-            MarkPunctuation(pipe, semicomma, openparen, closeparen, bind, openbracket, closebracket, comma);
+            var ift = ToTerm("if", "if");
+            MarkPunctuation(pipe, semicomma, openparen, closeparen, bind, openbracket, closebracket, comma, ift);
 
             // Non Terminals            
             AstNodeCreator MakeExpressionNode = delegate(AstContext context, ParseTreeNode treeNode)
@@ -59,6 +60,10 @@ namespace MultiTasks
                 else if (tag == "BIND")
                 {
                     treeNode.AstNode = _.NewAndInit<MtBind>(context, possibleValid);
+                }
+                else if (tag == "IF")
+                {
+                    treeNode.AstNode = _.NewAndInit<MtIf>(context, possibleValid);
                 }
                 else if (tag == "identifier")
                 {
@@ -96,6 +101,7 @@ namespace MultiTasks
                 }
             });
 
+            var IF = new NonTerminal("IF", typeof(MtIf));
             var CHAIN = new NonTerminal("CHAIN", typeof(MtChain));
             var ATOM = new NonTerminal("ATOM", typeof(MtAtom));
             var NCHAINS = new NonTerminal("NCHAINS", typeof(MtFork));
@@ -150,7 +156,7 @@ namespace MultiTasks
             CHAIN.Rule = EXPRESSION + pipe + EXPRESSION |
                         EXPRESSION + pipe + CHAIN;
 
-            EXPRESSION.Rule = FORK | BIND | APPLICATION | ATOM | identifier;
+            EXPRESSION.Rule = FORK | IF | BIND | APPLICATION | ATOM | identifier;
 
             FORK.Rule = openbracket + NCHAINS + closebracket;
 
@@ -166,6 +172,8 @@ namespace MultiTasks
             FUNCTION.Rule = identifier | APPLICATION;
 
             BIND.Rule = identifier + bind + EXPRESSION;
+
+            IF.Rule = ift + EXPRESSION + TOP_CHAIN + TOP_CHAIN;
         }
 
         public override LanguageRuntime CreateRuntime(LanguageData language)

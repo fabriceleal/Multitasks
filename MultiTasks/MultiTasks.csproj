@@ -55,6 +55,7 @@
     <Compile Include="AST\MtChain.cs" />
     <Compile Include="AST\MtBind.cs" />
     <Compile Include="AST\MtArguments.cs" />
+    <Compile Include="AST\MtIf.cs" />
     <Compile Include="RT\MtObject.cs" />
     <Compile Include="AST\MtFork.cs" />
     <Compile Include="RT\MtResult.cs" />

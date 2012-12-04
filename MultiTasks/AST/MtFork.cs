@@ -43,7 +43,9 @@ namespace MultiTasks.AST
             try
             {
                 var programResult = new MtResult();
-                var count = _chains.Count;
+
+                // do NOT use this for anything else other than counting the number of to-finish-threads
+                var count = _chains.Count; 
                 var waitForAllToEnd = new ManualResetEvent(false);
 
                 // TODO THIS NEEDS TO BE FIXED!
@@ -52,10 +54,10 @@ namespace MultiTasks.AST
                 // however, the program shouldn't end. 
                 // SOLUTION: Keep a global counter of all awaiting MtResults?
 
-                for (int i = 0; i < count; ++i)
+                for (int i = 0; i < _chains.Count; ++i)
                 {
                     // This is here because of issues with closures using the for variable
-                    var safe_i = i;
+                    var safe_i = i + 0;
                     var ch = _chains[i];
                     var subthread = ch.NewScriptThread(thread);
                     var chResult = ch.Evaluate(subthread) as MtResult;
@@ -81,8 +83,9 @@ namespace MultiTasks.AST
                     });
                 }
 
+
                 // Return value does not matter. This is asynchronous, remember?
-                return programResult; 
+                return programResult;
             }
             catch (Exception e)
             {

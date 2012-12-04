@@ -20,8 +20,9 @@ namespace MultiTasks.Tests
 				// Read file content (as embedded resource)
 				var src = Utils.ReadSourceFileContent("01_hello_world.mt");
 			
-				using(Stream str = new FileStream("01_hello_world.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				using(FileStream str = new FileStream("01_hello_world.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
 				{
+					
 					// Compile
 					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
 
@@ -49,8 +50,9 @@ namespace MultiTasks.Tests
 				// Read file content (as embedded resource)
 				var src = Utils.ReadSourceFileContent("02_hello_with_fork.mt");
 			
-				using(Stream str = new FileStream("02_hello_with_fork.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				using(FileStream str = new FileStream("02_hello_with_fork.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
 				{
+					
 					// Compile
 					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
 
@@ -78,8 +80,9 @@ namespace MultiTasks.Tests
 				// Read file content (as embedded resource)
 				var src = Utils.ReadSourceFileContent("03_binds.mt");
 			
-				using(Stream str = new FileStream("03_binds.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				using(FileStream str = new FileStream("03_binds.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
 				{
+					
 					// Compile
 					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
 
@@ -107,8 +110,9 @@ namespace MultiTasks.Tests
 				// Read file content (as embedded resource)
 				var src = Utils.ReadSourceFileContent("04_print_and_bind_print.mt");
 			
-				using(Stream str = new FileStream("04_print_and_bind_print.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				using(FileStream str = new FileStream("04_print_and_bind_print.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
 				{
+					
 					// Compile
 					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
 
@@ -136,8 +140,9 @@ namespace MultiTasks.Tests
 				// Read file content (as embedded resource)
 				var src = Utils.ReadSourceFileContent("05_sleep_and_print.mt");
 			
-				using(Stream str = new FileStream("05_sleep_and_print.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				using(FileStream str = new FileStream("05_sleep_and_print.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
 				{
+					
 					// Compile
 					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
 
@@ -165,8 +170,309 @@ namespace MultiTasks.Tests
 				// Read file content (as embedded resource)
 				var src = Utils.ReadSourceFileContent("06_sleep_and_add.mt");
 			
-				using(Stream str = new FileStream("06_sleep_and_add.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				using(FileStream str = new FileStream("06_sleep_and_add.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
 				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval07IfAndPrints()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("07_if_and_prints.mt");
+			
+				using(FileStream str = new FileStream("07_if_and_prints.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval08BoolConstantsPrint()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("08_bool_constants_print.mt");
+			
+				using(FileStream str = new FileStream("08_bool_constants_print.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval11Fork1()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("11_fork_1.mt");
+			
+				using(FileStream str = new FileStream("11_fork_1.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval12Fork2()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("12_fork_2.mt");
+			
+				using(FileStream str = new FileStream("12_fork_2.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval13Fork3()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("13_fork_3.mt");
+			
+				using(FileStream str = new FileStream("13_fork_3.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval14Fork4()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("14_fork_4.mt");
+			
+				using(FileStream str = new FileStream("14_fork_4.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval15Fork5()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("15_fork_5.mt");
+			
+				using(FileStream str = new FileStream("15_fork_5.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval16Fork6()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("16_fork_6.mt");
+			
+				using(FileStream str = new FileStream("16_fork_6.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval17Fork7()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("17_fork_7.mt");
+			
+				using(FileStream str = new FileStream("17_fork_7.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval18Fork8()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("18_fork_8.mt");
+			
+				using(FileStream str = new FileStream("18_fork_8.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
 					// Compile
 					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
 

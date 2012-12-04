@@ -20,15 +20,16 @@ namespace MultiTasks
         public override void Init()
         {
             base.Init();
-            BuiltIns.AddMethod(mtprint, "print", 1);
-            BuiltIns.AddMethod(mtfalse, "false");
-            BuiltIns.AddMethod(mttrue, "true");
-            BuiltIns.AddMethod(mtidentity, "identity", 1);
-            BuiltIns.AddMethod(mtsleep, "sleep", 1, 2);
-            BuiltIns.AddMethod(mtadd, "add");
+                                                
+            BuiltIns.AddMethod(MtPrint, "print", 1);
+            BuiltIns.AddMethod(MtFalse, "false");
+            BuiltIns.AddMethod(MtTrue, "true");
+            BuiltIns.AddMethod(MtIdentity, "identity", 1);
+            BuiltIns.AddMethod(MtSleep, "sleep", 1, 2);
+            BuiltIns.AddMethod(MtAdd, "add");
         }
 
-        public MtResult mtsleep(ScriptThread thread, object[] args)
+        public MtResult MtSleep(ScriptThread thread, object[] args)
         {
             var result = new MtResult();
             var ms = args[0] as MtResult;
@@ -46,74 +47,117 @@ namespace MultiTasks
             return result;
         }
 
-        public MtResult mtadd(ScriptThread thread, object[] args)
+        private void Reduce(object[] list, int i, Action<MtObject> reducer, Action finalAction)
+        {
+            if (i == list.Length)
+            {
+                finalAction();
+            }
+            else
+            {
+                var item = list[i] as MtResult;
+                if (item == null)
+                    throw new Exception("Argument should be a MtResult!");
+
+                item.GetValue((a) =>
+                {
+                    reducer(a);
+                    Reduce(list, i + 1, reducer, finalAction);
+                });
+            }
+        }
+
+        private void Reduce(object[] list, Action<MtObject> reducer, Action finalAction)
+        {
+            Reduce(list, 0, reducer, finalAction);
+        }
+
+        public MtResult MtAdd(ScriptThread thread, object[] args)
         {
             var result = new MtResult();
             var tot = 0;
 
-            Action<int> recursiveGet = null; 
-            recursiveGet = delegate(int i)
-            {
-                if (i == args.Length)
-                {
-                    result.SetValue(new MtObject(tot));
-                }
-                else
-                {
-                    var arg = args[i] as MtResult;
-                    arg.GetValue((a) => {
-                        tot += (int)a.Value;
-                        recursiveGet(i + 1);
-                    });
-                }
-            };
+            Action finalAction = () => { result.SetValue(new MtObject(tot)); };
+            Action<MtObject> reducer = (MtObject a) => { tot += (int)a.Value; };
 
-            recursiveGet(0);
+            Reduce(args, reducer, finalAction);
 
             return result;
         }
 
-        public MtResult mtfalse(ScriptThread thread, object[] args)
+        public MtResult MtFalse(ScriptThread thread, object[] args)
         {
             // does nothing, just returns false            
             return MtResult.False;
         }
 
-        public MtResult mttrue(ScriptThread thread, object[] args)
+        public MtResult MtTrue(ScriptThread thread, object[] args)
         {
             // does nothing, just returns true
             return MtResult.True;
         }
 
-        public MtResult mtidentity(ScriptThread thread, object[] args)
+        public MtResult MtIdentity(ScriptThread thread, object[] args)
         {
-            return args[0] as MtResult;
+            try
+            {
+                var arg = args[0] as MtResult;
+                if (arg == null)
+                    throw new Exception("Argument cant be null!");
+
+                return arg;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Exception on Runtime function: identity", e);
+            }            
         }
 
         static byte[] _newLineRaw = Encoding.UTF8.GetBytes(Environment.NewLine);
-        static object _mtprintlock = new object();
-        public MtResult mtprint(ScriptThread thread, object[] args)
+        
+        object _mtprintlock = new object();
+
+        public MtResult MtPrint(ScriptThread thread, object[] args)
         {
-            var r = new MtResult();
-            var arg0 = args[0] as MtResult;
-            arg0.GetValue((o) =>
+            try
             {
-                String toWrite = o == null ? "<null>" : o.ToString();
+                var r = new MtResult();
 
                 lock (_mtprintlock) /* Lock all streams */
                 {
-                    if (OutputStream != null)
-                    {
-                        byte[] raw = Encoding.UTF8.GetBytes(toWrite);
-                        OutputStream.Write(raw, 0, raw.Length);
-                        OutputStream.Write(_newLineRaw, 0, _newLineRaw.Length);
-                    }
-                    thread.App.WriteLine(toWrite);
+                                    
+                    Reduce(args, (o) => {
+                                     
+                        String toWrite = o == null ? "<null>" : o.ToString();
+
+                        if (OutputStream != null)
+                        {
+                            byte[] raw = Encoding.UTF8.GetBytes(toWrite);
+                            OutputStream.Write(raw, 0, raw.Length);                            
+                        }
+
+                        thread.App.Write(toWrite);
+                    }, () => { 
+
+                        // Write new lines
+                        if (OutputStream != null)
+                        {
+                            OutputStream.Write(_newLineRaw, 0, _newLineRaw.Length);
+                            OutputStream.Flush();
+                        }
+
+                        thread.App.WriteLine("");
+                        
+                        r.SetValue(MtObject.True); 
+                    });
                 }
-                
-                r.SetValue(MtObject.True);
-            });
-            return r;
+
+                return r;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Exception on Runtime function: print", e);
+            }
         }
 
     }
