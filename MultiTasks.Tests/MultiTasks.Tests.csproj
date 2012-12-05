@@ -92,6 +92,7 @@
     <EmbeddedResource Include="Examples\17_fork_7.mt" />
     <EmbeddedResource Include="Examples\18_fork_8.mt" />
     <EmbeddedResource Include="Examples\10_anonymous_factorial.mt" />
+    <EmbeddedResource Include="Examples\19_call_anonymous.mt" />
     <None Include="TestsForSourcesGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>TestsForSourcesGen.cs</LastGenOutput>

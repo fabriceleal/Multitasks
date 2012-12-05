@@ -6,6 +6,7 @@ using MultiTasks.RT;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
+using MultiTasks.Functional;
 
 namespace MultiTasks
 {
@@ -73,49 +74,6 @@ namespace MultiTasks
             Reduce(list, 0, reducer, finalAction);
         }
 
-        private abstract class Reducer<T>
-        {
-            private T _tot;
-            private MtResult _resultToWrap;
-
-            public Reducer(T initial, MtResult resultToWrap)
-            {
-                _tot = initial;
-                _resultToWrap = resultToWrap;
-            }
-
-            public void Reduce(object[] list)
-            {
-                Reduce(list, 0);
-            }
-
-            private void Reduce(object[] list, int i)
-            {
-                if (i == list.Length)
-                {
-                    FinalAction();
-                }
-                else
-                {
-                    var item = list[i] as MtResult;
-                    if (item == null)
-                        throw new Exception("Argument should be a MtResult!");
-
-                    item.GetValue((a) =>
-                    {
-                        _tot = OnReduce(a, _tot);
-                        Reduce(list, i + 1);
-                    });
-                }
-            }
-
-            protected abstract T OnReduce(MtObject o, T currentValue);
-            protected void FinalAction()
-            {
-                _resultToWrap.SetValue(new MtObject(_tot));
-            }
-        }
-
         #endregion
 
         #region Runtime builtin functions
@@ -176,7 +134,7 @@ namespace MultiTasks
 
         #region Arithmetic
 
-        private class AddReducer : Reducer<int>
+        private class AddReducer : ReducerToMtResult<int>
         {
             public AddReducer(MtResult result) : base(0, result) { }
 
@@ -186,7 +144,7 @@ namespace MultiTasks
             }
         }
 
-        private class SubtReducer : Reducer<int>
+        private class SubtReducer : ReducerToMtResult<int>
         {
             public SubtReducer(MtResult result) : base(0, result) { }
 
@@ -196,7 +154,7 @@ namespace MultiTasks
             }
         }
 
-        private class MultReducer : Reducer<int>
+        private class MultReducer : ReducerToMtResult<int>
         {
             public MultReducer(MtResult result) : base(1, result) { }
 
@@ -206,7 +164,7 @@ namespace MultiTasks
             }
         }
 
-        private class DivReducer : Reducer<int>
+        private class DivReducer : ReducerToMtResult<int>
         {
             public DivReducer(MtResult result) : base(1, result) { }
 

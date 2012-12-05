@@ -4,7 +4,7 @@ using Irony.Ast;
 using Irony.Parsing;
 using Irony.Interpreter;
 
-namespace MultiTasks.AST
+namespace MultiTasks
 {
     static class _
     {

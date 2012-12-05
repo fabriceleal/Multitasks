@@ -30,11 +30,6 @@ namespace MultiTasks.AST
                         
         }
 
-        private MtResult FunctionObject(ScriptThread thread, object[] args)
-        {
-            return MtResult.CreateAndWrap(123);
-        }
-
         protected override object DoEvaluate(Irony.Interpreter.ScriptThread thread)
         {
             thread.CurrentNode = this;
@@ -42,15 +37,8 @@ namespace MultiTasks.AST
             {
                 var ret = new MtResult();
 
-                //ret.SetValue(new MtObject(null));
-                                
-                // 1. Create function object, return it
-
-                // 2. Function object is responsable for:
-                // 2.1 Create a new context
-                // 2.2 For each parameter, bind its correspondent argument
-                // 2.3 Call body in this new context
-
+                ret.SetValue(new MtObject(new MtFunctionObject(_body, _arguments)));
+                
                 return ret;
             }
             catch (Exception e)

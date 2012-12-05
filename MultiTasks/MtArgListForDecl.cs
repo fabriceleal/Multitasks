@@ -17,7 +17,7 @@ namespace MultiTasks
                 return _argList.ToArray();
             }
         }
-        private List<AstNode> _argList;
+        private List<AstNode> _argList = new List<AstNode>();
 
         public override void Init(Irony.Ast.AstContext context, Irony.Parsing.ParseTreeNode treeNode)
         {

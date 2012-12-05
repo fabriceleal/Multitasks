@@ -6,8 +6,6 @@ namespace MultiTasks.RT
 {
     public class MtResult
     {
-        public delegate MtResult SetValueDelegate(MtObject o);
-
         private static long _counter = 0;
         private long _id;
                         
@@ -15,7 +13,7 @@ namespace MultiTasks.RT
         { 
             _id = Interlocked.Increment(ref _counter); 
         }
-        
+
         private MtObject _o;
         private bool _hasValue = false;
         private ManualResetEvent _receivedValue = new ManualResetEvent(false);
