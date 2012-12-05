@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Irony.Interpreter.Ast;
 using Irony.Interpreter;
 using MultiTasks.RT;
@@ -10,22 +7,15 @@ namespace MultiTasks.AST
 {
     public class MtApplication : MtAstNode
     {
+
         private AstNode _head;
-        //private List<AstNode> _args = new List<AstNode>();
         private MtArguments _args;
 
         public override void Init(Irony.Ast.AstContext context, Irony.Parsing.ParseTreeNode treeNode)
         {
             base.Init(context, treeNode);
 
-            // Function
             _head = AddChild(string.Empty, treeNode.ChildNodes[0]);
-
-            // Arguments
-            //for (int i = 1; i < treeNode.ChildNodes.Count; ++i)
-            // {
-            //    _args.Add(AddChild(string.Empty, treeNode.ChildNodes[i]));
-            //}
 
             _args = AddChild(string.Empty, treeNode.ChildNodes[1]) as MtArguments;
 

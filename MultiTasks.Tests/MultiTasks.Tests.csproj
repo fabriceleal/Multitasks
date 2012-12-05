@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -90,6 +91,7 @@
     <EmbeddedResource Include="Examples\16_fork_6.mt" />
     <EmbeddedResource Include="Examples\17_fork_7.mt" />
     <EmbeddedResource Include="Examples\18_fork_8.mt" />
+    <EmbeddedResource Include="Examples\10_anonymous_factorial.mt" />
     <None Include="TestsForSourcesGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>TestsForSourcesGen.cs</LastGenOutput>

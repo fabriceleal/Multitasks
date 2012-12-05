@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Irony.Interpreter.Ast;
 using Irony.Interpreter;
 using MultiTasks.RT;
@@ -38,18 +35,24 @@ namespace MultiTasks.AST
             thread.CurrentNode = this;
             try
             {
-                var bindResult = new MtResult();
-                var exprResult = _expression.Evaluate(thread) as MtResult;
-
-                var accessor = thread.Bind(_targetName.AsString, BindingRequestFlags.Write | BindingRequestFlags.ExistingOrNew);
-                accessor.SetValueRef(thread, bindResult);
+                var res = new MtResult();
                 
+                var accessor = thread.Bind(_targetName.AsString, BindingRequestFlags.Write | BindingRequestFlags.ExistingOrNew);
+                accessor.SetValueRef(thread, res);
+                
+                // To allow recursive definitions, we have 
+                // to evaluate _expression inside the new context.
+                var exprResult = _expression.Evaluate(thread) as MtResult;
                 exprResult.GetValue((o) =>
                 {
-                    bindResult.SetValue(o);
+                    res.SetValue((state) =>
+                    {
+                        return o;
+                    });
                 });
 
-                return bindResult;
+                return res;
+                
             }
             catch (Exception e)
             {

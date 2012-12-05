@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Irony.Ast;
-using Irony.Interpreter.Ast;
 using Irony.Parsing;
 using System.Threading;
 using Irony.Interpreter;
@@ -13,7 +10,7 @@ namespace MultiTasks.AST
 {
     public class MtFork : MtAstNode
     {
-        public List<MtAstNode> _chains = new List<MtAstNode>();
+        private List<MtAstNode> _chains = new List<MtAstNode>();
 
         public override void Init(AstContext context, ParseTreeNode treeNode)
         {

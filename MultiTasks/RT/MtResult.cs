@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Diagnostics;
 
@@ -13,9 +10,12 @@ namespace MultiTasks.RT
 
         private static long _counter = 0;
         private long _id;
-        public MtResult() { _id = Interlocked.Increment(ref _counter); }
-
-
+                        
+        internal MtResult() 
+        { 
+            _id = Interlocked.Increment(ref _counter); 
+        }
+        
         private MtObject _o;
         private bool _hasValue = false;
         private ManualResetEvent _receivedValue = new ManualResetEvent(false);
@@ -29,7 +29,7 @@ namespace MultiTasks.RT
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public MtResult SetValue(MtObject o)
+        internal MtResult SetValue(MtObject o)
         {
             lock (_sync) {
                 if (o == null)
@@ -55,6 +55,40 @@ namespace MultiTasks.RT
             }            
         }
 
+        internal MtResult SetValue(Func<object, MtObject> generateO)
+        {
+            // TODO Review this
+            lock(_sync) 
+            {
+                if (generateO == null)
+                    throw new Exception("Do not call MtResult.SetValue(async) with null!");
+
+                if (_hasValue)
+                    throw new Exception("Already has value!");
+
+                try
+                {
+
+                    ThreadPool.QueueUserWorkItem(state =>
+                    {
+                        var o = generateO(state);
+                        
+                        _o = o;
+                        _hasValue = true;
+
+                        // Raise event!
+                        _receivedValue.Set();
+                    });
+
+                    return this;
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Exception on MtResult.SetValue(async).", e);
+                }
+            }
+        }
+
         /// <summary>
         /// Get Value (asynchronous)
         /// </summary>
@@ -66,36 +100,35 @@ namespace MultiTasks.RT
                 throw new Exception("I need a callback to give you the value! Nothing is sync in this lang.");
 
             try
-            {
-                Action waitAndFire = () =>
+            {              
+                ThreadPool.QueueUserWorkItem(state =>
                 {
+
+#if DEBUG
                     Debug.Print("MtResult {0} #2 Thread {1} wait signal.", _id, Thread.CurrentThread.ManagedThreadId);
+#endif
 
                     // Wait event ...
                     _receivedValue.WaitOne();
 
+#if DEBUG
                     Debug.Print("MtResult {0} #3 Thread {1} received signal.", _id, Thread.CurrentThread.ManagedThreadId);
+#endif
 
                     // Raise callback
                     try
                     {
+#if DEBUG
                         Debug.Print("MtResult {0} #4 Thread {1} Callback with value({2})", _id, Thread.CurrentThread.ManagedThreadId, _o.Value);
+#endif                       
+ 
                         callback(_o);
                     }
                     catch (Exception e)
                     {
                         throw new Exception("Exception on MtResult.GetValue callback.", e);
                     }
-                };
-
-                Debug.Print("MtResult {0} #1 Thread {1} starts waiting for value ...", _id, Thread.CurrentThread.ManagedThreadId);
-
-                waitAndFire.BeginInvoke((IAsyncResult r) => {
-                    waitAndFire.EndInvoke(r);
-                    
-                    Debug.Print("MtResult {0} #5 Thread {1} has value({2}).", _id, Thread.CurrentThread.ManagedThreadId, _o.Value);
-
-                }, null);
+                });
 
                 return this;
             }
@@ -142,6 +175,7 @@ namespace MultiTasks.RT
         public override string ToString()
         {
             _receivedValue.WaitOne();
+
             return "<MtResult with value>";
         }
 
@@ -157,7 +191,7 @@ namespace MultiTasks.RT
             if (o as MtObject != null)
                 throw new Exception("Wrong method called! Call CreateAndWrap(MtObject)");
 
-            return (new MtResult().SetValue(new MtObject(o)));
+            return MtResult.CreateAndWrap(new MtObject(o));
         }
 
         public static MtResult True

@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace MultiTasks.RT
 {
     public class MtObject
     {
         private object _value;
-        public MtObject(object value) { _value = value; }
+
+        public MtObject(object value) 
+        { 
+            _value = value; 
+        }
         
         public object Value
         {
@@ -22,10 +22,11 @@ namespace MultiTasks.RT
         {
             if (_value == null)
                 return "<MtObject with no value!>";
+
             return _value.ToString();
         }
 
-        #region "Static"
+        #region Static
 
         private static MtObject _true = new MtObject(true);
        

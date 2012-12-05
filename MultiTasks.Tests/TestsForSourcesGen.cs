@@ -10,7 +10,7 @@ namespace MultiTasks.Tests
 
     [TestClass]
     public class TestsForSources
-    {
+    {		
 		
 		[TestMethod]
 		public void Eval01HelloWorld()
@@ -231,6 +231,36 @@ namespace MultiTasks.Tests
 				var src = Utils.ReadSourceFileContent("08_bool_constants_print.mt");
 			
 				using(FileStream str = new FileStream("08_bool_constants_print.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval10AnonymousFactorial()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("10_anonymous_factorial.mt");
+			
+				using(FileStream str = new FileStream("10_anonymous_factorial.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
 				{
 					
 					// Compile

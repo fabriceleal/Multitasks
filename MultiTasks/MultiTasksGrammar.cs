@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Irony.Parsing;
 using Irony.Interpreter;
-using System.Diagnostics;
 using Irony.Ast;
 using Irony.Interpreter.Ast;
 using MultiTasks.AST;
@@ -30,7 +26,7 @@ namespace MultiTasks
             var closeparen = ToTerm(")", "closeparen");
             var openbracket = ToTerm("{", "openbracket");
             var closebracket = ToTerm("}", "closebracket");
-            var bind = ToTerm("=>", "bind");
+            var bind = ToTerm("<=", "bind");
             var comma = ToTerm(",", "comma");
             var ift = ToTerm("if", "if");
             MarkPunctuation(pipe, semicomma, openparen, closeparen, bind, openbracket, closebracket, comma, ift);
@@ -146,7 +142,8 @@ namespace MultiTasks
              * RULES
              */
 
-            // TODO: ARGLIST 
+            // TODO: FUNCTION LITERALS / LAMBDAS
+            // TODO: SWITCH
                         
             NCHAINS.Rule = MakePlusRule(NCHAINS, TOP_CHAIN);
                         

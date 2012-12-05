@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Irony.Interpreter.Ast;
 using Irony.Ast;
 using Irony.Parsing;
@@ -39,8 +36,7 @@ namespace MultiTasks.AST
             catch (Exception e)
             {
                 throw new Exception("Exception on NewScriptThread.", e);
-            }
-            
+            }            
         }
 
         public static T NewAndInit<T>(AstContext ctx, ParseTreeNode tree)  where T : AstNode, new()

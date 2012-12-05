@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Irony.Interpreter;
 using Irony.Interpreter.Ast;
 using MultiTasks.RT;
@@ -49,7 +46,7 @@ namespace MultiTasks.AST
                 var res = _expression.Evaluate(subthread) as MtResult;
                 res.GetValue((resExpr) => 
                 {
-                    AstNode toEval =null;
+                    AstNode toEval = null;
                     if (resExpr.Value == MtObject.False.Value)
                     {
                         // Evaluate false branch
@@ -81,5 +78,6 @@ namespace MultiTasks.AST
                 thread.CurrentNode = Parent;
             }
         }
+
     }
 }

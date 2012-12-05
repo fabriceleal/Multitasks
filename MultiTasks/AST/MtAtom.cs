@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Irony.Interpreter.Ast;
 using MultiTasks.RT;
 
 namespace MultiTasks.AST
@@ -17,8 +13,7 @@ namespace MultiTasks.AST
             _value = treeNode.ChildNodes[0].Token.Value;
             AsString = "Atom";
         }
-
-
+        
         protected override object DoEvaluate(Irony.Interpreter.ScriptThread thread)
         {
             // PROLOG
@@ -26,9 +21,7 @@ namespace MultiTasks.AST
             try
             {
                 // Atoms are synchronous, and evaluate to MtObjects
-                var r = new MtResult();
-                r.SetValue(new MtObject(_value));
-                return r;
+                return MtResult.CreateAndWrap(_value);
             }
             catch (Exception e)
             {

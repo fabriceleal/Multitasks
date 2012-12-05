@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Irony.Interpreter;
 using Irony.Interpreter.Ast;
 using MultiTasks.RT;
@@ -46,27 +43,16 @@ namespace MultiTasks.AST
                 if (wrkHeadResult as MtResult == null)
                     throw new Exception("Head of chain evaluated to null!");
 
-                var chainResult = new MtResult();
+                var subthread = _tail.NewScriptThread(thread);
+                var accessor = subthread.Bind("_", BindingRequestFlags.Write | BindingRequestFlags.ExistingOrNew);
+                accessor.SetValueRef(subthread, headResult);
 
-                wrkHeadResult.GetValue((o) =>
-                {
-                    var subthread = _tail.NewScriptThread(thread);
-                    var accessor = subthread.Bind("_", BindingRequestFlags.Write | BindingRequestFlags.ExistingOrNew);
-                    accessor.SetValueRef(subthread, headResult);
+                var _tailResult = _tail.Evaluate(subthread) as MtResult;
 
-                    var _tailResult = _tail.Evaluate(subthread) as MtResult;
+                if (_tailResult == null)
+                    throw new Exception("tail of chain evaluated to null!");
 
-                    if (_tailResult == null)
-                        throw new Exception("tail of chain evaluated to null!");
-
-                    _tailResult.GetValue((o2) =>
-                    {
-                        chainResult.SetValue(o2);
-                    });
-
-                });
-
-                return chainResult;
+                return _tailResult;
             }
             catch (Exception e)
             {
@@ -78,5 +64,6 @@ namespace MultiTasks.AST
                 thread.CurrentNode = Parent;
             }            
         }
+
     }
 }

@@ -1,4 +1,6 @@
-﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="EnvDTE" #>
+<#@ import namespace="EnvDTE" #>
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Globalization" #>
 <#@ output extension=".cs" #>
@@ -14,10 +16,13 @@ namespace MultiTasks.Tests
 
     [TestClass]
     public class TestsForSources
-    {
+    {		
 <#
-
-		foreach(var fname in (new DirectoryInfo("./MultiTasks.Tests/Examples")).GetFiles("*.mt") ) {
+		// Get Solution info
+		var serviceProvider = this.Host as IServiceProvider;
+		var dte = serviceProvider.GetService(typeof(DTE)) as DTE;
+				
+		foreach(var fname in (new DirectoryInfo(Path.Combine(Path.GetDirectoryName(dte.Solution.FullName), "MultiTasks.Tests/Examples"))).GetFiles("*.mt") ) {
 #>		
 		[TestMethod]
 		public void Eval<#=CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Path.GetFileNameWithoutExtension(fname.FullName).Replace("_", " ")).Replace(" ", "")#>()
