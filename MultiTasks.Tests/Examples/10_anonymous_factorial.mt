@@ -1,6 +1,6 @@
 
 a <= 
-	(b) => if zero(b)
+	(b) if zero(b)
 			1;
 			mult(b, $(subt(b, 1))); | 
 				{

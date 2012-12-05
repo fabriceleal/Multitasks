@@ -27,19 +27,33 @@ namespace MultiTasks
             var openbracket = ToTerm("{", "openbracket");
             var closebracket = ToTerm("}", "closebracket");
             var bind = ToTerm("<=", "bind");
+            var argsBodySeparator = ToTerm("=>", "argsBodySeparator");
             var comma = ToTerm(",", "comma");
+            var lambda = ToTerm("L", "lambda");
             var ift = ToTerm("if", "if");
-            MarkPunctuation(pipe, semicomma, openparen, closeparen, bind, openbracket, closebracket, comma, ift);
+            MarkPunctuation(pipe, semicomma, openparen, closeparen, 
+                            openbracket, closebracket, bind, 
+                            argsBodySeparator, comma, lambda, 
+                            ift);
+            //--
 
             // Non Terminals            
             AstNodeCreator MakeExpressionNode = delegate(AstContext context, ParseTreeNode treeNode)
             {
+                if (treeNode == null)
+                    throw new Exception("treeNode cant be null at MakeExpressionNode");
+
                 if (treeNode.ChildNodes.Count != 1)
                     throw new Exception("Expression expects 1 child (received {0}.)".SafeFormat(treeNode.ChildNodes.Count));
-                                
+                
                 // Check child term name
                 var possibleValid = treeNode.ChildNodes[0];
-                var tag = possibleValid.Term.Name;              
+                if (possibleValid == null)
+                    throw new Exception("Only child cant be null at MakeExpressionNode");
+
+                var tag = possibleValid.Term.Name;
+                if (string.IsNullOrWhiteSpace(tag))
+                    throw new Exception("tag cant be null or empty at MakeExpressionNode");
 
                 if (tag == "APPLICATION")
                 {
@@ -60,6 +74,10 @@ namespace MultiTasks
                 else if (tag == "IF")
                 {
                     treeNode.AstNode = _.NewAndInit<MtIf>(context, possibleValid);
+                }
+                else if (tag == "FUNCTION_LITERAL")
+                {
+                    treeNode.AstNode = _.NewAndInit<MtFunctionLiteral>(context, possibleValid);
                 }
                 else if (tag == "identifier")
                 {
@@ -104,6 +122,9 @@ namespace MultiTasks
             var APPLICATION = new NonTerminal("APPLICATION", typeof(MtApplication));
             var BIND = new NonTerminal("BIND", typeof(MtBind));
             var FORK = new NonTerminal("FORK", typeof(MtFork));
+
+            var ARG_LIST_FOR_DECL = new NonTerminal("ARG_LIST_FOR_DECL", typeof(MtArgListForDecl));
+            var FUNCTION_LITERAL = new NonTerminal("FUNCTION_LITERAL", typeof(MtFunctionLiteral));
 
             var ARGLIST = new NonTerminal("ARGLIST", typeof(MtArguments));
 
@@ -153,7 +174,7 @@ namespace MultiTasks
             CHAIN.Rule = EXPRESSION + pipe + EXPRESSION |
                         EXPRESSION + pipe + CHAIN;
 
-            EXPRESSION.Rule = FORK | IF | BIND | APPLICATION | ATOM | identifier;
+            EXPRESSION.Rule = FORK | IF | BIND | FUNCTION_LITERAL | APPLICATION | ATOM | identifier;
 
             FORK.Rule = openbracket + NCHAINS + closebracket;
 
@@ -166,11 +187,16 @@ namespace MultiTasks
 
             ARGLIST.Rule = MakeStarRule(ARGLIST, comma, EXPRESSION);
 
-            FUNCTION.Rule = identifier | APPLICATION;
+            FUNCTION.Rule = identifier | FUNCTION_LITERAL | APPLICATION;
 
             BIND.Rule = identifier + bind + EXPRESSION;
 
             IF.Rule = ift + EXPRESSION + TOP_CHAIN + TOP_CHAIN;
+
+            // For function literals
+            ARG_LIST_FOR_DECL.Rule = MakeStarRule(ARG_LIST_FOR_DECL, comma, identifier);
+
+            FUNCTION_LITERAL.Rule = lambda + openparen + ARG_LIST_FOR_DECL + closeparen + argsBodySeparator + TOP_CHAIN;            
         }
 
         public override LanguageRuntime CreateRuntime(LanguageData language)

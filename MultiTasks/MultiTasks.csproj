@@ -57,6 +57,8 @@
     <Compile Include="AST\MtBind.cs" />
     <Compile Include="AST\MtArguments.cs" />
     <Compile Include="AST\MtIf.cs" />
+    <Compile Include="AST\MtFunctionLiteral.cs" />
+    <Compile Include="MtArgListForDecl.cs" />
     <Compile Include="MultiTasksRuntimeNETBindings.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
