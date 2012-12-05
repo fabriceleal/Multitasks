@@ -37,7 +37,7 @@ namespace MultiTasks.RT
 
             // Add var for recursive definitions
             {
-                var accessor = subthread.Bind("SELF", BindingRequestFlags.Write | BindingRequestFlags.ExistingOrNew);
+                var accessor = subthread.Bind("$", BindingRequestFlags.Write | BindingRequestFlags.ExistingOrNew);
                 accessor.SetValueRef(subthread, this);
             }
 

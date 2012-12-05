@@ -1,7 +1,6 @@
 # Multitasks
 
 The one true purely asynchronous programming language; every instruction is parsed asynchronously!
-*This is still on the making; for now, there is no such things as arithmetic, variable declaration or custom functions/types.*
 
 ## Disclaimer
 
@@ -46,14 +45,10 @@ Hello World 3!
 Hello World 1!
 ```
 
-## Syntax
-A program is composed by a sequence of *chains*, which are executed asynchronously. To use return values, functions must be chained.
-```
-1 | print(_);
-2 | print(_);
-```
-The `_` variable referers to the result of the previous *computation* (literal, function call, variable reference).
+For more examples, check the sources used for testing: https://github.com/fabriceleal/Multitasks/tree/master/MultiTasks.Tests/Examples
 
+## Syntax
+Coming soon ...
 
 ## Irony
 
