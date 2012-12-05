@@ -52,4 +52,4 @@ Coming soon ...
 
 ## Irony
 
-Built using Irony *link*; binaries for Irony provided in the Vendors dir, because seems that they change frequently.
+Built using Irony http://irony.codeplex.com/; binaries for Irony provided in the Vendors dir, because seems that they change frequently.

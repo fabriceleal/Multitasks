@@ -52,7 +52,7 @@ namespace multitasks
             try
             {
                 // Read file
-                var src = File.ReadAllText(args[0]);
+                var src = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, args[0]));
 
                 var app = MtCompiler.CreateScriptApp(Console.OpenStandardOutput());
 
