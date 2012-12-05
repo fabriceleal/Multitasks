@@ -29,6 +29,7 @@ namespace MultiTasks
             BuiltIns.AddMethod(MtMult, "mult");
             BuiltIns.AddMethod(MtSubt, "subt");
             BuiltIns.AddMethod(MtDiv, "div");
+            BuiltIns.AddMethod(MtZero, "zero");
 
             // TODO Add array, object literals
             // TODO Add map, filter, reduce           
@@ -140,7 +141,7 @@ namespace MultiTasks
 
             protected override int OnReduce(MtObject o, int currentValue)
             {
-                return currentValue + (int)(o.Value);
+                return (int)(o.Value) + currentValue;
             }
         }
 
@@ -150,7 +151,7 @@ namespace MultiTasks
 
             protected override int OnReduce(MtObject o, int currentValue)
             {
-                return currentValue - (int)(o.Value);
+                return (int)(o.Value) - currentValue;
             }
         }
 
@@ -160,7 +161,7 @@ namespace MultiTasks
 
             protected override int OnReduce(MtObject o, int currentValue)
             {
-                return currentValue * (int)(o.Value);
+                return (int)(o.Value) * currentValue;
             }
         }
 
@@ -170,7 +171,7 @@ namespace MultiTasks
 
             protected override int OnReduce(MtObject o, int currentValue)
             {
-                return currentValue / (int)(o.Value);
+                return (int)(o.Value) / currentValue;
             }
         }
 
@@ -234,6 +235,27 @@ namespace MultiTasks
             {
                 throw new Exception("Exception on Runtime function: identity", e);
             }            
+        }
+
+        private MtResult MtZero(ScriptThread thread, object[] args)
+        {
+            try
+            {
+                var res = new MtResult();
+
+                var arg = args[0] as MtResult;
+                arg.GetValue((o) =>
+                {
+                    int value = (int)o.Value;
+                    res.SetValue(value == 0 ? MtObject.True : MtObject.False);
+                });
+
+                return res;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Exception on Runtime function: zero", e);
+            }
         }
 
         static byte[] _newLineRaw = Encoding.UTF8.GetBytes(Environment.NewLine);

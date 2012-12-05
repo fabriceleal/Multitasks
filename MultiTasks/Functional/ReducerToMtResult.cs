@@ -19,12 +19,12 @@ namespace MultiTasks.Functional
 
         public void Reduce(object[] list)
         {
-            Reduce(list, 0);
+            Reduce(list, list.Length - 1);
         }
 
         private void Reduce(object[] list, int i)
         {
-            if (i == list.Length)
+            if (i == -1)
             {
                 FinalAction();
             }
@@ -37,7 +37,7 @@ namespace MultiTasks.Functional
                 item.GetValue((a) =>
                 {
                     _tot = OnReduce(a, _tot);
-                    Reduce(list, i + 1);
+                    Reduce(list, i - 1);
                 });
             }
         }

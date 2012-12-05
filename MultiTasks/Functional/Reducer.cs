@@ -16,19 +16,19 @@ namespace MultiTasks.Functional
 
         public void Reduce(Y[] list)
         {
-            Reduce(list, 0);
+            Reduce(list, list.Length - 1);
         }
 
         private void Reduce(Y[] list, int i)
         {
-            if (i == list.Length)
+            if (i == -1)
             {
                 FinalAction(_tot);
             }
             else
             {
                 _tot = OnReduce(list[i], _tot);
-                Reduce(list, i + 1);
+                Reduce(list, i - 1);
             }
         }
 
