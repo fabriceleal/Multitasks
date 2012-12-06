@@ -25,7 +25,7 @@ namespace MultiTasks.Tests
 		foreach(var fname in (new DirectoryInfo(Path.Combine(Path.GetDirectoryName(dte.Solution.FullName), "MultiTasks.Tests/Examples"))).GetFiles("*.mt") ) {
 #>		
 		[TestMethod]
-		public void Eval<#=CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Path.GetFileNameWithoutExtension(fname.FullName).Replace("_", " ")).Replace(" ", "")#>()
+		public void Eval<#=CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Path.GetFileNameWithoutExtension(fname.FullName).Replace("_", " ").Trim()).Replace(" ", "")#>()
 		{
 			try 
 			{				

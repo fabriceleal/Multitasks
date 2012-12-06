@@ -89,6 +89,50 @@ namespace MultiTasks.RT
             }
         }
 
+        public MtResult WaitForValue(Action<MtResult> callback)
+        {
+            if (callback == null)
+                throw new Exception("I need a callback to wait for a value! Nothing is sync in this lang.");
+
+            try
+            {
+                ThreadPool.QueueUserWorkItem(state =>
+                {
+
+#if DEBUG
+                    Debug.Print("MtResult.WaitForValue {0} #2 Thread {1} wait signal.", _id, Thread.CurrentThread.ManagedThreadId);
+#endif
+
+                    // Wait event ...
+                    _receivedValue.WaitOne();
+
+#if DEBUG
+                    Debug.Print("MtResult.WaitForValue {0} #3 Thread {1} received signal.", _id, Thread.CurrentThread.ManagedThreadId);
+#endif
+
+                    // Raise callback
+                    try
+                    {
+#if DEBUG
+                        Debug.Print("MtResult.WaitForValue {0} #4 Thread {1} Callback with value({2})", _id, Thread.CurrentThread.ManagedThreadId, _o.Value);
+#endif
+
+                        callback(this);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Exception on MtResult.WaitForValue callback.", e);
+                    }
+                });
+
+                return this;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Exception on MtResult.WaitForValue.", e);
+            }
+        }
+
         /// <summary>
         /// Get Value (asynchronous)
         /// </summary>
@@ -105,21 +149,21 @@ namespace MultiTasks.RT
                 {
 
 #if DEBUG
-                    Debug.Print("MtResult {0} #2 Thread {1} wait signal.", _id, Thread.CurrentThread.ManagedThreadId);
+                    Debug.Print("MtResult.GetValue {0} #2 Thread {1} wait signal.", _id, Thread.CurrentThread.ManagedThreadId);
 #endif
 
                     // Wait event ...
                     _receivedValue.WaitOne();
                     
 #if DEBUG
-                    Debug.Print("MtResult {0} #3 Thread {1} received signal.", _id, Thread.CurrentThread.ManagedThreadId);
+                    Debug.Print("MtResult.GetValue {0} #3 Thread {1} received signal.", _id, Thread.CurrentThread.ManagedThreadId);
 #endif
 
                     // Raise callback
                     try
                     {
 #if DEBUG
-                        Debug.Print("MtResult {0} #4 Thread {1} Callback with value({2})", _id, Thread.CurrentThread.ManagedThreadId, _o.Value);
+                        Debug.Print("MtResult.GetValue {0} #4 Thread {1} Callback with value({2})", _id, Thread.CurrentThread.ManagedThreadId, _o.Value);
 #endif                       
  
                         callback(_o);
@@ -135,7 +179,7 @@ namespace MultiTasks.RT
             catch (Exception e)
             {
                 throw new Exception("Exception on MtResult.GetValue.", e);
-            }            
+            }
         }
         
         /// <summary>

@@ -93,8 +93,10 @@ namespace MultiTasks
             return MtResult.CreateAndWrap(123);
         }
 
+        
         private MtResult MtMap(ScriptThread thread, object[] args)
         {
+            var result = new MtResult();
             var arrExpression = args[0] as MtResult;
             var fun = args[1];
 
@@ -110,15 +112,40 @@ namespace MultiTasks
 
                 MtFunctionObjectBase.ExtractAsFunction(fun, (wrkFun) =>
                 {
+                    // Launch and wait for all to end
+                    var res = new MtResult[wrkArr.Length];                    
+                    var count = wrkArr.Length - 1;
+                    var waitForEndOfAll = new ManualResetEvent(false); 
+
                     for (var i = 0; i < wrkArr.Length; ++i)
                     {
-                        wrkFun.Call(thread, new object[] { wrkArr[i] });
+                        int copy_i = i;
+
+                        var ret = wrkFun.Call(thread, new object[] { wrkArr[i] });
+                        if(ret == null)
+                        {
+                            throw new Exception("Return of application in map is null!");
+                        }
+
+                        var wrkRet = ret as MtResult;
+                        wrkRet.WaitForValue((r) =>
+                        {
+                            res[copy_i] = r;
+
+                            if (Interlocked.Decrement(ref count) == 0)
+                            {
+                                waitForEndOfAll.Set();
+                            }
+                        });
                     }
+
+                    waitForEndOfAll.WaitOne();                    
+                    result.SetValue(new MtObject(res));
                 });
 
             });
 
-            return MtResult.True;
+            return result;
         }
 
         private MtResult MtCompose(ScriptThread thread, object[] args)
