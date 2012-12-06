@@ -9,7 +9,7 @@ namespace MultiTasks.AST
     {
 
         private AstNode _head;
-        private MtArguments _args;
+        private MtExpressionList _args;
 
         public override void Init(Irony.Ast.AstContext context, Irony.Parsing.ParseTreeNode treeNode)
         {
@@ -17,7 +17,7 @@ namespace MultiTasks.AST
 
             _head = AddChild(string.Empty, treeNode.ChildNodes[0]);
 
-            _args = AddChild(string.Empty, treeNode.ChildNodes[1]) as MtArguments;
+            _args = AddChild(string.Empty, treeNode.ChildNodes[1]) as MtExpressionList;
 
             AsString = "Application";
         }
@@ -31,11 +31,18 @@ namespace MultiTasks.AST
                 var appResult = new MtResult();
 
                 MtResult[] args = _args.Evaluate(thread) as MtResult[];
+                if (args == null)
+                {
+                    throw new Exception("Args evaluated to null!");
+                }
 
-                var subthreadF = _head.NewScriptThread(thread);
+                var subthreadF = _head.NewScriptThread(thread);                
                 var headResult = _head.Evaluate(subthreadF);
-
-                Action<object> parseAndCallHead = null; 
+                if (headResult == null)
+                {
+                    throw new Exception("Head can't evaluate to null!");
+                }
+                /*Action<object> parseAndCallHead = null; 
                 parseAndCallHead = (probableFun) =>
                 {
                     if (probableFun == null)
@@ -67,7 +74,15 @@ namespace MultiTasks.AST
                     }
                 };
 
-                parseAndCallHead(headResult);
+                parseAndCallHead(headResult);*/
+                MtFunctionObjectBase.ExtractAsFunction(headResult, (wrkFun) =>
+                {
+                    var resultFun = wrkFun.Call(thread, args) as MtResult;
+                    resultFun.GetValue((r3) =>
+                    {
+                        appResult.SetValue(r3);
+                    });
+                });
 
                 return appResult;
             }

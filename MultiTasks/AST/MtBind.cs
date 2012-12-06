@@ -16,18 +16,23 @@ namespace MultiTasks.AST
 
             var nodes = treeNode.ChildNodes;
             if (nodes.Count != 2)
+            {
                 throw new Exception("MtBind expects 2 children (received {0}).".SafeFormat(nodes.Count));
+            }
 
             // AstNodeInterpreter, from Irony
             _targetName = AddChild(string.Empty, nodes[0]) as AstNode;
             if (_targetName == null)
+            {
                 throw new Exception("No identifier for Bind!");
+            }
 
             // An arbitrary Mt node
             _expression = AddChild(string.Empty, nodes[1]) as MtAstNode;
             if (_expression == null)
+            {
                 throw new Exception("No expression for Bind!");
-            
+            }
         }
 
         protected override object DoEvaluate(Irony.Interpreter.ScriptThread thread)

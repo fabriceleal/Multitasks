@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MultiTasks;
 using Irony.Interpreter.Ast;
 using Irony.Interpreter;
+using MultiTasks.AST;
 
 namespace MultiTasks.RT
 {
-    public class MtFunctionObject : MtObjectBase, ICallTarget
+    /// <summary>
+    /// 
+    /// </summary>
+    public class MtFunctionObject : MtFunctionObjectBase, ICallTarget
     {
 
         private AstNode _body;

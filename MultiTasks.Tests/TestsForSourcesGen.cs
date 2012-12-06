@@ -551,6 +551,125 @@ namespace MultiTasks.Tests
 			}
 		}
 
+		
+		[TestMethod]
+		public void Eval20Arrays()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("20_arrays.mt");
+			
+				using(FileStream str = new FileStream("20_arrays.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval21ArraysCar()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("21_arrays_car.mt");
+			
+				using(FileStream str = new FileStream("21_arrays_car.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval22ArraysCdr()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("22_arrays_cdr.mt");
+			
+				using(FileStream str = new FileStream("22_arrays_cdr.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval23ArrayMappedPrint()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("23_array_mapped_print.mt");
+			
+				using(FileStream str = new FileStream("23_array_mapped_print.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
 	}
 
 }

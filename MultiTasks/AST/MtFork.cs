@@ -27,7 +27,9 @@ namespace MultiTasks.AST
             {
                 // Only allow non-null, mtchains!
                 if (child.AstNode != null)
+                {
                     _chains.Add(AddChild(string.Empty, child) as MtAstNode);
+                }
             }
             
 

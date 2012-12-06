@@ -17,9 +17,13 @@ namespace MultiTasks
         public static ScriptThread NewScriptThread(this AstNode _this, ScriptThread current)
         {
             if (_this == null)
+            {
                 throw new NullReferenceException("NewScriptThread needs an AstNode");
+            }
             if (current == null)
+            {
                 throw new NullReferenceException("NewScriptThread needs a current thread");
+            }
             try
             {
                 var subthread = new ScriptThread(current.App);

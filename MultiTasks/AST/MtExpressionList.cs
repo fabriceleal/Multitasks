@@ -9,7 +9,7 @@ namespace MultiTasks.AST
     /// <summary>
     /// This is the only AST Node which does not return a MtResult. 
     /// </summary>
-    public class MtArguments : MtAstNode
+    public class MtExpressionList : MtAstNode
     {
 
         List<AstNode> _args = new List<AstNode>();
@@ -22,8 +22,9 @@ namespace MultiTasks.AST
             {
                 var child = AddChild(string.Empty, node);
                 if (child == null)
+                {
                     throw new Exception("Argument without an AST node!");
-
+                }
                 _args.Add(child);
             }            
         }
@@ -38,10 +39,22 @@ namespace MultiTasks.AST
                 for (var i = 0; i < _args.Count; ++i)
                 {
                     var subthread = _args[i].NewScriptThread(thread);
+                    var evalResult = _args[i].Evaluate(subthread);
 
-                    result[i] = _args[i].Evaluate(subthread) as MtResult;
+                    if (evalResult is MtResult)
+                    {
+                        result[i] = evalResult as MtResult;
+                    }
+                    else
+                    {
+                        // A function, wrap it!
+                        result[i] = MtResult.CreateAndWrap(evalResult);
+                    }
+                                        
                     if (result[i] == null)
+                    {
                         throw new Exception("Argument evaluated to null!");
+                    }
                 }
 
                 return result;

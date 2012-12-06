@@ -18,20 +18,27 @@ namespace MultiTasks.AST
             var nodes = treeNode.ChildNodes;
 
             if (nodes.Count != 3)
+            {
                 throw new Exception("If node extended 3 children, received {0}".SafeFormat(nodes.Count));
+            }
 
             _expression = AddChild(string.Empty, nodes[0]) as AstNode;
             if (_expression == null)
+            {
                 throw new Exception("No expression for if!");
+            }
 
             _trueBranch = AddChild(string.Empty, nodes[1]) as AstNode;
             if (_expression == null)
+            {
                 throw new Exception("No true branch for if!");
-            
+            }
+
             _falseBranch = AddChild(string.Empty, nodes[2]) as AstNode;
             if (_expression == null)
+            {
                 throw new Exception("No false branch for if!");
-
+            }
         }
 
         protected override object DoEvaluate(Irony.Interpreter.ScriptThread thread)

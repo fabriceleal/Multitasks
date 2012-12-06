@@ -15,7 +15,9 @@ namespace MultiTasks.AST
             base.Init(context, treeNode);
 
             if (treeNode.ChildNodes.Count != 2)
+            {
                 throw new Exception("MtChain expects 1 child (received {0}.)".SafeFormat(treeNode.ChildNodes.Count));
+            }
 
             _head = AddChild(string.Empty, treeNode.ChildNodes[0]);
 
@@ -36,12 +38,16 @@ namespace MultiTasks.AST
 
                 // Wrap if necessary.
                 if (headResult as ICallTarget != null)
+                {
                     headResult = MtResult.CreateAndWrap(headResult);
+                }
 
                 var wrkHeadResult = headResult as MtResult;
 
                 if (wrkHeadResult as MtResult == null)
+                {
                     throw new Exception("Head of chain evaluated to null!");
+                }
 
                 var subthread = _tail.NewScriptThread(thread);
                 var accessor = subthread.Bind("_", BindingRequestFlags.Write | BindingRequestFlags.ExistingOrNew);
@@ -50,7 +56,9 @@ namespace MultiTasks.AST
                 var _tailResult = _tail.Evaluate(subthread) as MtResult;
 
                 if (_tailResult == null)
+                {
                     throw new Exception("tail of chain evaluated to null!");
+                }
 
                 return _tailResult;
             }

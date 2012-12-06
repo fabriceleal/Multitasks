@@ -30,13 +30,20 @@ namespace MultiTasks
             BuiltIns.AddMethod(MtSubt, "subt");
             BuiltIns.AddMethod(MtDiv, "div");
             BuiltIns.AddMethod(MtZero, "zero");
+            BuiltIns.AddMethod(MtCar, "car");
+            BuiltIns.AddMethod(MtCdr, "cdr");
+            BuiltIns.AddMethod(MtMap, "map", 2, 2);            
 
-            // TODO Add array, object literals
+            // TODO Add insert, append, concat
+
+            // TODO Add object literals
+            // TODO Add streams literals?
             // TODO Add map, filter, reduce           
             // TODO Add sorting examples
             // TODO Add quote (for lazy evaluation of MtResults)
             // TODO Add flow control instructions (continuations, exceptions, ...)
             // TODO Add signaling, waiting
+            // TODO Add compose(f, f)
 
             DoNETBindings();
         }
@@ -78,6 +85,105 @@ namespace MultiTasks
         #endregion
 
         #region Runtime builtin functions
+
+        #region Lists
+
+        private MtResult MtCurry(ScriptThread thread, object[] args)
+        {
+            return MtResult.CreateAndWrap(123);
+        }
+
+        private MtResult MtMap(ScriptThread thread, object[] args)
+        {
+            var arrExpression = args[0] as MtResult;
+            var fun = args[1];
+
+            arrExpression.GetValue((arr) =>
+            {
+                // arr
+                MtResult[] wrkArr = arr.Value as MtResult[];
+
+                if (wrkArr == null)
+                {
+                    throw new Exception("Array expression is null!");
+                }
+
+                MtFunctionObjectBase.ExtractAsFunction(fun, (wrkFun) =>
+                {
+                    for (var i = 0; i < wrkArr.Length; ++i)
+                    {
+                        wrkFun.Call(thread, new object[] { wrkArr[i] });
+                    }
+                });
+
+            });
+
+            return MtResult.True;
+        }
+
+        private MtResult MtCompose(ScriptThread thread, object[] args)
+        {
+            var result = new MtResult();
+
+            // compose(f, g) := L (x) => f(g(x))
+
+            
+            return result;
+        }
+
+        private MtResult MtCar(ScriptThread thread, object[] args)
+        {
+            var ret = new MtResult();
+            var arr = args[0] as MtResult;
+            arr.GetValue((o) =>
+            {
+                var wrkArr = o.Value as MtResult[];
+                if (wrkArr == null)
+                {
+                    throw new Exception("Argument is not an array!");
+                }
+
+                wrkArr[0].GetValue((head) =>
+                {
+                    ret.SetValue(head);
+                });                
+            });
+            return ret;
+        }
+
+        private MtResult MtCdr(ScriptThread thread, object[] args)
+        {
+            var ret = new MtResult();
+            var arr = args[0] as MtResult;
+            arr.GetValue((o) =>
+            {
+                var wrkArr = o.Value as MtResult[];
+                if (wrkArr == null)
+                {
+                    throw new Exception("Argument is not an array!");
+                }
+
+                if (wrkArr.Length == 0 || wrkArr.Length == 1)
+                {
+                    ret.SetValue(new MtObject(new MtResult[] { }));
+                }
+                else
+                {
+                    ret.SetValue((state) =>
+                    {
+                        var tail = new MtResult[wrkArr.Length - 1];
+
+                        Array.Copy(wrkArr, 1, tail, 0, tail.Length);
+
+                        return new MtObject(tail);
+                    });
+                }
+                
+            });
+            return ret;
+        }
+
+        #endregion
 
         public MtResult MtSleep(ScriptThread thread, object[] args)
         {
@@ -267,27 +373,32 @@ namespace MultiTasks
         /// doesn't get interleaved
         /// </summary>
         private object _mtPrintLock = new object();
+
         public MtResult MtPrint(ScriptThread thread, object[] args)
         {
             try
             {
                 var r = new MtResult();
 
-                lock (_mtPrintLock) /* Lock all streams */
+               // lock (_mtPrintLock) /* Lock all streams */
+               // {
+                Monitor.Enter(_mtPrintLock);
+                try
                 {
-                                    
-                    Reduce(args, (o) => {
-                                     
+                    Reduce(args, (o) =>
+                    {
+
                         String toWrite = o == null ? "<null>" : o.ToString();
 
                         if (OutputStream != null)
                         {
                             byte[] raw = Encoding.UTF8.GetBytes(toWrite);
-                            OutputStream.Write(raw, 0, raw.Length);                            
+                            OutputStream.Write(raw, 0, raw.Length);
                         }
 
                         thread.App.Write(toWrite);
-                    }, () => { 
+                    }, () =>
+                    {
 
                         // Write new lines
                         if (OutputStream != null)
@@ -297,10 +408,21 @@ namespace MultiTasks
                         }
 
                         thread.App.WriteLine("");
-                        
-                        r.SetValue(MtObject.True); 
+
+                        r.SetValue(MtObject.True);
                     });
                 }
+                catch (Exception e)
+                {
+                    throw new Exception("Error printing stuff.", e);
+                }
+                finally
+                {
+                    Monitor.Exit(_mtPrintLock);
+                }
+
+                
+               // }
 
                 return r;
             }

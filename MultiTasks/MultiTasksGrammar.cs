@@ -24,14 +24,17 @@ namespace MultiTasks
             var semicomma = ToTerm(";", "semicomma");
             var openparen = ToTerm("(", "openparen");
             var closeparen = ToTerm(")", "closeparen");
-            var openbracket = ToTerm("{", "openbracket");
-            var closebracket = ToTerm("}", "closebracket");
+            var openbrace = ToTerm("{", "openbrace");
+            var closebrace = ToTerm("}", "closebrace");
+            var openbracket = ToTerm("[", "openbracket");
+            var closebracket = ToTerm("]", "closebracket");
             var bind = ToTerm("<=", "bind");
             var argsBodySeparator = ToTerm("=>", "argsBodySeparator");
             var comma = ToTerm(",", "comma");
             var lambda = ToTerm("L", "lambda");
             var ift = ToTerm("if", "if");
             MarkPunctuation(pipe, semicomma, openparen, closeparen, 
+                            openbrace, closebrace, 
                             openbracket, closebracket, bind, 
                             argsBodySeparator, comma, lambda, 
                             ift);
@@ -79,6 +82,10 @@ namespace MultiTasks
                 {
                     treeNode.AstNode = _.NewAndInit<MtFunctionLiteral>(context, possibleValid);
                 }
+                else if (tag == "ARRAY")
+                {
+                    treeNode.AstNode = _.NewAndInit<MtArray>(context, possibleValid);
+                }
                 else if (tag == "identifier")
                 {
                     // Do nothing here ...
@@ -114,7 +121,8 @@ namespace MultiTasks
                     throw new Exception("Unexpected tag in TOP_CHAIN child: {0}".SafeFormat(tag));
                 }
             });
-
+                        
+            var ARRAY = new NonTerminal("ARRAY", typeof(MtArray));
             var IF = new NonTerminal("IF", typeof(MtIf));
             var CHAIN = new NonTerminal("CHAIN", typeof(MtChain));
             var ATOM = new NonTerminal("ATOM", typeof(MtAtom));
@@ -126,7 +134,7 @@ namespace MultiTasks
             var ARG_LIST_FOR_DECL = new NonTerminal("ARG_LIST_FOR_DECL", typeof(MtArgListForDecl));
             var FUNCTION_LITERAL = new NonTerminal("FUNCTION_LITERAL", typeof(MtFunctionLiteral));
 
-            var ARGLIST = new NonTerminal("ARGLIST", typeof(MtArguments));
+            var EXPRESSION_LIST = new NonTerminal("EXPRESSION_LIST", typeof(MtExpressionList));
 
             var FUNCTION = new NonTerminal("FUNCTION", delegate(AstContext context, ParseTreeNode treeNode)
             {
@@ -174,24 +182,26 @@ namespace MultiTasks
             CHAIN.Rule = EXPRESSION + pipe + EXPRESSION |
                         EXPRESSION + pipe + CHAIN;
 
-            EXPRESSION.Rule = FORK | IF | BIND | FUNCTION_LITERAL | APPLICATION | ATOM | identifier;
+            EXPRESSION.Rule = ARRAY | FORK | IF | BIND | FUNCTION_LITERAL | APPLICATION | ATOM | identifier;
 
-            FORK.Rule = openbracket + NCHAINS + closebracket;
+            FORK.Rule = openbrace + NCHAINS + closebrace;
 
             ATOM.Rule =
                       nbrLiteral |
                       stringLiteral /*|
                       identifier*/;
 
-            APPLICATION.Rule = FUNCTION + openparen + ARGLIST + closeparen;
+            APPLICATION.Rule = FUNCTION + openparen + EXPRESSION_LIST + closeparen;
 
-            ARGLIST.Rule = MakeStarRule(ARGLIST, comma, EXPRESSION);
+            EXPRESSION_LIST.Rule = MakeStarRule(EXPRESSION_LIST, comma, EXPRESSION);
 
             FUNCTION.Rule = identifier | FUNCTION_LITERAL | APPLICATION;
 
             BIND.Rule = identifier + bind + EXPRESSION;
 
             IF.Rule = ift + EXPRESSION + TOP_CHAIN + TOP_CHAIN;
+
+            ARRAY.Rule = openbracket + EXPRESSION_LIST + closebracket;
 
             // For function literals
             ARG_LIST_FOR_DECL.Rule = MakeStarRule(ARG_LIST_FOR_DECL, comma, identifier);

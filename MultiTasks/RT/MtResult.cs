@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Diagnostics;
+using Irony.Interpreter.Ast;
+using Irony.Interpreter;
 
 namespace MultiTasks.RT
 {
@@ -98,7 +100,7 @@ namespace MultiTasks.RT
                 throw new Exception("I need a callback to give you the value! Nothing is sync in this lang.");
 
             try
-            {              
+            {
                 ThreadPool.QueueUserWorkItem(state =>
                 {
 
@@ -108,7 +110,7 @@ namespace MultiTasks.RT
 
                     // Wait event ...
                     _receivedValue.WaitOne();
-
+                    
 #if DEBUG
                     Debug.Print("MtResult {0} #3 Thread {1} received signal.", _id, Thread.CurrentThread.ManagedThreadId);
 #endif
@@ -176,9 +178,9 @@ namespace MultiTasks.RT
 
             return "<MtResult with value>";
         }
-
+                
         #region "Static"
-
+        
         public static MtResult CreateAndWrap(MtObject o)
         {
             return (new MtResult().SetValue(o));

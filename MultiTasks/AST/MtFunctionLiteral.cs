@@ -1,9 +1,8 @@
-﻿
-using MultiTasks.RT;
+﻿using MultiTasks.RT;
 using System;
 using Irony.Interpreter;
 using Irony.Interpreter.Ast;
-using System.Collections.Generic;
+
 namespace MultiTasks.AST
 {
     public class MtFunctionLiteral : MtAstNode
@@ -17,16 +16,21 @@ namespace MultiTasks.AST
 
             var nodes = treeNode.ChildNodes;
             if (nodes.Count != 2)
+            {
                 throw new Exception("FunctionLiteral expected 2 children, received {0}".SafeFormat(nodes.Count));
+            }
 
             _arguments = AddChild(string.Empty, nodes[0]) as MtArgListForDecl;
             if (_arguments == null)
+            {
                 throw new Exception("List of arguments can't be null!");
+            }
 
             _body = AddChild(string.Empty, nodes[1]) as AstNode;
             if (_body == null)
+            {
                 throw new Exception("Body of function can't be null!");/*v*/
-
+            }
                         
         }
 

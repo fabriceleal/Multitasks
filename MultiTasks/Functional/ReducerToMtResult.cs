@@ -32,7 +32,9 @@ namespace MultiTasks.Functional
             {
                 var item = list[i] as MtResult;
                 if (item == null)
+                {
                     throw new Exception("Argument should be a MtResult!");
+                }
 
                 item.GetValue((a) =>
                 {

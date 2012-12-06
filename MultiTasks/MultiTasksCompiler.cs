@@ -65,10 +65,14 @@ namespace MultiTasks
         public static ScriptApp CreateScriptApp(Stream output)
         {
             if (output == null)
+            {
                 throw new NullReferenceException("I need a stream!");
+            }
 
             if (!output.CanWrite)
+            {
                 throw new Exception("Stream is not writable!");
+            }
 
             return InternCreateScriptApp(output, null);
         }

@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MultiTasks.AST;
-using MultiTasks.RT;
 using Irony.Interpreter.Ast;
 
-namespace MultiTasks
+namespace MultiTasks.AST
 {
     public class MtArgListForDecl : MtAstNode
     {
@@ -27,7 +23,9 @@ namespace MultiTasks
             {
                 var id = AddChild(string.Empty, node) as AstNode;
                 if (id == null)
+                {
                     throw new Exception("Argument can't be null!");
+                }
                 _argList.Add(id);
             }
         }
