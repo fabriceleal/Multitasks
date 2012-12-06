@@ -33,11 +33,13 @@ namespace MultiTasks
             var comma = ToTerm(",", "comma");
             var lambda = ToTerm("L", "lambda");
             var ift = ToTerm("if", "if");
+            var dot = ToTerm(".", "dot");
+
             MarkPunctuation(pipe, semicomma, openparen, closeparen, 
                             openbrace, closebrace, 
                             openbracket, closebracket, bind, 
                             argsBodySeparator, comma, lambda, 
-                            ift);
+                            ift, dot);
             //--
 
             // Non Terminals            
@@ -135,6 +137,8 @@ namespace MultiTasks
             var FUNCTION_LITERAL = new NonTerminal("FUNCTION_LITERAL", typeof(MtFunctionLiteral));
 
             var EXPRESSION_LIST = new NonTerminal("EXPRESSION_LIST", typeof(MtExpressionList));
+
+            var DOTTED_EXPRESSION = new NonTerminal("DOTTED_EXPRESSION", typeof(MtDottedExpression));
 
             var FUNCTION = new NonTerminal("FUNCTION", delegate(AstContext context, ParseTreeNode treeNode)
             {

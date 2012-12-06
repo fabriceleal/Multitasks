@@ -25,17 +25,16 @@ namespace MultiTasks
             BuiltIns.AddMethod(MtTrue, "true");
             BuiltIns.AddMethod(MtIdentity, "identity", 1);
             BuiltIns.AddMethod(MtSleep, "sleep", 1, 2);
-            BuiltIns.AddMethod(MtAdd, "add");
-            BuiltIns.AddMethod(MtMult, "mult");
-            BuiltIns.AddMethod(MtSubt, "subt");
-            BuiltIns.AddMethod(MtDiv, "div");
-            BuiltIns.AddMethod(MtZero, "zero");
-            BuiltIns.AddMethod(MtCar, "car");
-            BuiltIns.AddMethod(MtCdr, "cdr");
-            BuiltIns.AddMethod(MtMap, "map", 2, 2);            
-
+            BuiltIns.AddMethod(MtAdd, "add", 1);
+            BuiltIns.AddMethod(MtMult, "mult", 1);
+            BuiltIns.AddMethod(MtSubt, "subt", 1);
+            BuiltIns.AddMethod(MtDiv, "div", 1);
+            BuiltIns.AddMethod(MtZero, "zero", 1);
+            BuiltIns.AddMethod(MtCar, "car", 1, 1);
+            BuiltIns.AddMethod(MtCdr, "cdr", 1, 1);
+            BuiltIns.AddMethod(MtMap, "map", 2, 2);
+            
             // TODO Add insert, append, concat
-
             // TODO Add object literals
             // TODO Add streams literals?
             // TODO Add map, filter, reduce           
@@ -88,12 +87,12 @@ namespace MultiTasks
 
         #region Lists
 
+        // TODO
         private MtResult MtCurry(ScriptThread thread, object[] args)
         {
             return MtResult.CreateAndWrap(123);
         }
-
-        
+                
         private MtResult MtMap(ScriptThread thread, object[] args)
         {
             var result = new MtResult();
@@ -148,13 +147,13 @@ namespace MultiTasks
             return result;
         }
 
+        // TODO
         private MtResult MtCompose(ScriptThread thread, object[] args)
         {
             var result = new MtResult();
 
             // compose(f, g) := L (x) => f(g(x))
-
-            
+                        
             return result;
         }
 
