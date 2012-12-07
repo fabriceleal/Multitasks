@@ -34,7 +34,8 @@ namespace MultiTasks
             var lambda = ToTerm("L", "lambda");
             var ift = ToTerm("if", "if");
             var dot = ToTerm(".", "dot");
-
+            var flowRightToLeft = ToTerm("<-", "flowRightToLeft");
+                        
             MarkPunctuation(pipe, semicomma, openparen, closeparen, 
                             openbrace, closebrace, 
                             openbracket, closebracket, bind, 
@@ -140,6 +141,8 @@ namespace MultiTasks
 
             var DOTTED_EXPRESSION = new NonTerminal("DOTTED_EXPRESSION", typeof(MtDottedExpression));
 
+            var FLOW_RIGHT_TO_LEFT = new NonTerminal("FLOW_RIGHT_TO_LEFT", typeof(MtFlowRightToLeft));
+            
             var FUNCTION = new NonTerminal("FUNCTION", delegate(AstContext context, ParseTreeNode treeNode)
             {
                 if (treeNode.ChildNodes.Count != 1)
@@ -194,6 +197,8 @@ namespace MultiTasks
                       nbrLiteral |
                       stringLiteral /*|
                       identifier*/;
+
+            FLOW_RIGHT_TO_LEFT.Rule = identifier + flowRightToLeft + identifier;
 
             APPLICATION.Rule = FUNCTION + openparen + EXPRESSION_LIST + closeparen;
 

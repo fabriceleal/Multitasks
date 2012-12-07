@@ -130,6 +130,7 @@
     <EmbeddedResource Include="Examples\22_arrays_cdr.mt" />
     <EmbeddedResource Include="Examples\23_array_mapped_print.mt" />
     <EmbeddedResource Include="Examples\24_nested_array_map_map.mt" />
+    <EmbeddedResource Include="Examples\25_stream_literal.mt" />
     <None Include="TestsForSourcesGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>TestsForSourcesGen.cs</LastGenOutput>

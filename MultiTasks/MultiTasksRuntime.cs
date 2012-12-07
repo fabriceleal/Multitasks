@@ -33,6 +33,8 @@ namespace MultiTasks
             BuiltIns.AddMethod(MtCar, "car", 1, 1);
             BuiltIns.AddMethod(MtCdr, "cdr", 1, 1);
             BuiltIns.AddMethod(MtMap, "map", 2, 2);
+            BuiltIns.AddMethod(MtStringStreamCreate, "str_stream", 1, 1);
+            BuiltIns.AddMethod(MtUriStreamCreate, "uri_stream", 1, 1);
             
             // TODO Add insert, append, concat
             // TODO Add object literals
@@ -45,6 +47,16 @@ namespace MultiTasks
             // TODO Add compose(f, f)
 
             DoNETBindings();
+        }
+
+        public object MtStringStreamCreate(ScriptThread thread, object[] arguments)
+        {
+            return MtResult.True;
+        }
+
+        public object MtUriStreamCreate(ScriptThread thread, object[] arguments)
+        {
+            return MtResult.True;
         }
 
         #region Aux

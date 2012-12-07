@@ -701,6 +701,36 @@ namespace MultiTasks.Tests
 			}
 		}
 
+		
+		[TestMethod]
+		public void Eval25StreamLiteral()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("25_stream_literal.mt");
+			
+				using(FileStream str = new FileStream("25_stream_literal.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
 	}
 
 }
