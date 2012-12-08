@@ -89,6 +89,20 @@ namespace MultiTasks.RT
             }
         }
 
+
+        public MtResult WaitForValue()
+        {
+#if DEBUG
+            Debug.Print("MtResult.WaitForValue(no callback) {0} #2 Thread {1} wait signal.", _id, Thread.CurrentThread.ManagedThreadId);
+#endif
+            // Wait event ...
+            _receivedValue.WaitOne();
+#if DEBUG
+            Debug.Print("MtResult.WaitForValue(no callback) {0} #2 Thread {1} received signal.", _id, Thread.CurrentThread.ManagedThreadId);
+#endif
+            return this;
+        }
+
         public MtResult WaitForValue(Action<MtResult> callback)
         {
             if (callback == null)
@@ -257,5 +271,6 @@ namespace MultiTasks.RT
         }
 
         #endregion
+
     }
 }

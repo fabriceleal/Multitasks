@@ -40,7 +40,7 @@ namespace MultiTasks
                             openbrace, closebrace, 
                             openbracket, closebracket, bind, 
                             argsBodySeparator, comma, lambda, 
-                            ift, dot);
+                            ift, dot, flowRightToLeft);
             //--
 
             // Non Terminals            
@@ -84,6 +84,10 @@ namespace MultiTasks
                 else if (tag == "FUNCTION_LITERAL")
                 {
                     treeNode.AstNode = _.NewAndInit<MtFunctionLiteral>(context, possibleValid);
+                }
+                else if (tag == "FLOW_RIGHT_TO_LEFT")
+                {
+                    treeNode.AstNode = _.NewAndInit<MtFlowRightToLeft>(context, possibleValid);
                 }
                 else if (tag == "ARRAY")
                 {
@@ -189,7 +193,9 @@ namespace MultiTasks
             CHAIN.Rule = EXPRESSION + pipe + EXPRESSION |
                         EXPRESSION + pipe + CHAIN;
 
-            EXPRESSION.Rule = ARRAY | FORK | IF | BIND | FUNCTION_LITERAL | APPLICATION | ATOM | identifier;
+            EXPRESSION.Rule = ARRAY | FORK | IF | BIND | 
+                    FUNCTION_LITERAL | APPLICATION | 
+                    FLOW_RIGHT_TO_LEFT | ATOM | identifier;
 
             FORK.Rule = openbrace + NCHAINS + closebrace;
 

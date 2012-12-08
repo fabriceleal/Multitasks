@@ -35,7 +35,9 @@ namespace MultiTasks
             BuiltIns.AddMethod(MtMap, "map", 2, 2);
             BuiltIns.AddMethod(MtStringStreamCreate, "str_stream", 1, 1);
             BuiltIns.AddMethod(MtUriStreamCreate, "uri_stream", 1, 1);
-            
+            BuiltIns.AddMethod(MtStreamsClose, "close_stream", 1);
+            BuiltIns.AddMethod(MtWait, "wait", 1);
+
             // TODO Add insert, append, concat
             // TODO Add object literals
             // TODO Add streams literals?
@@ -49,14 +51,125 @@ namespace MultiTasks
             DoNETBindings();
         }
 
+        public object MtWait(ScriptThread thread, object[] arguments)
+        {
+            // Wait for all arguments. Blocking.
+            for (var i = 0; i < arguments.Length; ++i)
+            {
+                var arg = arguments[i] as MtResult;
+                if (arg == null)
+                {
+                    throw new Exception("Unexpected argument!");
+                }
+                arg.WaitForValue();
+            }
+
+            // Returns all the arguments, in an array
+            return MtResult.CreateAndWrap(arguments);
+        }
+
         public object MtStringStreamCreate(ScriptThread thread, object[] arguments)
         {
-            return MtResult.True;
+            Debug.Print("Create stream from string");
+
+            try
+            {
+                var result = new MtResult();
+                var rStr = arguments[0] as MtResult;
+                rStr.GetValue((str) =>
+                {
+                    result.SetValue(new MtObject(new MtStreamString(str.Value as string)));
+                });
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error on string stream create.", e);
+            }
         }
 
         public object MtUriStreamCreate(ScriptThread thread, object[] arguments)
         {
-            return MtResult.True;
+            Debug.Print("Create stream from uri");
+
+            try
+            {
+
+                var result = new MtResult();
+                var rUri = arguments[0] as MtResult;
+                rUri.GetValue((uri) =>
+                {
+                    string strUri = uri.Value as string;
+
+                    try
+                    {
+                        var dummy = new Uri(strUri);
+                    }
+                    catch
+                    {
+                        // Assume its a filename
+                        // Try to combine with Env.CurrentDir
+                        strUri = Path.Combine(Environment.CurrentDirectory, strUri);
+                    }
+
+                    var wrkUri = new Uri(strUri);
+                    if (wrkUri.Scheme == Uri.UriSchemeFile)
+                    {
+                        result.SetValue(new MtObject(new MtStreamFile(uri.Value as string)));
+                    }
+                    else
+                    {
+                        throw new Exception("Unsupported uri scheme: " + wrkUri.Scheme);
+                    }
+                });
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Exception on uri stream create.", e);
+            }
+        }
+
+        public object MtStreamsClose(ScriptThread thread, object[] arguments)
+        {
+            Debug.Print("Close streams");
+
+            try
+            {
+
+                var result = new MtResult();
+                var count = arguments.Length;
+
+                foreach (var arg in arguments)
+                {
+                    var wrkArg = arg as MtResult;
+                    if (wrkArg == null)
+                    {
+                        throw new Exception("Argument is not a MtResult!");
+                    }
+
+                    wrkArg.GetValue(stream =>
+                    {
+                        var wrkStream = stream.Value as MtStream;
+                        if (wrkStream == null)
+                        {
+                            throw new Exception("Argument is not a stream!");
+                        }
+
+                        wrkStream.Close();
+
+                        if (Interlocked.Decrement(ref count) == 0)
+                        {
+                            result.SetValue(MtObject.True);
+                        }
+                    });
+                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Exception on close(streams, ...)", e);
+            }
         }
 
         #region Aux
@@ -125,7 +238,7 @@ namespace MultiTasks
                 {
                     // Launch and wait for all to end
                     var res = new MtResult[wrkArr.Length];                    
-                    var count = wrkArr.Length - 1;
+                    var count = wrkArr.Length;
                     var waitForEndOfAll = new ManualResetEvent(false); 
 
                     for (var i = 0; i < wrkArr.Length; ++i)

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Diagnostics;
 
 namespace MultiTasks.RT
 {
     public abstract class MtStream
     {
 
-        public const int ReadBufferSize = 1024;
+        public const int ReadBufferSize = 1;
 
         public class MtStreamWritingContext
         {
@@ -40,28 +41,50 @@ namespace MultiTasks.RT
 
         public MtStreamReadingContext CreateReadingContext()
         {
+            if (!_stream.CanRead)
+            {
+                throw new Exception("You can't read from this stream!");
+            }
             var r = new MtStreamReadingContext(0);
             return r;
         }
 
 
-        public void ReadFromWriteTo(MtStream src, MtStream dest, Action doneCallback)
+        public static void ReadFromWriteTo(MtStream src, MtStream dest, Action doneCallback)
         {
-            var readCtx = src.CreateReadingContext();
-            var writCtx = dest.CreateWritingContext();
+            Debug.Print("ReadFrom x to y");
 
-            Action<byte[]> readCallback = null; 
-            readCallback = bytes =>
+            try
             {
-                dest.Write(writCtx, bytes);
+                var readCtx = src.CreateReadingContext();
+                var writCtx = dest.CreateWritingContext();
+
+                Action<byte[], bool> readCallback = null;
+                readCallback = (bytes, atEnd) =>
+                {
+                    dest.Write(writCtx, bytes);
+
+                    // Continue only if there are more bytes to read ...
+                    if (!atEnd)
+                    {
+                        src.Read(readCtx, readCallback, doneCallback);
+                    }
+                };
+
                 src.Read(readCtx, readCallback, doneCallback);
-            };
-            
-            src.Read(readCtx, readCallback, doneCallback);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Exception on Stream.readFromTo", e);
+            }
         }
 
-        private MtStreamWritingContext CreateWritingContext()
+        public MtStreamWritingContext CreateWritingContext()
         {
+            if (!_stream.CanWrite)
+            {
+                throw new Exception("You can't write in this stream!");
+            }
             var w = new MtStreamWritingContext(0);
             return w;
         }
@@ -70,72 +93,114 @@ namespace MultiTasks.RT
 
         public void Write(MtStreamWritingContext ctx, byte[] stuff)
         {
-            AsyncCallback wroteCallback = null;
-            wroteCallback = r =>
-            {
-                _stream.EndWrite(r);
+            Debug.Print("Write");
 
-                ctx._position += stuff.Length;
-            };
-            _stream.BeginWrite(stuff, ctx._position, stuff.Length, wroteCallback, null);
+            try
+            {
+                AsyncCallback wroteCallback = null;
+                wroteCallback = r =>
+                {
+                    _stream.EndWrite(r);
+
+                    ctx._position += stuff.Length;
+                };
+
+                // Put cursor in the right place
+                _stream.Position = ctx._position;
+
+                _stream.BeginWrite(stuff, 0, stuff.Length, wroteCallback, null);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Exception on Stream.write", e);
+            }
         }
 
         public void Write(MtStreamWritingContext ctx, byte[] stuff, Action doneCallback)
         {
-            AsyncCallback wroteCallback = null;
-            wroteCallback = r =>
+            Debug.Print("Write");
+
+            try
             {
-                _stream.EndWrite(r);
+                AsyncCallback wroteCallback = null;
+                wroteCallback = r =>
+                {
+                    _stream.EndWrite(r);
 
-                ctx._position += stuff.Length;
+                    ctx._position += stuff.Length;
 
-                doneCallback();
-            };
-            _stream.BeginWrite(stuff, ctx._position, stuff.Length, wroteCallback, null);
+                    doneCallback();
+                };
+
+                // Put cursor in the right place
+                _stream.Position = ctx._position;
+
+                _stream.BeginWrite(stuff, 0, stuff.Length, wroteCallback, null);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Exception on Stream.write", e);
+            }
         }
 
         #endregion
 
-        public void Read(MtStreamReadingContext ctx, Action<byte[]> readStuffCallback, Action doneCallback)
+        public void Read(MtStreamReadingContext ctx, Action<byte[], bool> readStuffCallback, Action doneCallback)
         {
-            var buffer = new byte[1024];
+            Debug.Print("Read");
+            try
+            {
 
-            AsyncCallback readCallback = null;
+                var buffer = new byte[ReadBufferSize];
 
-            readCallback = r => 
+                AsyncCallback readCallback = null;
+
+                readCallback = r =>
                 {
                     var count = _stream.EndRead(r);
 
                     // Create a new array, copy read bytes to there
                     var read = new byte[count];
+
+                    // Update position
+                    ctx._position += count;
+
                     if (count > 0)
                     {
-                        // Update position
-                        ctx._position += count;
-
                         // Copy buffer to final count array
                         Array.Copy(buffer, read, count);
 
-                        readStuffCallback(read);
-
-                        // Continue ...
-                        _stream.BeginRead(buffer, ctx._position, ReadBufferSize, readCallback, null);
+                        readStuffCallback(read, ctx._position >= _stream.Length);
                     }
-                    else if (count == 0)
+
+                    if (ctx._position >= _stream.Length)
                     {
                         doneCallback();
                     }
-                    else
-                    {
-                        throw new Exception("Ups! Error reading stream...");
-                    }
                 };
-            //--
 
-            _stream.BeginRead(buffer, ctx._position, ReadBufferSize, readCallback, null);
+                if (ctx._position >= _stream.Length)
+                {
+                    throw new Exception("Can't read further, end of stream!");
+                }
+
+                // Put cursor in the right place
+                _stream.Position = ctx._position;
+
+                _stream.BeginRead(buffer, 0, ReadBufferSize, readCallback, null);    
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Exception on Stream.read.", e);
+            }
         }
 
-
+        public void Close()
+        {
+            _stream.Flush();
+            _stream.Close();
+            _stream.Dispose();
+        }
 
     }
 }
