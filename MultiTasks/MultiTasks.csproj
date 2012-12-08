@@ -117,6 +117,7 @@
     <Compile Include="RT\MtStreamFile.cs" />
     <Compile Include="RT\MtServerHttp.cs" />
     <Compile Include="RT\MtStreamString.cs" />
+    <Compile Include="RT\MtStreamWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MultiTasksRuntimeNETBindings.tt">

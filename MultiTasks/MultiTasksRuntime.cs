@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading;
 using System.Diagnostics;
 using MultiTasks.Functional;
+using System.Net;
 
 namespace MultiTasks
 {
@@ -38,6 +39,19 @@ namespace MultiTasks
             BuiltIns.AddMethod(MtStreamsClose, "close_stream", 1);
             BuiltIns.AddMethod(MtWait, "wait", 1);
 
+            // HTTP Server
+            BuiltIns.AddMethod(MtHttpServerCreate, "http_server", 1);
+            BuiltIns.AddMethod(MtHttpServerStart, "http_server_start", 1);
+            BuiltIns.AddMethod(MtHttpServerClose, "http_server_close", 1);
+            BuiltIns.AddMethod(MtHttpCtxRequest, "http_ctx_request", 1, 1);
+            BuiltIns.AddMethod(MtHttpCtxResponse, "http_ctx_response", 1, 1);
+
+            // TODO
+            // Get/Set request/response header value
+            // Get request/response stream             
+
+
+            // MORE ...
             // TODO Add insert, append, concat
             // TODO Add object literals
             // TODO Add streams literals?
@@ -50,6 +64,216 @@ namespace MultiTasks
 
             DoNETBindings();
         }
+
+
+        #region HttpServer
+
+        /// <summary>
+        /// Create http server. Pass prefixes as arguments
+        /// </summary>
+        /// <param name="thread"></param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public object MtHttpServerCreate(ScriptThread thread, object[] arguments)
+        {
+            var result = new MtResult();
+            var prefixes = new string[arguments.Length];
+            var count = arguments.Length;
+
+            for (var i = 0; i < arguments.Length; ++i)
+            {
+                var copy_i = i;
+                var wrkArg = arguments[copy_i] as MtResult;
+
+                wrkArg.GetValue(o =>
+                {
+                    prefixes[copy_i] = o.Value as string;
+
+                    if (Interlocked.Decrement(ref count) == 0)
+                    {
+                        result.SetValue(new MtObject(new MtServerHttp(prefixes)));
+                    }
+                });
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Start one or more http servers
+        /// </summary>
+        /// <param name="thread"></param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public object MtHttpServerStart(ScriptThread thread, object[] arguments)
+        {
+            var result = new MtResult();
+
+            if (arguments.Length == 1)
+            {
+                // Wrap the single server in the result
+                var arg = arguments[0] as MtResult;
+                arg.GetValue(o =>
+                {
+                    var server = o.Value as MtServerHttp;
+                    server.Start(() =>
+                    {
+                        result.SetValue(MtObject.True);
+                    }, e =>
+                    {
+                        result.SetValue(MtObject.False);
+                    });
+                });
+            }
+            else if (arguments.Length > 1)
+            {
+                // Wrap all servers in the result
+                var results = new MtResult[arguments.Length];
+                var count = arguments.Length;
+                for (int i = 0; i < arguments.Length; ++i)
+                {
+                    int copy_i = i;
+                    var wrkArg = arguments[copy_i] as MtResult;
+
+                    // Call this after server start/exception
+                    Action done = () =>
+                    {
+                        if (Interlocked.Decrement(ref count) == 0)
+                        {
+                            result.SetValue(new MtObject(results));
+                        }
+                    };
+
+                    // Extract server, try to start
+                    wrkArg.GetValue(o =>
+                    {
+                        var server = o.Value as MtServerHttp;
+                        server.Start(() => {
+                            results[copy_i] = MtResult.True;
+
+                            done();
+
+                        }, e => {
+                            results[copy_i] = MtResult.False;
+
+                            done();
+
+                        });
+                    });
+                }
+            }
+            else
+            {
+                throw new Exception("I need args!");
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Stop one or more http servers
+        /// (copy pasted from mthttpserverstartp. Arrrrrgh...)
+        /// </summary>
+        /// <param name="thread"></param>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public object MtHttpServerClose(ScriptThread thread, object[] arguments)
+        {
+            var result = new MtResult();
+
+            if (arguments.Length == 1)
+            {
+                // Wrap the single server in the result
+                var arg = arguments[0] as MtResult;
+                arg.GetValue(o =>
+                {
+                    var server = o.Value as MtServerHttp;
+                    server.Stop(() =>
+                    {
+                        result.SetValue(MtObject.True);
+                    }, e =>
+                    {
+                        result.SetValue(MtObject.False);
+                    });
+                });
+            }
+            else if (arguments.Length > 1)
+            {
+                // Wrap all servers in the result
+                var results = new MtResult[arguments.Length];
+                var count = arguments.Length;
+                for (int i = 0; i < arguments.Length; ++i)
+                {
+                    int copy_i = i;
+                    var wrkArg = arguments[copy_i] as MtResult;
+
+                    // Call this after server start/exception
+                    Action done = () =>
+                    {
+                        if (Interlocked.Decrement(ref count) == 0)
+                        {
+                            result.SetValue(new MtObject(results));
+                        }
+                    };
+
+                    // Extract server, try to start
+                    wrkArg.GetValue(o =>
+                    {
+                        var server = o.Value as MtServerHttp;
+                        server.Stop(() =>
+                        {
+                            results[copy_i] = MtResult.True;
+
+                            done();
+
+                        }, e =>
+                        {
+                            results[copy_i] = MtResult.False;
+
+                            done();
+
+                        });
+                    });
+                }
+            }
+            else
+            {
+                throw new Exception("I need args!");
+            }
+
+            return result;
+        }
+        
+
+        public object MtHttpCtxRequest(ScriptThread thread, object[] arguments)
+        {
+            var result = new MtResult();
+
+            var arg = arguments[0] as MtResult;
+            arg.GetValue(o =>
+            {
+                var ctx = o.Value as HttpListenerContext;
+                result.SetValue(new MtObject(ctx.Request));
+            });
+
+            return result;
+        }
+        
+        public object MtHttpCtxResponse(ScriptThread thread, object[] arguments)
+        {
+            var result = new MtResult();
+
+            var arg = arguments[0] as MtResult;
+            arg.GetValue(o =>
+            {                
+                var ctx = o.Value as HttpListenerContext;
+                result.SetValue(new MtObject(ctx.Response));                
+            });
+
+            return result;
+        }
+
+        #endregion
 
         public object MtWait(ScriptThread thread, object[] arguments)
         {

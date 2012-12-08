@@ -56,8 +56,7 @@ namespace MultiTasks.AST
                     });
                 });
 
-                return res;
-                
+                return res;                
             }
             catch (Exception e)
             {

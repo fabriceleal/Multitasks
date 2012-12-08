@@ -42,39 +42,7 @@ namespace MultiTasks.AST
                 {
                     throw new Exception("Head can't evaluate to null!");
                 }
-                /*Action<object> parseAndCallHead = null; 
-                parseAndCallHead = (probableFun) =>
-                {
-                    if (probableFun == null)
-                        throw new Exception("probableFun is null!");
-
-                    if (probableFun as ICallTarget != null)
-                    {
-                        var wrkFun = probableFun as ICallTarget;
-                        var resultFun = wrkFun.Call(thread, args) as MtResult;
-                        resultFun.GetValue((r3) => {
-                            appResult.SetValue(r3);
-                        });
-                    }
-                    else if (probableFun as MtObject != null)
-                    {
-                        parseAndCallHead((probableFun as MtObject).Value);
-                    }
-                    else if (probableFun as MtResult != null)
-                    {
-                        var wrkFun = probableFun as MtResult;
-                        wrkFun.GetValue((o) =>
-                        {
-                            parseAndCallHead(o);
-                        });
-                    }
-                    else
-                    {
-                        throw new Exception("probableFun is neither MtResult nor ICallTarget, is {0}.".SafeFormat(probableFun.GetType().FullName));
-                    }
-                };
-
-                parseAndCallHead(headResult);*/
+                
                 MtFunctionObjectBase.ExtractAsFunction(headResult, (wrkFun) =>
                 {
                     var resultFun = wrkFun.Call(thread, args) as MtResult;

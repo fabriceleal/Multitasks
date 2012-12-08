@@ -132,6 +132,7 @@
     <EmbeddedResource Include="Examples\24_nested_array_map_map.mt" />
     <EmbeddedResource Include="Examples\25_stream_literal.mt" />
     <EmbeddedResource Include="Examples\26_stream_read_write.mt" />
+    <EmbeddedResource Include="Examples\28_http_server_complete.mt" />
     <None Include="TestsForSourcesGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>TestsForSourcesGen.cs</LastGenOutput>
@@ -139,6 +140,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Examples\27_http_server.mt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

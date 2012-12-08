@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Net;
 using System.Threading;
-using Irony.Interpreter;
 
 namespace MultiTasks.RT
 {
@@ -12,9 +8,14 @@ namespace MultiTasks.RT
     {
         private HttpListener _httpListener;
                 
-        public MtServerHttp()
+        public MtServerHttp(string[] endpoints)
         {
             _httpListener = new HttpListener();
+
+            foreach (var prefix in endpoints)
+            {
+                _httpListener.Prefixes.Add(prefix);
+            }
         }
 
         #region Methods       
@@ -57,11 +58,10 @@ namespace MultiTasks.RT
             }
         }
 
-        public override void Start(string endpoint, Action OnStarted, Action<Exception> OnException)
+        public override void Start(Action OnStarted, Action<Exception> OnException)
         {
             try
-            {
-                _httpListener.Prefixes.Add(endpoint);
+            {                
                 _httpListener.Start();
             }
             catch (Exception e)
