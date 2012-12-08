@@ -18,7 +18,9 @@ namespace MultiTasks
             var stringLiteral = new StringLiteral("stringLiteral", "\"", StringOptions.AllowsLineBreak);
             var nbrLiteral = new NumberLiteral("nbrLiteral");
             var identifier = new IdentifierTerminal("identifier", IdOptions.IsNotKeyword);
-            
+
+            var comment = new CommentTerminal("comment", "/*", "*/");
+
             // Punctuation terminals; these shouldn't appear on the tree
             var pipe = ToTerm("|", "pipe");
             var semicomma = ToTerm(";", "semicomma");
@@ -35,12 +37,13 @@ namespace MultiTasks
             var ift = ToTerm("if", "if");
             var dot = ToTerm(".", "dot");
             var flowRightToLeft = ToTerm("<-", "flowRightToLeft");
+            var listenerOp = ToTerm("on", "listenerOp");
                         
             MarkPunctuation(pipe, semicomma, openparen, closeparen, 
                             openbrace, closebrace, 
                             openbracket, closebracket, bind, 
-                            argsBodySeparator, comma, lambda, 
-                            ift, dot, flowRightToLeft);
+                            argsBodySeparator, comma, lambda,
+                            ift, dot, flowRightToLeft, listenerOp);
             //--
 
             // Non Terminals            
@@ -92,6 +95,10 @@ namespace MultiTasks
                 else if (tag == "ARRAY")
                 {
                     treeNode.AstNode = _.NewAndInit<MtArray>(context, possibleValid);
+                }
+                else if (tag == "LISTENER_STATEMENT")
+                {
+                    treeNode.AstNode = _.NewAndInit<MtListenerStatement>(context, possibleValid);
                 }
                 else if (tag == "identifier")
                 {
@@ -146,7 +153,9 @@ namespace MultiTasks
             var DOTTED_EXPRESSION = new NonTerminal("DOTTED_EXPRESSION", typeof(MtDottedExpression));
 
             var FLOW_RIGHT_TO_LEFT = new NonTerminal("FLOW_RIGHT_TO_LEFT", typeof(MtFlowRightToLeft));
-            
+
+            var LISTENER_STATEMENT = new NonTerminal("LISTENER_STATEMENT", typeof(MtListenerStatement));
+
             var FUNCTION = new NonTerminal("FUNCTION", delegate(AstContext context, ParseTreeNode treeNode)
             {
                 if (treeNode.ChildNodes.Count != 1)
@@ -198,6 +207,8 @@ namespace MultiTasks
                     FLOW_RIGHT_TO_LEFT | ATOM | identifier;
 
             FORK.Rule = openbrace + NCHAINS + closebrace;
+
+            LISTENER_STATEMENT.Rule = identifier + listenerOp + identifier + TOP_CHAIN;
 
             ATOM.Rule =
                       nbrLiteral |

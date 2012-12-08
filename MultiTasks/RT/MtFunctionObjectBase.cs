@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Irony.Interpreter;
 using Irony.Interpreter.Ast;
 
 namespace MultiTasks.RT
 {
-    public abstract class MtFunctionObjectBase : MtObjectBase, ICallTarget
+    public abstract class MtFunctionObjectBase : ICallTarget
     {
         public static void ExtractAsFunction(object obj, Action<ICallTarget> finalAction)
         {

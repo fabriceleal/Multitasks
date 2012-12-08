@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System.Diagnostics;
+using System.Threading;
 
 namespace MultiTasks.RT
 {
     public abstract class MtStream
     {
 
-        public const int ReadBufferSize = 1;
+        public const int ReadBufferSize = 256;
 
         public class MtStreamWritingContext
         {
@@ -52,7 +50,9 @@ namespace MultiTasks.RT
 
         public static void ReadFromWriteTo(MtStream src, MtStream dest, Action doneCallback)
         {
+#if DEBUG
             Debug.Print("ReadFrom x to y");
+#endif
 
             try
             {
@@ -93,7 +93,9 @@ namespace MultiTasks.RT
 
         public void Write(MtStreamWritingContext ctx, byte[] stuff)
         {
+#if DEBUG
             Debug.Print("Write");
+#endif
 
             try
             {
@@ -108,6 +110,16 @@ namespace MultiTasks.RT
                 // Put cursor in the right place
                 _stream.Position = ctx._position;
 
+#if DEBUG
+
+                // Get thread pool info
+                {
+                    int workerThreads = -1, completionPortThreads = -1;
+
+                    ThreadPool.GetAvailableThreads(out workerThreads, out completionPortThreads);
+                    Debug.Print("ThreadPool Info - Available threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
+                }
+#endif
                 _stream.BeginWrite(stuff, 0, stuff.Length, wroteCallback, null);
             }
             catch (Exception e)
@@ -118,8 +130,10 @@ namespace MultiTasks.RT
 
         public void Write(MtStreamWritingContext ctx, byte[] stuff, Action doneCallback)
         {
+#if DEBUG
             Debug.Print("Write");
-
+#endif
+            
             try
             {
                 AsyncCallback wroteCallback = null;
@@ -135,6 +149,16 @@ namespace MultiTasks.RT
                 // Put cursor in the right place
                 _stream.Position = ctx._position;
 
+#if DEBUG
+
+                // Get thread pool info
+                {
+                    int workerThreads = -1, completionPortThreads = -1;
+
+                    ThreadPool.GetAvailableThreads(out workerThreads, out completionPortThreads);
+                    Debug.Print("ThreadPool Info - Available threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
+                }
+#endif
                 _stream.BeginWrite(stuff, 0, stuff.Length, wroteCallback, null);
             }
             catch (Exception e)
@@ -147,7 +171,10 @@ namespace MultiTasks.RT
 
         public void Read(MtStreamReadingContext ctx, Action<byte[], bool> readStuffCallback, Action doneCallback)
         {
+#if DEBUG
             Debug.Print("Read");
+#endif
+            
             try
             {
 
@@ -187,6 +214,16 @@ namespace MultiTasks.RT
                 // Put cursor in the right place
                 _stream.Position = ctx._position;
 
+#if DEBUG
+
+                // Get thread pool info
+                {
+                    int workerThreads = -1, completionPortThreads = -1;
+
+                    ThreadPool.GetAvailableThreads(out workerThreads, out completionPortThreads);
+                    Debug.Print("ThreadPool Info - Available threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
+                }
+#endif
                 _stream.BeginRead(buffer, 0, ReadBufferSize, readCallback, null);    
             }
             catch (Exception e)

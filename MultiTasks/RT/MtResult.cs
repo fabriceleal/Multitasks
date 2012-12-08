@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Diagnostics;
-using Irony.Interpreter.Ast;
-using Irony.Interpreter;
 
 namespace MultiTasks.RT
 {
@@ -68,6 +66,16 @@ namespace MultiTasks.RT
 
                 try
                 {
+#if DEBUG
+
+                    // Get thread pool info
+                    {
+                        int workerThreads = -1, completionPortThreads = -1;
+
+                        ThreadPool.GetAvailableThreads(out workerThreads, out completionPortThreads);
+                        Debug.Print("ThreadPool Info - Available threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
+                    }
+#endif
 
                     ThreadPool.QueueUserWorkItem(state =>
                     {
@@ -110,6 +118,16 @@ namespace MultiTasks.RT
 
             try
             {
+#if DEBUG
+
+                // Get thread pool info
+                {
+                    int workerThreads = -1, completionPortThreads = -1;
+
+                    ThreadPool.GetAvailableThreads(out workerThreads, out completionPortThreads);
+                    Debug.Print("ThreadPool Info - Available threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
+                }
+#endif
                 ThreadPool.QueueUserWorkItem(state =>
                 {
 
@@ -159,6 +177,16 @@ namespace MultiTasks.RT
 
             try
             {
+#if DEBUG
+
+                // Get thread pool info
+                {
+                    int workerThreads = -1, completionPortThreads = -1;
+
+                    ThreadPool.GetAvailableThreads(out workerThreads, out completionPortThreads);
+                    Debug.Print("ThreadPool Info - Available threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
+                }
+#endif
                 ThreadPool.QueueUserWorkItem(state =>
                 {
 

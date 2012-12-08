@@ -70,7 +70,9 @@ namespace MultiTasks
 
         public object MtStringStreamCreate(ScriptThread thread, object[] arguments)
         {
+#if DEBUG
             Debug.Print("Create stream from string");
+#endif            
 
             try
             {
@@ -90,7 +92,9 @@ namespace MultiTasks
 
         public object MtUriStreamCreate(ScriptThread thread, object[] arguments)
         {
+#if DEBUG
             Debug.Print("Create stream from uri");
+#endif            
 
             try
             {
@@ -132,7 +136,9 @@ namespace MultiTasks
 
         public object MtStreamsClose(ScriptThread thread, object[] arguments)
         {
+#if DEBUG
             Debug.Print("Close streams");
+#endif            
 
             try
             {

@@ -1,7 +1,7 @@
 ﻿
 namespace MultiTasks.RT
 {
-    public class MtObject : MtObjectBase
+    public class MtObject 
     {
         private object _value;
 

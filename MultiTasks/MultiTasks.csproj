@@ -96,25 +96,26 @@
     <Compile Include="AST\MtArray.cs" />
     <Compile Include="AST\MtDottedExpression.cs" />
     <Compile Include="AST\MtFlowRightToLeft.cs" />
+    <Compile Include="MtListenerStatement.cs" />
     <Compile Include="MultiTasksRuntimeNETBindings.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MultiTasksRuntimeNETBindings.tt</DependentUpon>
     </Compile>
-    <Compile Include="RT\MtFunctionCompose.cs" />
+    <Compile Include="RT\IEventEmitter.cs" />
     <Compile Include="RT\MtFunctionObject.cs" />
     <Compile Include="RT\MtFunctionObjectBase.cs" />
     <Compile Include="RT\MtObject.cs" />
     <Compile Include="AST\MtFork.cs" />
-    <Compile Include="RT\MtObjectBase.cs" />
-    <Compile Include="RT\MtObjectEmpty.cs" />
     <Compile Include="RT\MtResult.cs" />
     <Compile Include="MultiTasksCompiler.cs" />
     <Compile Include="MultiTasksGrammar.cs" />
     <Compile Include="MultiTasksRuntime.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RT\MtServer.cs" />
     <Compile Include="RT\MtStream.cs" />
     <Compile Include="RT\MtStreamFile.cs" />
+    <Compile Include="RT\MtServerHttp.cs" />
     <Compile Include="RT\MtStreamString.cs" />
   </ItemGroup>
   <ItemGroup>
