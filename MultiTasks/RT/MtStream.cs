@@ -108,7 +108,8 @@ namespace MultiTasks.RT
                 };
 
                 // Put cursor in the right place
-                _stream.Position = ctx._position;
+                //_stream.Position = ctx._position;
+                // TODO Fix this, for now ignore (assume cursor on the right place)
 
 #if DEBUG
 
