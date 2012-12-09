@@ -177,6 +177,10 @@ namespace MultiTasks
                     (treeNode.AstNode as AstNode).Init(context, possibleValid);
                     // _.NewAndInit<t>(context, possibleValid);
                 }
+                else if (tag == "FUNCTION_LITERAL")
+                {
+                    treeNode.AstNode = _.NewAndInit<MtFunctionLiteral>(context, possibleValid);
+                }
                 else
                 {
                     throw new Exception("Unexpected tag in FUNCTION child: {0}".SafeFormat(tag));
@@ -203,12 +207,13 @@ namespace MultiTasks
                         EXPRESSION + pipe + CHAIN;
 
             EXPRESSION.Rule = ARRAY | FORK | IF | BIND | 
-                    FUNCTION_LITERAL | APPLICATION | 
-                    FLOW_RIGHT_TO_LEFT | ATOM | identifier;
+                    FUNCTION_LITERAL | APPLICATION |
+                    LISTENER_STATEMENT | FLOW_RIGHT_TO_LEFT | 
+                    ATOM | identifier;
 
             FORK.Rule = openbrace + NCHAINS + closebrace;
 
-            LISTENER_STATEMENT.Rule = identifier + listenerOp + identifier + TOP_CHAIN;
+            LISTENER_STATEMENT.Rule = identifier + listenerOp + identifier + FUNCTION;
 
             ATOM.Rule =
                       nbrLiteral |

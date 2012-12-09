@@ -1,29 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Net;
 
 namespace MultiTasks.RT
 {
     public abstract class MtServer: IEventEmitter
     {
 
-        protected Dictionary<string, Action<object[]>> _events = new Dictionary<string, Action<object[]>>();
+        private EventEmitter _eventEmitter = new EventEmitter();
 
         void IEventEmitter.Raise(string eventName, object[] args)
         {
-            if (_events.ContainsKey(eventName))
-            {
-                _events[eventName](args);
-            }
+            (_eventEmitter as IEventEmitter).Raise(eventName, args);
         }
 
         void IEventEmitter.On(string eventName, Action<object[]> action)
         {
-            if (!_events.ContainsKey(eventName))
-            {
-                _events.Add(eventName, action);
-            }
-            // else, ignore
+            (_eventEmitter as IEventEmitter).On(eventName, action);
         }
+
 
         public abstract void Start(
                 Action OnStarted, 
@@ -34,7 +28,7 @@ namespace MultiTasks.RT
                 Action<Exception> OnException);
 
         public abstract void GetContext(
-                Action<object> OnContext,
+                Action<HttpListenerContext> OnContext,
                 Action<Exception> OnContextException,
                 Action<Exception> OnException);
 

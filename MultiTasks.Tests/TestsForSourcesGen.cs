@@ -793,14 +793,44 @@ namespace MultiTasks.Tests
 
 		
 		[TestMethod]
-		public void Eval28HttpServerComplete()
+		public void Eval28HttpServerEvents()
 		{
 			try 
 			{				
 				// Read file content (as embedded resource)
-				var src = Utils.ReadSourceFileContent("28_http_server_complete.mt");
+				var src = Utils.ReadSourceFileContent("28_http_server_events.mt");
 			
-				using(FileStream str = new FileStream("28_http_server_complete.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				using(FileStream str = new FileStream("28_http_server_events.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval29HttpServerComplete()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("29_http_server_complete.mt");
+			
+				using(FileStream str = new FileStream("29_http_server_complete.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
 				{
 					
 					// Compile

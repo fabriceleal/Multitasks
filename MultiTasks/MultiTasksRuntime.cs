@@ -42,9 +42,10 @@ namespace MultiTasks
             // HTTP Server
             BuiltIns.AddMethod(MtHttpServerCreate, "http_server", 1);
             BuiltIns.AddMethod(MtHttpServerStart, "http_server_start", 1);
-            BuiltIns.AddMethod(MtHttpServerClose, "http_server_close", 1);
-            BuiltIns.AddMethod(MtHttpCtxRequest, "http_ctx_request", 1, 1);
-            BuiltIns.AddMethod(MtHttpCtxResponse, "http_ctx_response", 1, 1);
+            BuiltIns.AddMethod(MtHttpServerStop, "http_server_stop", 1);
+            BuiltIns.AddMethod(MtHttpSetCode, "http_set_code", 2, 2);
+            BuiltIns.AddMethod(MtHttpStream, "http_stream", 1, 1);
+            BuiltIns.AddMethod(MtHttpEnd, "http_end", 1, 1);
 
             // TODO
             // Get/Set request/response header value
@@ -67,6 +68,50 @@ namespace MultiTasks
 
 
         #region HttpServer
+
+        public object MtHttpEnd(ScriptThread thread, object[] arguments)
+        {
+            var result = new MtResult();
+            
+            var arg0 = arguments[0] as MtResult;
+            arg0.GetValue(response =>
+            {
+                var wrkResponse = response.Value as HttpListenerResponse;
+                if (wrkResponse == null)
+                {
+                    throw new Exception("No response!");
+                }
+                wrkResponse.Close();
+            });
+            
+            return result;
+        }
+
+        public object MtHttpStream(ScriptThread thread, object[] arguments)
+        {
+            var result = new MtResult();
+
+            var arg0 = arguments[0] as MtResult;
+            arg0.GetValue(httpstuff =>
+            {
+                if (httpstuff.Value is HttpListenerRequest)
+                {
+                    var wrkValue = httpstuff.Value as HttpListenerRequest;
+                    result.SetValue(new MtObject(new MtStreamWrapper(wrkValue.InputStream)));
+                }
+                else if (httpstuff.Value is HttpListenerResponse)
+                {
+                    var wrkValue = httpstuff.Value as HttpListenerResponse;
+                    result.SetValue(new MtObject(new MtStreamWrapper(wrkValue.OutputStream)));                    
+                }
+                else
+                {
+                    throw new Exception("Neither a request nor a response!");
+                }
+            });
+
+            return result;
+        }
 
         /// <summary>
         /// Create http server. Pass prefixes as arguments
@@ -177,7 +222,7 @@ namespace MultiTasks
         /// <param name="thread"></param>
         /// <param name="arguments"></param>
         /// <returns></returns>
-        public object MtHttpServerClose(ScriptThread thread, object[] arguments)
+        public object MtHttpServerStop(ScriptThread thread, object[] arguments)
         {
             var result = new MtResult();
 
@@ -243,31 +288,22 @@ namespace MultiTasks
 
             return result;
         }
-        
 
-        public object MtHttpCtxRequest(ScriptThread thread, object[] arguments)
+        public object MtHttpSetCode(ScriptThread thread, object[] arguments)
         {
             var result = new MtResult();
+            var arg0 = arguments[0] as MtResult;
+            var arg1 = arguments[1] as MtResult;
 
-            var arg = arguments[0] as MtResult;
-            arg.GetValue(o =>
+            arg0.GetValue(o =>
             {
-                var ctx = o.Value as HttpListenerContext;
-                result.SetValue(new MtObject(ctx.Request));
-            });
-
-            return result;
-        }
-        
-        public object MtHttpCtxResponse(ScriptThread thread, object[] arguments)
-        {
-            var result = new MtResult();
-
-            var arg = arguments[0] as MtResult;
-            arg.GetValue(o =>
-            {                
-                var ctx = o.Value as HttpListenerContext;
-                result.SetValue(new MtObject(ctx.Response));                
+                arg1.GetValue(code => 
+                {
+                    var response = o.Value as HttpListenerResponse;
+                    response.StatusCode = (int)code.Value;
+ 
+                    result.SetValue(MtObject.True);
+                });                
             });
 
             return result;
@@ -343,13 +379,14 @@ namespace MultiTasks
                     var wrkUri = new Uri(strUri);
                     if (wrkUri.Scheme == Uri.UriSchemeFile)
                     {
-                        result.SetValue(new MtObject(new MtStreamFile(uri.Value as string)));
+                        result.SetValue(new MtObject(new MtStreamFile(strUri as string)));
                     }
                     else
                     {
                         throw new Exception("Unsupported uri scheme: " + wrkUri.Scheme);
                     }
                 });
+
                 return result;
             }
             catch (Exception e)

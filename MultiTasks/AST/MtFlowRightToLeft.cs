@@ -35,7 +35,9 @@ namespace MultiTasks.AST
                     rSource.GetValue(source =>
                     {
                         MtStream.ReadFromWriteTo(
-                            source.Value as MtStream, target.Value as MtStream, () => { result.SetValue(MtObject.True); });
+                            source.Value as MtStream, target.Value as MtStream, () => { 
+                                result.SetValue(MtObject.True); 
+                            });
                     });
                 });
                 
