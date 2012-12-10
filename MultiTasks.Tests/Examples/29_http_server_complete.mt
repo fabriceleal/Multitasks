@@ -12,5 +12,5 @@ ii <= uri_stream("L:\\TesteFx\\Multitasks\\MultiTasks.Tests\\Examples\\index.htm
 
         ;
 
-    sleeping <= sleep(230000) | wait(sleeping) | http_server_stop(server);
+    sleeping <= sleep(60000) | wait(sleeping) | http_server_stop(server);
 };

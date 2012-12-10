@@ -41,7 +41,7 @@ namespace MultiTasks.AST
             {
                 var ret = new MtResult();
 
-                ret.SetValue(new MtObject(new MtFunctionObject(_body, _arguments)));
+                ret.SetValue(new MtObject(new MtFunctionObject(_body, _arguments, thread)));
                 
                 return ret;
             }

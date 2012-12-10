@@ -75,9 +75,10 @@ namespace MultiTasks.AST
                                 
                                 haveCallable.WaitOne();
 
-                                // Call it 
-                                callable.Call(thread, resArgs);
 
+                                // Call it 
+                                var result = callable.Call(thread, resArgs) as MtResult;
+                                
                             });
                         }
                         

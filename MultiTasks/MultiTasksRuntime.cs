@@ -44,6 +44,7 @@ namespace MultiTasks
             BuiltIns.AddMethod(MtHttpServerStart, "http_server_start", 1);
             BuiltIns.AddMethod(MtHttpServerStop, "http_server_stop", 1);
             BuiltIns.AddMethod(MtHttpSetCode, "http_set_code", 2, 2);
+            BuiltIns.AddMethod(MtHttpSetContentType, "http_set_content_type", 2, 2);
             BuiltIns.AddMethod(MtHttpStream, "http_stream", 1, 1);
             BuiltIns.AddMethod(MtHttpEnd, "http_end", 1, 1);
 
@@ -289,6 +290,26 @@ namespace MultiTasks
             return result;
         }
 
+        public object MtHttpSetContentType(ScriptThread thread, object[] arguments)
+        {
+            var result = new MtResult();
+            var arg0 = arguments[0] as MtResult;
+            var arg1 = arguments[1] as MtResult;
+
+            arg0.GetValue(o =>
+            {
+                arg1.GetValue(code =>
+                {
+                    var response = o.Value as HttpListenerResponse;
+                    response.ContentType = code.Value as string;
+
+                    result.SetValue(MtObject.True);
+                });
+            });
+
+            return result;
+        }
+
         public object MtHttpSetCode(ScriptThread thread, object[] arguments)
         {
             var result = new MtResult();
@@ -301,7 +322,7 @@ namespace MultiTasks
                 {
                     var response = o.Value as HttpListenerResponse;
                     response.StatusCode = (int)code.Value;
- 
+                     
                     result.SetValue(MtObject.True);
                 });                
             });

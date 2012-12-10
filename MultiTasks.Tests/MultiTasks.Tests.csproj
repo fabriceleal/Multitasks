@@ -84,6 +84,11 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Examples\ExamplesThatUseFiles.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExamplesThatUseFiles.tt</DependentUpon>
+    </Compile>
     <Compile Include="TestsForSourcesGen.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -133,7 +138,17 @@
     <EmbeddedResource Include="Examples\25_stream_literal.mt" />
     <EmbeddedResource Include="Examples\26_stream_read_write.mt" />
     <EmbeddedResource Include="Examples\29_http_server_complete.mt" />
+    <None Include="Examples\29_http_server_complete.templatemt" />
     <EmbeddedResource Include="Examples\28_http_server_events.mt" />
+    <EmbeddedResource Include="Examples\30_binds_and_fork.mt" />
+    <EmbeddedResource Include="Examples\31_closure_1.mt" />
+    <EmbeddedResource Include="Examples\32_closure_2.mt" />
+    <EmbeddedResource Include="Examples\33_http_server_closures_events.mt" />
+    <EmbeddedResource Include="Examples\34_http_server_simple.mt" />
+    <None Include="Examples\ExamplesThatUseFiles.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ExamplesThatUseFiles.cs</LastGenOutput>
+    </None>
     <None Include="TestsForSourcesGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>TestsForSourcesGen.cs</LastGenOutput>

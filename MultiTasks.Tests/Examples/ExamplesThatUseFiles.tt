@@ -3,6 +3,7 @@
 <#@ import namespace="EnvDTE" #>
 <#@ import namespace="System.IO" #>
 <#
+	// http://www.olegsych.com/2008/03/how-to-generate-multiple-outputs-from-single-t4-template/
 
 	IServiceProvider hostServiceProvider = (IServiceProvider)Host;
 	EnvDTE.DTE dte = (EnvDTE.DTE)hostServiceProvider.GetService(typeof(EnvDTE.DTE));
@@ -15,7 +16,6 @@
 		#><#=File.ReadAllText(template.FullName).Replace("%TESTS-DIR%", Path.GetDirectoryName(Host.TemplateFile).Replace(@"\", @"\\"))#><#
 		
 		// Write buffered output
-
 		string templateDirectory = Path.GetDirectoryName(Host.TemplateFile);
 
 		string outputFilePath = Path.Combine(templateDirectory, Path.GetFileNameWithoutExtension(template.FullName) + ".mt");

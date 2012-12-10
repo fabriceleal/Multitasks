@@ -13,17 +13,27 @@ namespace MultiTasks.RT
 
         private AstNode _body;
         private MtArgListForDecl _args;
+        private ScriptThread _thread;
 
-        public MtFunctionObject(AstNode body, MtArgListForDecl arguments)
+        public MtFunctionObject(AstNode body, MtArgListForDecl arguments) : this(body, arguments, null)
+        { }
+
+        public MtFunctionObject(AstNode body, MtArgListForDecl arguments, ScriptThread thread)
         {
             _body = body;
             _args = arguments;
+            _thread = thread;
         }
 
         object ICallTarget.Call(Irony.Interpreter.ScriptThread thread, object[] parameters)
         {
             try
             {
+                if (_thread != null)
+                {
+                    thread = _thread;
+                }
+
                 // 2. Function object is responsable for:
                 // 2.1 Create a new context
                 var subthread = _body.NewScriptThread(thread);

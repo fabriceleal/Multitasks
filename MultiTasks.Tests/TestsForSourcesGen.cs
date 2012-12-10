@@ -851,6 +851,156 @@ namespace MultiTasks.Tests
 			}
 		}
 
+		
+		[TestMethod]
+		public void Eval30BindsAndFork()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("30_binds_and_fork.mt");
+			
+				using(FileStream str = new FileStream("30_binds_and_fork.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval31Closure1()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("31_closure_1.mt");
+			
+				using(FileStream str = new FileStream("31_closure_1.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval32Closure2()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("32_closure_2.mt");
+			
+				using(FileStream str = new FileStream("32_closure_2.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval33HttpServerClosuresEvents()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("33_http_server_closures_events.mt");
+			
+				using(FileStream str = new FileStream("33_http_server_closures_events.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
+		
+		[TestMethod]
+		public void Eval34HttpServerSimple()
+		{
+			try 
+			{				
+				// Read file content (as embedded resource)
+				var src = Utils.ReadSourceFileContent("34_http_server_simple.mt");
+			
+				using(FileStream str = new FileStream("34_http_server_simple.mt.log", FileMode.OpenOrCreate, FileAccess.Write))
+				{
+					
+					// Compile
+					var res = MtCompiler.CreateScriptApp(str).Evaluate(src) as MtResult;
+
+					// Tests ...
+					Assert.IsNotNull(res);
+
+					// Wait for end
+					res.GetValueSync((o) => { });
+
+					// ... More tests
+				}				
+			} 
+			catch(Exception e)
+			{
+				Assert.Fail(e.Message);
+			}
+		}
+
 	}
 
 }

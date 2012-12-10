@@ -12,5 +12,5 @@ ii <= uri_stream("%TESTS-DIR%\\index.html") |
 
         ;
 
-    sleeping <= sleep(230000) | wait(sleeping) | http_server_stop(server);
+    sleeping <= sleep(60000) | wait(sleeping) | http_server_stop(server);
 };
