@@ -1,0 +1,36 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="EnvDTE" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="System.IO" #>
+<#
+
+	IServiceProvider hostServiceProvider = (IServiceProvider)Host;
+	EnvDTE.DTE dte = (EnvDTE.DTE)hostServiceProvider.GetService(typeof(EnvDTE.DTE));
+
+	var files = (new DirectoryInfo(Path.GetDirectoryName(Host.TemplateFile))).GetFiles("*.templatemt");
+
+	foreach(var template in files)
+	{
+
+		#><#=File.ReadAllText(template.FullName).Replace("%TESTS-DIR%", Path.GetDirectoryName(Host.TemplateFile).Replace(@"\", @"\\"))#><#
+		
+		// Write buffered output
+
+		string templateDirectory = Path.GetDirectoryName(Host.TemplateFile);
+
+		string outputFilePath = Path.Combine(templateDirectory, Path.GetFileNameWithoutExtension(template.FullName) + ".mt");
+		File.WriteAllText(outputFilePath, this.GenerationEnvironment.ToString()); 
+
+		this.GenerationEnvironment.Remove(0, this.GenerationEnvironment.Length);
+
+		// Add generated file to project
+		// TODO
+
+		// Change build action to 'Embebbed resource'
+		// TODO
+
+		// Please ensure that the file DOES use ANSI encoding!
+
+	}
+
+#>
