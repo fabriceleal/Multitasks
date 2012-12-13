@@ -1,0 +1,284 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<tests>
+  
+  <!-- 
+    Every *.mt file corresponds to one test.
+    Every test should be identified by whatever is before the first '_' 
+  -->
+  
+  <test name="01">
+    <output>
+      <exact>
+        <line>Hello World!</line>
+      </exact>
+    </output>
+  </test>
+  
+  <test name="02">
+    <output>
+      <permutation>
+        <line>h</line>
+        <line>e</line>
+        <line>l</line>
+        <line>l</line>
+        <line>o</line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="03">
+    <output>
+      <permutation>
+        <line>1</line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="04">
+    <output>
+      <permutation>
+        <line>Hello World!</line>
+        <line>1</line>
+        <line>2</line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="05">
+    <output>
+      <permutation>
+        <line>Hello</line>
+        <line>World</line>
+      </permutation>
+    </output>
+  </test>
+  
+  
+  <!--
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+  
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+
+  -->
+  
+</tests>

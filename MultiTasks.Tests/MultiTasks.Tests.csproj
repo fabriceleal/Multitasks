@@ -163,6 +163,7 @@
   <ItemGroup>
     <Content Include="Examples\404.html" />
     <Content Include="Examples\index.html" />
+    <Content Include="Examples\Tests.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
