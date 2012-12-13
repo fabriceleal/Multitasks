@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<tests>
+  
+  <test name="01_hello_world">
+    <output>
+      <exact>
+        <line>Hello World!</line>
+      </exact>
+    </output>
+  </test>
+  
+  <test name="02_hello_with_fork">
+    <output>
+      <permutation>
+        <line>h</line>
+        <line>e</line>
+        <line>l</line>
+        <line>l</line>
+        <line>o</line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="03_binds">
+    <output>
+      <permutation>
+        <line>1</line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="04_print_and_bind_print">
+    <output>
+      <permutation>
+        <line>Hello World!</line>
+        <line>1</line>
+        <line>2</line>
+      </permutation>
+    </output>
+  </test>
+
+  <test name="05_sleep_and_print">
+    <output>
+      <permutation>
+        <line>Hello</line>
+        <line>World</line>
+      </permutation>
+    </output>
+  </test>
+  
+  
+  <!--
+    <test name="">
+    <output>
+      <permutation>
+        <line></line>
+      </permutation>
+    </output>
+  </test>
+  
+  -->
+  
+</tests>
