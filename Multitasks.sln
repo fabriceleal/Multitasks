@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiTasks.Tests", "MultiTasks.Tests\MultiTasks.Tests.csproj", "{3859034C-1139-42F8-83BD-B4E2C5534E5C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiTasks.REST", "MultiTasks.REST\MultiTasks.REST.csproj", "{6222920A-CF0E-4AEE-A912-214F764C7EC0}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = multitasks.vsmdi
@@ -60,6 +62,16 @@ Global
 		{3859034C-1139-42F8-83BD-B4E2C5534E5C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{3859034C-1139-42F8-83BD-B4E2C5534E5C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{3859034C-1139-42F8-83BD-B4E2C5534E5C}.Release|x86.ActiveCfg = Release|Any CPU
+		{6222920A-CF0E-4AEE-A912-214F764C7EC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6222920A-CF0E-4AEE-A912-214F764C7EC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6222920A-CF0E-4AEE-A912-214F764C7EC0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6222920A-CF0E-4AEE-A912-214F764C7EC0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6222920A-CF0E-4AEE-A912-214F764C7EC0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6222920A-CF0E-4AEE-A912-214F764C7EC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6222920A-CF0E-4AEE-A912-214F764C7EC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6222920A-CF0E-4AEE-A912-214F764C7EC0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6222920A-CF0E-4AEE-A912-214F764C7EC0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6222920A-CF0E-4AEE-A912-214F764C7EC0}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
