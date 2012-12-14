@@ -9,6 +9,7 @@ namespace MultiTasks.REST
     {
         void Application_Start(object sender, EventArgs e)
         {
+            throw new Exception("HELLO!");
             RegisterRoutes();
         }
 
