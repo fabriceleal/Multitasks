@@ -17,6 +17,9 @@ namespace MultiTasks.Tests
     [TestClass]
     public class TestsForSources
     {		
+
+#if TEST_SOURCES
+
 <#
 		// Get Solution info
 		var serviceProvider = this.Host as IServiceProvider;
@@ -56,6 +59,9 @@ namespace MultiTasks.Tests
 <#
 		}
 #>
+
+#endif
+
 	}
 
 }

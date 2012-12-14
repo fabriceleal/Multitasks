@@ -11,6 +11,9 @@ namespace MultiTasks.Tests
     [TestClass]
     public class TestsForSources
     {		
+
+#if TEST_SOURCES
+
 		
 		[TestMethod]
 		public void Eval01HelloWorld()
@@ -1000,6 +1003,9 @@ namespace MultiTasks.Tests
 				Assert.Fail(e.Message);
 			}
 		}
+
+
+#endif
 
 	}
 
