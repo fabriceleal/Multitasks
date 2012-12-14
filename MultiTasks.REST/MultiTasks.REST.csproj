@@ -22,8 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DeployIisAppPath>
-    </DeployIisAppPath>
+    <DeployIisAppPath>/MultiTasks</DeployIisAppPath>
     <PackageAsSingleFile>false</PackageAsSingleFile>
     <DesktopBuildPackageLocation>obj\Debug\</DesktopBuildPackageLocation>
   </PropertyGroup>
