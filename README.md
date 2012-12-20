@@ -2,6 +2,10 @@
 
 The one true purely asynchronous programming language; every instruction is parsed asynchronously!
 
+## Inspirations
+
+[Futures and promises](http://en.wikipedia.org/wiki/Futures_and_promises)
+
 ## Documentation
 
 Check the [wiki for the *official* documentation](https://github.com/fabriceleal/Multitasks/wiki).

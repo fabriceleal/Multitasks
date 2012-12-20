@@ -62,9 +62,37 @@ namespace MultiTasks
             // TODO Add quote (for lazy evaluation of MtResults)
             // TODO Add flow control instructions (continuations, exceptions, ...)
             // TODO Add signaling, waiting
-            // TODO Add compose(f, f)
+            // TODO Add compose(f, g)
+            // TODO Add curry
 
             DoNETBindings();
+        }
+
+        public object MtJsonParse(ScriptThread thread, object[] arguments)
+        {
+            var ret = new MtResult();
+            var reader = new Newtonsoft.Json.JsonTextReader(new StringReader(""));
+            
+            Action readStuff = null;
+
+            readStuff = () =>
+            {
+                var hasStuff = reader.Read();
+                if (hasStuff)
+                {
+                    Debug.Print("Token: {0}", reader.Value);
+
+                    readStuff();
+                }
+                else
+                {
+                    reader.Close();
+                    ret.SetValue(MtObject.True);
+                }
+            };
+                                   
+
+            return ret;
         }
 
 
@@ -331,6 +359,20 @@ namespace MultiTasks
         }
 
         #endregion
+
+        // TODO
+        public object MtCurry(ScriptThread thread, object[] arguments)
+        {            
+            var arg0 = arguments[0] as MtResult; // arity
+            var arg1 = arguments[1] as MtResult; // ICallTarget
+            return MtResult.True;
+        }
+
+        // TODO
+        public object MtCompose(ScriptThread thread, object[] arguments)
+        {
+            return MtResult.True;
+        }
 
         public object MtWait(ScriptThread thread, object[] arguments)
         {
