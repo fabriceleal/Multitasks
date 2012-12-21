@@ -39,6 +39,9 @@ namespace MultiTasks
             BuiltIns.AddMethod(MtStreamsClose, "close_stream", 1);
             BuiltIns.AddMethod(MtWait, "wait", 1);
 
+            // JSON
+            BuiltIns.AddMethod(MtJsonParse, "json_parse", 1);
+
             // HTTP Server
             BuiltIns.AddMethod(MtHttpServerCreate, "http_server", 1);
             BuiltIns.AddMethod(MtHttpServerStart, "http_server_start", 1);
@@ -71,27 +74,35 @@ namespace MultiTasks
         public object MtJsonParse(ScriptThread thread, object[] arguments)
         {
             var ret = new MtResult();
-            var reader = new Newtonsoft.Json.JsonTextReader(new StringReader(""));
+            var arg0 = arguments[0] as MtResult;
+
+            arg0.GetValue((o) => { 
+                var s = o.Value == null ? "null" : o.Value.ToString();
+                var reader = new Newtonsoft.Json.JsonTextReader(new StringReader(s));
+
+                Action readStuff = null;
+
+                readStuff = () =>
+                {
+                    var hasStuff = reader.Read();
+                    if (hasStuff)
+                    {
+                        Debug.Print("Token: {0}", reader.Value);
+                        Debug.Print("Value Type: {0}", reader.ValueType);
+                        Debug.Print("Token Type: {0}", reader.TokenType);
+                        
+                        readStuff();
+                    }
+                    else
+                    {
+                        reader.Close();
+                        ret.SetValue(MtObject.True);
+                    }
+                };
+
+                readStuff();                
+            });
             
-            Action readStuff = null;
-
-            readStuff = () =>
-            {
-                var hasStuff = reader.Read();
-                if (hasStuff)
-                {
-                    Debug.Print("Token: {0}", reader.Value);
-
-                    readStuff();
-                }
-                else
-                {
-                    reader.Close();
-                    ret.SetValue(MtObject.True);
-                }
-            };
-                                   
-
             return ret;
         }
 
@@ -541,13 +552,7 @@ namespace MultiTasks
         #region Runtime builtin functions
 
         #region Lists
-
-        // TODO
-        private MtResult MtCurry(ScriptThread thread, object[] args)
-        {
-            return MtResult.CreateAndWrap(123);
-        }
-                
+             
         private MtResult MtMap(ScriptThread thread, object[] args)
         {
             var result = new MtResult();
@@ -599,16 +604,6 @@ namespace MultiTasks
 
             });
 
-            return result;
-        }
-
-        // TODO
-        private MtResult MtCompose(ScriptThread thread, object[] args)
-        {
-            var result = new MtResult();
-
-            // compose(f, g) := L (x) => f(g(x))
-                        
             return result;
         }
 

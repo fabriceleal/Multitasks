@@ -13,9 +13,9 @@ namespace MultiTasks
 
         public MtGrammar()
             : base(true)
-        {
+        {            
             // Terminals
-            var stringLiteral = new StringLiteral("stringLiteral", "\"", StringOptions.AllowsLineBreak);
+            var stringLiteral = new StringLiteral("stringLiteral", "\"", StringOptions.AllowsLineBreak | StringOptions.AllowsAllEscapes);
             var nbrLiteral = new NumberLiteral("nbrLiteral");
             var identifier = new IdentifierTerminal("identifier", IdOptions.IsNotKeyword);
 
