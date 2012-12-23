@@ -146,6 +146,7 @@
     <EmbeddedResource Include="Examples\33_http_server_closures_events.mt" />
     <EmbeddedResource Include="Examples\34_http_server_simple.mt" />
     <EmbeddedResource Include="Examples\35_json_parse.mt" />
+    <None Include="Examples\36_eventted_json.mt" />
     <None Include="Examples\ExamplesThatUseFiles.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ExamplesThatUseFiles.cs</LastGenOutput>

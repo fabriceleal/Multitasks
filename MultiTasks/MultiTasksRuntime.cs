@@ -52,9 +52,9 @@ namespace MultiTasks
             BuiltIns.AddMethod(MtHttpEnd, "http_end", 1, 1);
 
             // TODO
-            // Get/Set request/response header value
+            
             // Get request/response stream             
-
+            // Get/Set request/response header value
 
             // MORE ...
             // TODO Add insert, append, concat
