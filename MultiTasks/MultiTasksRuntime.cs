@@ -856,8 +856,6 @@ namespace MultiTasks
             {
                 var r = new MtResult();
 
-               // lock (_mtPrintLock) /* Lock all streams */
-               // {
                 Monitor.Enter(_mtPrintLock);
                 try
                 {
@@ -894,11 +892,11 @@ namespace MultiTasks
                 }
                 finally
                 {
+                    // Sync wait to avoid race conditions
+                    // while printing ...
+                    r.WaitForValue();
                     Monitor.Exit(_mtPrintLock);
                 }
-
-                
-               // }
 
                 return r;
             }
