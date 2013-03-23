@@ -10,7 +10,19 @@ namespace MultiTasks
 {
     public class MtCompiler
     {
-        protected static ScriptApp InternCreateScriptApp(Stream output, Stream debugStream)
+        private ScriptApp _scriptApp;
+
+        protected MtCompiler(ScriptApp scriptApp)
+        {
+            _scriptApp = scriptApp;
+        }
+
+        public MtResult Evaluate(string str)
+        {
+            return _scriptApp.Evaluate(str) as MtResult;
+        }
+
+        protected static MtCompiler InternCreateScriptApp(Stream output, Stream debugStream)
         {
             var grammar = new MtGrammar();
             var lang = new LanguageData(grammar);
@@ -54,15 +66,15 @@ namespace MultiTasks
             }
 #endif
 
-            return app;
+            return new MtCompiler(app);
         }
-        
-        public static ScriptApp CreateScriptApp()
+
+        public static MtCompiler CreateScriptApp()
         {
             return InternCreateScriptApp(null, null);
         }
 
-        public static ScriptApp CreateScriptApp(Stream output)
+        public static MtCompiler CreateScriptApp(Stream output)
         {
             if (output == null)
             {
