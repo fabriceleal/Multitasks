@@ -100,11 +100,6 @@
     <Compile Include="AST\MtDottedExpression.cs" />
     <Compile Include="AST\MtFlowRightToLeft.cs" />
     <Compile Include="AST\MtListenerStatement.cs" />
-    <Compile Include="MultiTasksRuntimeNETBindings.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MultiTasksRuntimeNETBindings.tt</DependentUpon>
-    </Compile>
     <Compile Include="RT\EventEmitter.cs" />
     <Compile Include="RT\IEventEmitter.cs" />
     <Compile Include="RT\MtFunctionObject.cs" />
@@ -125,10 +120,6 @@
     <Compile Include="RT\MtStreamWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="MultiTasksRuntimeNETBindings.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>MultiTasksRuntimeNETBindings.cs</LastGenOutput>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

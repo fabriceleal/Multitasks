@@ -123,12 +123,6 @@
     <Compile Include="..\MultiTasks\MultiTasksRuntime.cs">
       <Link>MultiTasksRuntime.cs</Link>
     </Compile>
-    <Compile Include="..\MultiTasks\MultiTasksRuntimeNETBindings1.cs">
-      <Link>MultiTasksRuntimeNETBindings1.cs</Link>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MultiTasksRuntimeNETBindings.tt</DependentUpon>
-    </Compile>
     <Compile Include="..\MultiTasks\RT\EventEmitter.cs">
       <Link>RT\EventEmitter.cs</Link>
     </Compile>
@@ -160,13 +154,6 @@
       <Link>RT\MtStreamWrapper.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\MultiTasks\MultiTasksRuntimeNETBindings.tt">
-      <Link>MultiTasksRuntimeNETBindings.tt</Link>
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>MultiTasksRuntimeNETBindings1.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

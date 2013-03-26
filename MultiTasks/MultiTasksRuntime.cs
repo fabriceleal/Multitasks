@@ -70,7 +70,6 @@ namespace MultiTasks
             // TODO Add compose(f, g)
             // TODO Add curry
 
-            DoNETBindings();
         }
 
 #if !SILVERLIGHT
