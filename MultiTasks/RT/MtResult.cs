@@ -66,7 +66,7 @@ namespace MultiTasks.RT
 
                 try
                 {
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
 
                     // Get thread pool info
                     {
@@ -100,12 +100,12 @@ namespace MultiTasks.RT
 
         public MtResult WaitForValue()
         {
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
             Debug.Print("MtResult.WaitForValue(no callback) {0} #2 Thread {1} wait signal.", _id, Thread.CurrentThread.ManagedThreadId);
 #endif
             // Wait event ...
             _receivedValue.WaitOne();
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
             Debug.Print("MtResult.WaitForValue(no callback) {0} #2 Thread {1} received signal.", _id, Thread.CurrentThread.ManagedThreadId);
 #endif
             return this;
@@ -118,7 +118,7 @@ namespace MultiTasks.RT
 
             try
             {
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
 
                 // Get thread pool info
                 {
@@ -131,21 +131,21 @@ namespace MultiTasks.RT
                 ThreadPool.QueueUserWorkItem(state =>
                 {
 
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
                     Debug.Print("MtResult.WaitForValue {0} #2 Thread {1} wait signal.", _id, Thread.CurrentThread.ManagedThreadId);
 #endif
 
                     // Wait event ...
                     _receivedValue.WaitOne();
 
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
                     Debug.Print("MtResult.WaitForValue {0} #3 Thread {1} received signal.", _id, Thread.CurrentThread.ManagedThreadId);
 #endif
 
                     // Raise callback
                     try
                     {
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
                         Debug.Print("MtResult.WaitForValue {0} #4 Thread {1} Callback with value({2})", _id, Thread.CurrentThread.ManagedThreadId, _o.Value);
 #endif
 
@@ -177,7 +177,7 @@ namespace MultiTasks.RT
 
             try
             {
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
 
                 // Get thread pool info
                 {
@@ -190,21 +190,21 @@ namespace MultiTasks.RT
                 ThreadPool.QueueUserWorkItem(state =>
                 {
 
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
                     Debug.Print("MtResult.GetValue {0} #2 Thread {1} wait signal.", _id, Thread.CurrentThread.ManagedThreadId);
 #endif
 
                     // Wait event ...
                     _receivedValue.WaitOne();
-                    
-#if DEBUG
+
+#if DEBUG && !SILVERLIGHT
                     Debug.Print("MtResult.GetValue {0} #3 Thread {1} received signal.", _id, Thread.CurrentThread.ManagedThreadId);
 #endif
 
                     // Raise callback
                     try
                     {
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
                         Debug.Print("MtResult.GetValue {0} #4 Thread {1} Callback with value({2})", _id, Thread.CurrentThread.ManagedThreadId, _o.Value);
 #endif                       
  

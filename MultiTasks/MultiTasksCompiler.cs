@@ -19,7 +19,14 @@ namespace MultiTasks
 
         public MtResult Evaluate(string str)
         {
-            return _scriptApp.Evaluate(str) as MtResult;
+            try
+            {
+                return _scriptApp.Evaluate(str) as MtResult;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Exception evaluating script.", e);
+            }
         }
 
         protected static MtCompiler InternCreateScriptApp(Stream output, Stream debugStream)
@@ -33,7 +40,7 @@ namespace MultiTasks
             {
                 runtime.OutputStream = output;
             }
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
 
             if (debugStream != null)
             {
@@ -48,8 +55,8 @@ namespace MultiTasks
             // Add constants
             app.Globals.Add("TRUE", MtResult.True);
             app.Globals.Add("FALSE", MtResult.False);
-                        
-#if DEBUG
+
+#if DEBUG && !SILVERLIGHT
 
             // Get thread pool info
             {               

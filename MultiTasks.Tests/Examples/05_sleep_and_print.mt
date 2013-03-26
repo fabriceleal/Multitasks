@@ -1,4 +1,4 @@
 {
-    sleep(2000) | "Hello" | print(_);
-    sleep(1000) | "World" | print(_);
+	sleep(5000) | wait(_) | print("Hello");
+	sleep(1000) | wait(_) | print("World");
 };

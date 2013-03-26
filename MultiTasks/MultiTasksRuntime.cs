@@ -39,6 +39,8 @@ namespace MultiTasks
             BuiltIns.AddMethod(MtStreamsClose, "close_stream", 1);
             BuiltIns.AddMethod(MtWait, "wait", 1);
 
+#if !SILVERLIGHT
+
             // JSON
             BuiltIns.AddMethod(MtJsonParse, "json_parse", 1);
 
@@ -50,7 +52,7 @@ namespace MultiTasks
             BuiltIns.AddMethod(MtHttpSetContentType, "http_set_content_type", 2, 2);
             BuiltIns.AddMethod(MtHttpStream, "http_stream", 1, 1);
             BuiltIns.AddMethod(MtHttpEnd, "http_end", 1, 1);
-
+#endif
             // TODO
             
             // Get request/response stream             
@@ -71,6 +73,8 @@ namespace MultiTasks
             DoNETBindings();
         }
 
+#if !SILVERLIGHT
+
         public object MtJsonParse(ScriptThread thread, object[] arguments)
         {
             var ret = new MtResult();
@@ -87,10 +91,12 @@ namespace MultiTasks
                     var hasStuff = reader.Read();
                     if (hasStuff)
                     {
+
+#if DEBUG && !SILVERLIGHT
                         Debug.Print("Token: {0}", reader.Value);
                         Debug.Print("Value Type: {0}", reader.ValueType);
                         Debug.Print("Token Type: {0}", reader.TokenType);
-                        
+#endif                     
                         readStuff();
                     }
                     else
@@ -106,8 +112,12 @@ namespace MultiTasks
             return ret;
         }
 
+#endif
+
 
         #region HttpServer
+
+#if !SILVERLIGHT
 
         public object MtHttpEnd(ScriptThread thread, object[] arguments)
         {
@@ -369,6 +379,8 @@ namespace MultiTasks
             return result;
         }
 
+#endif
+
         #endregion
 
         // TODO
@@ -404,7 +416,7 @@ namespace MultiTasks
 
         public object MtStringStreamCreate(ScriptThread thread, object[] arguments)
         {
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
             Debug.Print("Create stream from string");
 #endif            
 
@@ -426,7 +438,7 @@ namespace MultiTasks
 
         public object MtUriStreamCreate(ScriptThread thread, object[] arguments)
         {
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
             Debug.Print("Create stream from uri");
 #endif            
 
@@ -471,7 +483,7 @@ namespace MultiTasks
 
         public object MtStreamsClose(ScriptThread thread, object[] arguments)
         {
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
             Debug.Print("Close streams");
 #endif            
 
@@ -686,21 +698,24 @@ namespace MultiTasks
                 // set value, async
                 result.SetValue((state) =>
                 {
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
                     Debug.Print("MtSleep #1 Thread {0} {1:mm:ss.ffff} start sleep", Thread.CurrentThread.ManagedThreadId, DateTime.Now);
 #endif
                     
                     // Wait period and, if need be, wait for sleepResult
-                    Thread.Sleep((int)waitPeriod.Value);
-
-#if DEBUG
+                    var to_wait = (int)waitPeriod.Value;
+                    if (to_wait > 0)
+                    {
+                        Thread.Sleep(to_wait);
+                    }
+#if DEBUG && !SILVERLIGHT
                     Debug.Print("MtSleep #2 Thread {0} {1:mm:ss.ffff} end sleep, wait value", Thread.CurrentThread.ManagedThreadId, DateTime.Now);
 #endif
 
                     // Wait for signal...
                     waitValue.WaitOne();
 
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
                     Debug.Print("MtSleep #3 Thread {0} {1:mm:ss.ffff} has value", Thread.CurrentThread.ManagedThreadId, DateTime.Now);
 #endif
 

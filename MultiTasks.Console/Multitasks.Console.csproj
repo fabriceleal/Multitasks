@@ -66,11 +66,11 @@
   <ItemGroup>
     <Reference Include="Irony, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ca48ace7223ead47, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Vendors\Irony.dll</HintPath>
+      <HintPath>..\Vendors\Any Cpu\Irony.dll</HintPath>
     </Reference>
     <Reference Include="Irony.Interpreter, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ca48ace7223ead47, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Vendors\Irony.Interpreter.dll</HintPath>
+      <HintPath>..\Vendors\Any Cpu\Irony.Interpreter.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

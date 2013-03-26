@@ -46,7 +46,7 @@ namespace MultiTasks.AST
 
                         if (wrkEmitter == null)
                         {
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
                             Debug.Print("I dont throw events");
 #endif
                         }
@@ -64,9 +64,9 @@ namespace MultiTasks.AST
                             
 
                             wrkEmitter.On(_eventName, args => { 
-                            
+#if DEBUG && !SILVERLIGHT
                                 Debug.Print("EventEmitter Called {0}", _eventName);
-
+#endif
                                 var resArgs = new MtResult[args.Length];
                                 for (var i = 0; i < args.Length; ++i)
                                 {

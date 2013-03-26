@@ -5,20 +5,24 @@ using System.Threading;
 
 namespace MultiTasks.RT
 {
+    // Do not include this class for the silverlight demo!
     public class MtServerHttp : MtServer
     {
+
         private HttpListener _httpListener;
         private object _sync = new object();
         private bool _running = false;
         
+       
         public MtServerHttp(string[] endpoints)
-        {
+        {            
             _httpListener = new HttpListener();
 
             foreach (var prefix in endpoints)
             {
                 _httpListener.Prefixes.Add(prefix);
             }
+
         }
 
         #region Methods       
@@ -139,7 +143,7 @@ namespace MultiTasks.RT
                 OnException(e);
             }
         }
-
+        
         #endregion
 
     }

@@ -3,6 +3,7 @@ using System.Net;
 
 namespace MultiTasks.RT
 {
+    // Do not include this class for the Silverlight demo!
     public abstract class MtServer: IEventEmitter
     {
 

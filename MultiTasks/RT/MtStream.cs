@@ -50,7 +50,7 @@ namespace MultiTasks.RT
 
         public static void ReadFromWriteTo(MtStream src, MtStream dest, Action doneCallback)
         {
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
             Debug.Print("ReadFrom x to y");
 #endif
 
@@ -93,7 +93,7 @@ namespace MultiTasks.RT
 
         public void Write(MtStreamWritingContext ctx, byte[] stuff)
         {
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
             Debug.Print("Write");
 #endif
 
@@ -111,7 +111,7 @@ namespace MultiTasks.RT
                 //_stream.Position = ctx._position;
                 // TODO Fix this, for now ignore (assume cursor on the right place)
 
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
 
                 // Get thread pool info
                 {
@@ -131,7 +131,7 @@ namespace MultiTasks.RT
 
         public void Write(MtStreamWritingContext ctx, byte[] stuff, Action doneCallback)
         {
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
             Debug.Print("Write");
 #endif
             
@@ -150,7 +150,7 @@ namespace MultiTasks.RT
                 // Put cursor in the right place
                 _stream.Position = ctx._position;
 
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
 
                 // Get thread pool info
                 {
@@ -172,7 +172,7 @@ namespace MultiTasks.RT
 
         public void Read(MtStreamReadingContext ctx, Action<byte[], bool> readStuffCallback, Action doneCallback)
         {
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
             Debug.Print("Read");
 #endif
             
@@ -215,7 +215,7 @@ namespace MultiTasks.RT
                 // Put cursor in the right place
                 _stream.Position = ctx._position;
 
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
 
                 // Get thread pool info
                 {

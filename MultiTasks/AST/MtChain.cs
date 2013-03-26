@@ -34,6 +34,10 @@ namespace MultiTasks.AST
 
             try
             {
+
+#if true //SILVERLIGHT
+                                
+                // synchronous eval??
                 var headResult = _head.Evaluate(thread);
 
                 // Wrap if necessary.
@@ -42,9 +46,9 @@ namespace MultiTasks.AST
                     headResult = MtResult.CreateAndWrap(headResult);
                 }
 
-                var wrkHeadResult = headResult as MtResult;
+                //var wrkHeadResult = headResult as MtResult;
 
-                if (wrkHeadResult as MtResult == null)
+                if (headResult as MtResult == null)
                 {
                     throw new Exception("Head of chain evaluated to null!");
                 }
@@ -61,6 +65,46 @@ namespace MultiTasks.AST
                 }
 
                 return _tailResult;
+
+#else
+                MtResult chainResult = new MtResult();
+
+                _head.Evaluate.BeginInvoke(thread, iar =>
+                {
+                    var headResult = _head.Evaluate.EndInvoke(iar);
+                    
+                    // Wrap if necessary.
+                    if (headResult as ICallTarget != null)
+                    {
+                        headResult = MtResult.CreateAndWrap(headResult);
+                    }
+
+                    if (headResult as MtResult == null)
+                    {
+                        throw new Exception("Head of chain evaluated to null!");
+                    }
+
+                    var subthread = _tail.NewScriptThread(thread);
+                    var accessor = subthread.Bind("_", BindingRequestFlags.Write | BindingRequestFlags.ExistingOrNew);
+                    accessor.SetValueRef(subthread, headResult);
+
+                    var tailResult = _tail.Evaluate(subthread) as MtResult;
+
+                    if (tailResult == null)
+                    {
+                        throw new Exception("tail of chain evaluated to null!");
+                    }
+
+                    tailResult.GetValue(o =>
+                    {
+                        chainResult.SetValue(o);
+                    });
+
+                }, null);
+
+                return chainResult;
+#endif
+
             }
             catch (Exception e)
             {

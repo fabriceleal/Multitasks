@@ -33,7 +33,7 @@ namespace MultiTasks.RT
                     // Execute handler!
                     _events[eventName](args);
                 }
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
                 else
                 {
                     Debug.Print("Raised event {0}, but no one is listening.", eventName);
@@ -51,7 +51,7 @@ namespace MultiTasks.RT
                     _events.Add(eventName, action);
                 }
                 // else, ignore
-#if DEBUG
+#if DEBUG && !SILVERLIGHT
                 else
                 {
                     Debug.Print("Already had listener for {0}, ignore", eventName);
