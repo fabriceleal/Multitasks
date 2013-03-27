@@ -27,7 +27,7 @@ namespace SilverlightMultitasksDemo
             // Add examples
             foreach (var example in ExampleList.All)
             {
-                AddExample(example.Title, example.Source);
+                AddExample(example.Title, example.Source);                
             }                
         }
 
@@ -173,26 +173,6 @@ namespace SilverlightMultitasksDemo
                 Done();
             }            
         }
-
-        //private void btCancel_Click(object sender, RoutedEventArgs e)
-        //{
-        //    try
-        //    {
-        //        if (t != null) 
-        //        {
-        //            if (t.IsAlive)
-        //            {
-        //                // Do something to cancel the thread. WHAT???
-                        
-        //            }
-        //            t = null;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show(ex.Message, ex.GetType().FullName, MessageBoxButton.OK);
-        //    }
-        //}
     
     }
 }
