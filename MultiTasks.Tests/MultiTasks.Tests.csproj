@@ -137,8 +137,8 @@
     <EmbeddedResource Include="Examples\22_arrays_cdr.mt" />
     <EmbeddedResource Include="Examples\23_array_mapped_print.mt" />
     <EmbeddedResource Include="Examples\24_nested_array_map_map.mt" />
-    <EmbeddedResource Include="Examples\25_stream_literal.mt" />
-    <EmbeddedResource Include="Examples\26_stream_read_write.mt" />
+    <EmbeddedResource Include="Examples\25_string_stream_literal.mt" />
+    <EmbeddedResource Include="Examples\26_file_stream_read_write.mt" />
     <EmbeddedResource Include="Examples\29_http_server_complete.mt" />
     <None Include="Examples\29_http_server_complete.templatemt" />
     <EmbeddedResource Include="Examples\28_http_server_events.mt" />

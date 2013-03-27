@@ -37,15 +37,22 @@ namespace SilverlightMultitasksDemo.Examples
 
 		for(int i = 0; i < files.Length; ++i) {			
 			var fname = files[i].FullName; 
+
+			var fname_no_dir = Path.GetFileNameWithoutExtension(fname);
+
+			// Exclude examples featuring files, http servers or json
+			if(fname_no_dir.Contains("file") || fname_no_dir.Contains("http") || fname_no_dir.Contains("json"))
+				continue;
+
 			var content = File.ReadAllText(fname);
 
 			// some spaces so it all fits into one-line-string-literal			
 			content = content.Replace("\\", "\\\\");
 			content = content.Replace("\"", "\\\"");
 			content = content.Replace("\r\n", @"\r\n");
-
+			
 			// Replace '_' by ' ', correct casing
-			var title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Path.GetFileNameWithoutExtension(fname).Replace("_", " ").Trim());
+			var title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(fname_no_dir.Replace("_", " ").Trim());
 			
 			// Because of the first 3 chars, a 2 digit number and a space
 			title = title.Substring(3);

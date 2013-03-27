@@ -45,18 +45,10 @@ namespace SilverlightMultitasksDemo.Examples
 			,  new Example("Arrays Cdr", "\r\n[1, 2, 3, 4] | cdr(_) | car(_) | print(_);\r\n")
 			,  new Example("Array Mapped Print", "\r\n[1,2,3,4,5] | map(_, print);\r\n")
 			,  new Example("Nested Array Map Map", "\r\na <= [[1,2], [3, 4], [5, 6]] | \r\n    b <= L (b) => map(b, print); |\r\n        map(a, b);\r\n")
-			,  new Example("Stream Literal", "\r\nstr_stream(\"Hello World\");\r\n")
-			,  new Example("Stream Read Write", "\r\na <= str_stream(\"Hello World\") | b <= uri_stream(\"26_output_test.txt\") | b <- a | wait(_) | close_stream(b, a);\r\n")
-			,  new Example("Http Server", "\r\nserver <= http_server(\"http://127.0.0.1/\") |\r\n    start_info <= http_server_start(server) |\r\n        wait(start_info) |\r\n            http_server_stop(server);\r\n")
-			,  new Example("Http Server Events", "\r\nserver <= http_server(\"http://127.0.0.1:7654/\")\r\n| server  on start    L(server) => print(\"started!\");\r\n| server  on stop     L(server) => print(\"stopped!\");\r\n| server  on context  L(server, req, resp) => print(\"context!\");\r\n| r <= http_server_start(server)\r\n| wait(r)\r\n| r <= sleep(15000)\r\n| wait(r)\r\n| r <= http_server_stop(server)\r\n| wait(r)\r\n;")
-			,  new Example("Http Server Complete", "server <= http_server(\"http://127.0.0.1:7654/\") |\r\nii <= uri_stream(\"L:\\\\TesteFx\\\\Multitasks\\\\MultiTasks.Tests\\\\Examples\\\\index.html\") |\r\n{\r\n    start_info <= http_server_start(server) | wait(start_info) |\r\n        server  on context          L(server, request, response) => \r\n                                        http_set_code(response, 202) |\r\n										http_set_content_type(response, \"text/html\") |\r\n                                        st <= http_stream(response) |\r\n                                        st <- ii |\r\n                                        wait(_) |\r\n                                        http_end(response);\r\n\r\n        ;\r\n\r\n    sleeping <= sleep(60000) | wait(sleeping) | http_server_stop(server);\r\n};")
+			,  new Example("String Stream Literal", "\r\nstr_stream(\"Hello World\");\r\n")
 			,  new Example("Binds And Fork", "a <= 1 |\r\nb <= 2 |\r\nc <= 3 |\r\nd <= 4 |\r\n{\r\n	print(a);\r\n	print(b);\r\n	print(c);\r\n	print(d);\r\n};")
 			,  new Example("Closure 1", "\r\na <= 1 |\r\n	b <= L (b) => add(b, a); |\r\n		a <= 3 |\r\n			print(b(4));\r\n")
 			,  new Example("Closure 2", "\r\na <= 1 | c <= 2 | \r\n{\r\n	b <= L (b) => add(b, c, a); |\r\n		a <= 3 |\r\n			print(b(4));\r\n\r\n	b <= L (b) => add(b, 10, c, a); |\r\n			print(b(4));\r\n};\r\n\r\n")
-			,  new Example("Http Server Closures Events", "a <= 1\r\n| b <= 2\r\n| c <= 3\r\n| server <= http_server(\"http://127.0.0.1:7654/\")\r\n| server  on start    L(server) => print(a);\r\n| server  on stop     L(server) => print(c);\r\n| server  on context  L(server, req, resp) => print(b);\r\n| r <= http_server_start(server)\r\n| wait(r)\r\n| r <= sleep(15000)\r\n| wait(r)\r\n| r <= http_server_stop(server)\r\n| wait(r)\r\n;")
-			,  new Example("Http Server Simple", "a <= 1\r\n| b <= 2\r\n| c <= 3\r\n| server <= http_server(\"http://127.0.0.1:7654/\")\r\n| server  on start    L(server) => print(\"started\");\r\n| server  on stop     L(server) => print(\"stopped\");\r\n| server  on context  L(server, request, response) => \r\n        http_set_code(response, 202) \r\n        | st <= http_stream(response) \r\n        | t <= str_stream(\"hello world\") \r\n        | st <- t \r\n        | wait(_) \r\n        | http_end(response);\r\n| r <= http_server_start(server)\r\n| wait(r)\r\n| r <= sleep(15000)\r\n| wait(r)\r\n| r <= http_server_stop(server)\r\n| wait(r)\r\n;")
-			,  new Example("Json Parse", "\"{\\\"a\\\":1}\" | json_parse(_) | print(_);\r\n")
-			,  new Example("Eventted Json", "\"[1, 2, 3, 4, 5, 6, 7, 8]\" | json_parse(_) | map(_);\r\n")
 		};
 
 		public static Example[] All
