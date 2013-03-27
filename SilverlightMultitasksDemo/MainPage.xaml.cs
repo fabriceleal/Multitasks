@@ -134,6 +134,7 @@ namespace SilverlightMultitasksDemo
                 // All is OK
                 t = null;
                 txCode.IsEnabled = true;
+                btExecute.IsEnabled = true;
             });
         }
 
@@ -147,8 +148,10 @@ namespace SilverlightMultitasksDemo
             try
             {
                 // Disable everything, to avoid click-heroes
+                // This will be re-enabled on Done()
                 txCode.IsEnabled = false;
-                
+                btExecute.IsEnabled = false;
+
                 txOutput.Text = "";
 
                 if (t != null && t.IsAlive)
@@ -167,6 +170,7 @@ namespace SilverlightMultitasksDemo
                         // Do something to cancel the thread. WHAT???
                     }
                 }
+                Done();
             }            
         }
 

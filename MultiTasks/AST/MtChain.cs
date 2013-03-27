@@ -2,6 +2,7 @@
 using Irony.Interpreter;
 using Irony.Interpreter.Ast;
 using MultiTasks.RT;
+using System.Threading;
 
 namespace MultiTasks.AST
 {
@@ -35,36 +36,42 @@ namespace MultiTasks.AST
             try
             {
 
-#if true //SILVERLIGHT
+#if SILVERLIGHT
+
+                var result = new MtResult();
                                 
-                // synchronous eval??
-                var headResult = _head.Evaluate(thread);
-
-                // Wrap if necessary.
-                if (headResult as ICallTarget != null)
+                // This is the best we can do in silverlight. There is no BeginInvoke!
+                ThreadPool.QueueUserWorkItem(new WaitCallback(_ => 
                 {
-                    headResult = MtResult.CreateAndWrap(headResult);
-                }
+                    // synchronous eval :(
+                    var headResult = _head.Evaluate(thread);
 
-                //var wrkHeadResult = headResult as MtResult;
+                    // Wrap it if necessary.
+                    if (headResult as ICallTarget != null)
+                    {
+                        headResult = MtResult.CreateAndWrap(headResult);
+                    }
 
-                if (headResult as MtResult == null)
-                {
-                    throw new Exception("Head of chain evaluated to null!");
-                }
+                    if (headResult as MtResult == null)
+                    {
+                        throw new Exception("Head of chain evaluated to null!");
+                    }
 
-                var subthread = _tail.NewScriptThread(thread);
-                var accessor = subthread.Bind("_", BindingRequestFlags.Write | BindingRequestFlags.ExistingOrNew);
-                accessor.SetValueRef(subthread, headResult);
+                    var subthread = _tail.NewScriptThread(thread);
+                    var accessor = subthread.Bind("_", BindingRequestFlags.Write | BindingRequestFlags.ExistingOrNew);
+                    accessor.SetValueRef(subthread, headResult);
 
-                var _tailResult = _tail.Evaluate(subthread) as MtResult;
+                    var _tailResult = _tail.Evaluate(subthread) as MtResult;
 
-                if (_tailResult == null)
-                {
-                    throw new Exception("tail of chain evaluated to null!");
-                }
+                    if (_tailResult == null)
+                    {
+                        throw new Exception("tail of chain evaluated to null!");
+                    }
 
-                return _tailResult;
+                    _tailResult.GetValue(o => { result.SetValue(o); });
+                }));
+
+                return result;
 
 #else
                 MtResult chainResult = new MtResult();
