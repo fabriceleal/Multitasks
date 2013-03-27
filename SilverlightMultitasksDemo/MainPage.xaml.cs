@@ -14,9 +14,10 @@ using System.Text;
 using MultiTasks;
 using System.Threading;
 
+using SilverlightMultitasksDemo.Examples;
+
 namespace SilverlightMultitasksDemo
-{
-    [System.Security.SecurityCritical()]
+{    
     public partial class MainPage : UserControl
     {
         public MainPage()
@@ -24,10 +25,10 @@ namespace SilverlightMultitasksDemo
             InitializeComponent();
             
             // Add examples
-            AddExample("Hello World", "\"Hello World!\" | print(_);");
-            AddExample("Hello with Fork", "{\"h\" | print(_); \"e\" | print(_); \"l\" | print(_); \"l\" | print(_); \"o\" | print(_); };");
-            AddExample("Binds", "a <= 1 | b <= 2 | print(a);");
-            AddExample("Nested Array Map Map", " a <= [[1,2], [3, 4], [5, 6]] | b <= L (b) => map(b, print); | map(a, b); ");
+            foreach (var example in ExampleList.All)
+            {
+                AddExample(example.Title, example.Source);
+            }                
         }
 
         private Thread t;
@@ -46,6 +47,9 @@ namespace SilverlightMultitasksDemo
         {
             return (object sender, RoutedEventArgs e) =>
             {
+                if (t != null && t.IsAlive)
+                    return;
+
                 txCode.Text = srcExample;
             };
         }
@@ -118,10 +122,19 @@ namespace SilverlightMultitasksDemo
                 out_stream.WriteUTF8("[ERROR] Exception executing script {0}.\r\n".ExtFormat(ex.Message));
             }
             finally
-            {                
-                // All is OK
-                t = null;                
+            {
+                Done();
             }
+        }
+
+        void Done()
+        {
+            Dispatcher.BeginInvoke(() =>
+            {
+                // All is OK
+                t = null;
+                txCode.IsEnabled = true;
+            });
         }
 
         void out_stream_Writed(byte[] buffer, int offset, int length)
@@ -133,6 +146,9 @@ namespace SilverlightMultitasksDemo
         {
             try
             {
+                // Disable everything, to avoid click-heroes
+                txCode.IsEnabled = false;
+                
                 txOutput.Text = "";
 
                 if (t != null && t.IsAlive)

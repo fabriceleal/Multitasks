@@ -96,6 +96,11 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Examples\ExamplesGen.cs">
+      <DependentUpon>ExamplesGen.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Extensions.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -113,6 +118,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Examples\ExamplesGen.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ExamplesGen.cs</LastGenOutput>
+    </None>
     <None Include="Properties\AppManifest.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +129,10 @@
       <Project>{6ebd6cd2-ae12-44ec-98bf-aea05c2336bc}</Project>
       <Name>SilverlightMultitasks</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

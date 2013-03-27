@@ -1,0 +1,70 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="EnvDTE" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Globalization" #>
+<#@ output extension=".cs" #>
+// This file was generated automatically
+// Do not change it manually, otherwise you'll lose all your hard work!
+using System;
+using System.IO;
+
+namespace SilverlightMultitasksDemo.Examples
+{
+
+	public class Example
+	{
+		public string Source { get; private set; }
+		public string Title { get; private set; }
+
+		public Example(string title, string source)
+		{
+			Title = title;
+			Source = source;
+		}
+	}
+
+    public class ExampleList
+    {		
+
+        static Example[] _examples = new Example[]{
+<#
+		// Get Solution info
+		var serviceProvider = this.Host as IServiceProvider;
+		var dte = serviceProvider.GetService(typeof(DTE)) as DTE;
+		var the_dir = Path.Combine(Path.GetDirectoryName(dte.Solution.FullName), "MultiTasks.Tests/Examples");
+		var files = (new DirectoryInfo(the_dir)).GetFiles("*.mt");
+
+		for(int i = 0; i < files.Length; ++i) {			
+			var fname = files[i].FullName; 
+			var content = File.ReadAllText(fname);
+
+			// some spaces so it all fits into one-line-string-literal			
+			content = content.Replace("\\", "\\\\");
+			content = content.Replace("\"", "\\\"");
+			content = content.Replace("\r\n", @"\r\n");
+
+			// Replace '_' by ' ', correct casing
+			var title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Path.GetFileNameWithoutExtension(fname).Replace("_", " ").Trim());
+			
+			// Because of the first 3 chars, a 2 digit number and a space
+			title = title.Substring(3);
+
+#>
+			<#=(i==0?"":", ")#> new Example("<#=title#>", "<#=content#>")
+<#
+		}
+#>
+		};
+
+		public static Example[] All
+		{
+			get {				
+				return _examples;
+			}
+		}
+
+
+	}
+
+}
