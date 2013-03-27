@@ -8,11 +8,12 @@
     d:DesignHeight="300" d:DesignWidth="400">
 
     <Grid x:Name="LayoutRoot" Background="#FFF2F2F2" Margin="0,0,-426,-226">
-        <Button x:Name="btExecute" Content="Execute" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" VerticalAlignment="Top" Width="86" RenderTransformOrigin="0.644,0.595" Click="btExecute_Click" FontSize="13"/>
-        <TextBox x:Name="txCode" HorizontalAlignment="Left" Height="147" Margin="10,47,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="425" AcceptsReturn="True"/>
-        <TextBox x:Name="txOutput" HorizontalAlignment="Left" Height="307" Margin="10,209,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="425" IsReadOnly="True"/>
+        <Button x:Name="btExecute" Content="Execute" HorizontalAlignment="Left" Height="23" Margin="349,63,0,0" VerticalAlignment="Top" Width="86" RenderTransformOrigin="0.644,0.595" Click="btExecute_Click" FontSize="13"/>
+        <TextBox x:Name="txCode" HorizontalAlignment="Left" Height="147" Margin="10,91,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="425" AcceptsReturn="True"/>
+        <TextBox x:Name="txOutput" HorizontalAlignment="Left" Height="263" Margin="10,253,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="425" IsReadOnly="True"/>
         <StackPanel x:Name="ExamplesStack" HorizontalAlignment="Left" Height="469" Margin="450,47,0,0" VerticalAlignment="Top" Width="366" Grid.ColumnSpan="3"/>
         <sdk:Label HorizontalAlignment="Left" Height="23" Margin="450,10,0,0" VerticalAlignment="Top" Width="120" Content="Examples" FontSize="13"/>
+        <sdk:Label HorizontalAlignment="Left" Height="48" Margin="10,10,0,0" VerticalAlignment="Top" Width="425" Content="Type or pick an example from the right; some examples might take a while &#xD;&#xA;for the first time they're run. Cortesy from the .Net 4.0 / Silverlight security&#xD;&#xA;model, if this breaks / takes too long, there's no cancel; refresh the page!" HorizontalContentAlignment="Left"/>
 
     </Grid>
 </UserControl>
