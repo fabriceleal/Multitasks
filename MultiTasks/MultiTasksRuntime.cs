@@ -38,6 +38,9 @@ namespace MultiTasks
             BuiltIns.AddMethod(MtUriStreamCreate, "uri_stream", 1, 1);
             BuiltIns.AddMethod(MtStreamsClose, "close_stream", 1);
             BuiltIns.AddMethod(MtWait, "wait", 1);
+            BuiltIns.AddMethod(MtLength, "length", 1);
+            BuiltIns.AddMethod(MtEquals, "equals", 2);
+            BuiltIns.AddMethod(MtGreater, "greater", 2);
 
 #if !SILVERLIGHT
 
@@ -69,7 +72,80 @@ namespace MultiTasks
             // TODO Add signaling, waiting
             // TODO Add compose(f, g)
             // TODO Add curry
+        }
 
+        private object MtGreater(ScriptThread thread, object[] args)
+        {
+            var ret = new MtResult();
+
+            var arg0 = args[0] as MtResult;
+            var arg1 = args[1] as MtResult;
+
+            arg0.GetValue(o1 =>
+            {
+                arg1.GetValue(o2 =>
+                {
+                    int i1 = (int)o1.Value;
+                    int i2 = (int)o2.Value;
+
+                    if (i1 > i2)
+                    {
+                        ret.SetValue(MtObject.True);
+                    }
+                    else
+                    {
+                        ret.SetValue(MtObject.False);
+                    }
+                });
+            });
+
+            return ret;
+        }
+
+        private object MtEquals(ScriptThread thread, object[] args)
+        {
+            var ret = new MtResult();
+            var arg0 = args[0] as MtResult;
+            var arg1 = args[1] as MtResult;
+
+            arg0.GetValue(o1 =>
+            {
+                arg1.GetValue(o2 =>
+                {                    
+                    //if (o1.GetType().Equals(o2.GetType()) && o1.Value == o2.Value)
+                    if(object.Equals(o1.Value, o2.Value))
+                    {
+                        ret.SetValue(MtObject.True);
+                    }
+                    else
+                    {
+                        ret.SetValue(MtObject.False);
+                    }
+                });
+            });
+
+            return ret;
+        }
+
+        private object MtLength(ScriptThread thread, object[] args)
+        {
+            var ret = new MtResult();
+            var arg0 = args[0] as MtResult;
+            
+            arg0.GetValue((o) =>
+            {
+                var arr = o.Value as MtResult[];
+                if (arr == null)
+                {
+                    ret.SetValue(new MtObject(0));
+                }
+                else
+                {
+                    ret.SetValue(new MtObject(arr.Length));
+                }
+            });
+
+            return ret;
         }
 
 #if !SILVERLIGHT
