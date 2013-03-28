@@ -41,7 +41,11 @@ namespace MultiTasks
             BuiltIns.AddMethod(MtLength, "length", 1);
             BuiltIns.AddMethod(MtEquals, "equals", 2);
             BuiltIns.AddMethod(MtGreater, "greater", 2);
-
+            BuiltIns.AddMethod(MtSliceUntil, "slice_until", 2);
+            BuiltIns.AddMethod(MtSliceFrom, "slice_from", 2);
+            BuiltIns.AddMethod(MtCons, "cons", 2);
+            BuiltIns.AddMethod(MtAnd, "and", 2);
+            
 #if !SILVERLIGHT
 
             // JSON
@@ -72,6 +76,122 @@ namespace MultiTasks
             // TODO Add signaling, waiting
             // TODO Add compose(f, g)
             // TODO Add curry
+        }
+
+        private object MtAnd(ScriptThread thread, object[] args)
+        {
+            var ret = new MtResult();
+
+            var arg0 = args[0] as MtResult;
+            var arg1 = args[1] as MtResult;
+
+            arg0.GetValue(o1 =>
+            {
+                arg1.GetValue(o2 =>
+                {
+                    if (MtObject.True.Value == o1.Value &&
+                        MtObject.True.Value == o2.Value)
+                    {
+                        ret.SetValue(MtObject.True);
+                    }
+                    else
+                    {
+                        ret.SetValue(MtObject.False);
+                    }
+                });
+            });
+
+            return ret;
+        }
+
+        private object MtCons(ScriptThread thread, object[] args)
+        {
+            var ret = new MtResult();
+
+            var head = args[0] as MtResult;
+            var tail = args[1] as MtResult;
+
+            // we can eval the head later ;)
+            tail.GetValue(o =>
+            {
+                var arr = o.Value as MtResult[];
+                if (arr == null)
+                    throw new Exception("Cons expected a list!");
+
+                var ret_arr = new MtResult[arr.Length + 1];
+
+                ret_arr[0] = head;
+                Array.Copy(arr, 0, ret_arr, 1, arr.Length);
+
+                ret.SetValue(new MtObject(ret_arr));
+            });
+
+            return ret;
+        }
+
+        private object MtSliceFrom(ScriptThread thread, object[] args)
+        {
+            var ret = new MtResult();
+
+            var the_list = args[0] as MtResult;
+            var the_idx = args[1] as MtResult;
+
+            the_list.GetValue(o_list =>
+            {
+                the_idx.GetValue(o_idx =>
+                {
+                    var arr = o_list.Value as MtResult[];
+                    if (arr == null)
+                        throw new Exception("slice_from expected a list!");
+
+                    var idx = (int)o_idx.Value;
+                    idx = idx < 0 ? 0 : idx;
+
+                    if (idx >= arr.Length)
+                    {
+                        // If idx is outside array, return an empty array
+                        ret.SetValue(new MtObject(new MtResult[0]));
+                    }
+                    else
+                    {
+                        var len = arr.Length;
+
+                        var ret_arr = new MtResult[len - idx];
+                        Array.Copy(arr, idx, ret_arr, 0, ret_arr.Length);
+
+                        ret.SetValue(new MtObject(ret_arr));
+                    }
+                });
+            });
+
+            return ret;
+        }
+
+        private object MtSliceUntil(ScriptThread thread, object[] args)
+        {
+            var ret = new MtResult();
+            
+            var the_list = args[0] as MtResult;
+            var the_idx = args[1] as MtResult;
+
+            the_list.GetValue(o_list =>
+            {
+                the_idx.GetValue(o_idx =>
+                {
+                    var arr = o_list.Value as MtResult[];
+                    if (arr == null)
+                        throw new Exception("slice_until expected a list!");
+
+                    var idx = (int)o_idx.Value;
+
+                    var ret_arr = new MtResult[idx];
+                    Array.Copy(arr, ret_arr, ret_arr.Length);
+
+                    ret.SetValue(new MtObject(ret_arr));
+                });
+            });
+
+            return ret;
         }
 
         private object MtGreater(ScriptThread thread, object[] args)
