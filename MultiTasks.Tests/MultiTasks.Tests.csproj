@@ -150,6 +150,10 @@
     <EmbeddedResource Include="Examples\35_json_parse.mt" />
     <EmbeddedResource Include="Examples\36_eventted_json.mt" />
     <EmbeddedResource Include="Examples\37_length_test.mt" />
+    <EmbeddedResource Include="Examples\39_slice_until.mt" />
+    <EmbeddedResource Include="Examples\40_slice_from_test.mt" />
+    <EmbeddedResource Include="Examples\41_cons_test.mt" />
+    <EmbeddedResource Include="Examples\42_merge_sort.mt" />
     <None Include="Examples\ExamplesThatUseFiles.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ExamplesThatUseFiles.cs</LastGenOutput>
