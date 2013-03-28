@@ -1,0 +1,1 @@
+print(equals(1, 1));

@@ -149,6 +149,7 @@
     <EmbeddedResource Include="Examples\34_http_server_simple.mt" />
     <EmbeddedResource Include="Examples\35_json_parse.mt" />
     <EmbeddedResource Include="Examples\36_eventted_json.mt" />
+    <EmbeddedResource Include="Examples\37_length_test.mt" />
     <None Include="Examples\ExamplesThatUseFiles.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ExamplesThatUseFiles.cs</LastGenOutput>
@@ -165,6 +166,7 @@
     <EmbeddedResource Include="Examples\27_http_server.mt" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Examples\38_equals_test.mt" />
     <Content Include="Examples\404.html" />
     <Content Include="Examples\index.html" />
     <Content Include="Examples\Tests.xml" />
