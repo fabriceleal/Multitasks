@@ -778,35 +778,41 @@ namespace MultiTasks
 
                 MtFunctionObjectBase.ExtractAsFunction(fun, (wrkFun) =>
                 {
-                    // Launch and wait for all to end
-                    var res = new MtResult[wrkArr.Length];                    
+                    // Launch and wait for all to end                    
                     var count = wrkArr.Length;
-                    var waitForEndOfAll = new ManualResetEvent(false); 
+                    var res = new MtResult[count];
 
-                    for (var i = 0; i < wrkArr.Length; ++i)
+                    if (count > 0)
                     {
-                        int copy_i = i;
+                        var waitForEndOfAll = new ManualResetEvent(false);
 
-                        var ret = wrkFun.Call(thread, new object[] { wrkArr[i] });
-                        if(ret == null)
+                        for (var i = 0; i < wrkArr.Length; ++i)
                         {
-                            throw new Exception("Return of application in map is null!");
+                            int copy_i = i;
+
+                            var ret = wrkFun.Call(thread, new object[] { wrkArr[i] });
+                            if(ret == null)
+                            {
+                                throw new Exception("Return of application in map is null!");
+                            }
+
+                            var wrkRet = ret as MtResult;
+                            wrkRet.WaitForValue((r) =>
+                            {
+                                res[copy_i] = r;
+
+                                if (Interlocked.Decrement(ref count) == 0)
+                                {
+                                    waitForEndOfAll.Set();
+                                }
+                            });
                         }
 
-                        var wrkRet = ret as MtResult;
-                        wrkRet.WaitForValue((r) =>
-                        {
-                            res[copy_i] = r;
-
-                            if (Interlocked.Decrement(ref count) == 0)
-                            {
-                                waitForEndOfAll.Set();
-                            }
-                        });
+                        waitForEndOfAll.WaitOne();
                     }
 
-                    waitForEndOfAll.WaitOne();                    
                     result.SetValue(new MtObject(res));
+                    
                 });
 
             });
@@ -848,7 +854,7 @@ namespace MultiTasks
 
                 if (wrkArr.Length == 0 || wrkArr.Length == 1)
                 {
-                    ret.SetValue(new MtObject(new MtResult[] { }));
+                    ret.SetValue(new MtObject(new MtResult[0]));
                 }
                 else
                 {

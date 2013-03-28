@@ -154,6 +154,8 @@
     <EmbeddedResource Include="Examples\40_slice_from_test.mt" />
     <EmbeddedResource Include="Examples\41_cons_test.mt" />
     <EmbeddedResource Include="Examples\42_merge_sort.mt" />
+    <EmbeddedResource Include="Examples\43_and_test.mt" />
+    <EmbeddedResource Include="Examples\44_map_empty_list.mt" />
     <None Include="Examples\ExamplesThatUseFiles.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ExamplesThatUseFiles.cs</LastGenOutput>
