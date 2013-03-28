@@ -51,6 +51,11 @@ namespace SilverlightMultitasksDemo.Examples
 			,  new Example("Closure 2", "\r\na <= 1 | c <= 2 | \r\n{\r\n	b <= L (b) => add(b, c, a); |\r\n		a <= 3 |\r\n			print(b(4));\r\n\r\n	b <= L (b) => add(b, 10, c, a); |\r\n			print(b(4));\r\n};\r\n\r\n")
 			,  new Example("Length Test", "a <= [1, 2, 3, 4, 5] | print(length(a));")
 			,  new Example("Equals Test", "print(equals(1, 1));")
+			,  new Example("Slice Until", "[1, 2, 3, 4, 5, 6] | slice_until(_, 3) | map(_, print);")
+			,  new Example("Slice From Test", "[1, 2, 3, 4, 5, 6] | slice_from(_, 3) | map(_, print);")
+			,  new Example("Cons Test", "a <= 1 | b <= [2,3,4,5] | c <= cons(a, b) | map(_, print);")
+			,  new Example("Merge Sort", "a <= [3,5,2] |\r\n    fst <= L(l) => car(l); |\r\n    snd <= L(l) => car(cdr(l)); |\r\n   \r\n    merge <= L(a, b) =>\r\n        a_is_empty <= zero(length(a)) |\r\n        b_is_empty <= zero(length(b)) |\r\n        if and(a_is_empty, b_is_empty)\r\n            [];\r\n            if a_is_empty\r\n                b;\r\n                if b_is_empty\r\n                    a;\r\n                    car_a <= car(a) | car_b <= car(b) | \r\n                            if greater(car_a, car_b)\r\n                                cons(car_b, merge(a, cdr(b)));\r\n                                cons(car_a, merge(cdr(a), b));\r\n                            ;\r\n                ;\r\n            ;\r\n        ; |\r\n   \r\n   merge_sort <= L (b) =>\r\n        len_b <= length(b) |\r\n        if equals(len_b, 1)\r\n            b;\r\n            if equals(len_b, 2)\r\n                fst_b <= fst(b) | snd_b <= snd(b) | \r\n                        if greater(fst_b, snd_b)\r\n                            [snd_b, fst_b];\r\n                            b;\r\n                        ;\r\n\r\n                half <= div(len_b, 2) |\r\n                    fst_half <= slice_until(b, half) |\r\n                    snd_half <= slice_from(b, half)  |\r\n                    fst_half_s <= merge_sort(fst_half) | \r\n                    snd_half_s <= merge_sort(snd_half) |\r\n                    merge(fst_half_s, snd_half_s);\r\n\r\n            ;\r\n        ; | merge_sort(a) | map(_, print) ;\r\n")
+			,  new Example("And Test", "if and(TRUE, TRUE)\r\n	print(\"printed!\");\r\n	print(\"never reached!\");\r\n;")
 		};
 
 		public static Example[] All
