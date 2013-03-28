@@ -49,6 +49,8 @@ namespace SilverlightMultitasksDemo.Examples
 			,  new Example("Binds And Fork", "a <= 1 |\r\nb <= 2 |\r\nc <= 3 |\r\nd <= 4 |\r\n{\r\n	print(a);\r\n	print(b);\r\n	print(c);\r\n	print(d);\r\n};")
 			,  new Example("Closure 1", "\r\na <= 1 |\r\n	b <= L (b) => add(b, a); |\r\n		a <= 3 |\r\n			print(b(4));\r\n")
 			,  new Example("Closure 2", "\r\na <= 1 | c <= 2 | \r\n{\r\n	b <= L (b) => add(b, c, a); |\r\n		a <= 3 |\r\n			print(b(4));\r\n\r\n	b <= L (b) => add(b, 10, c, a); |\r\n			print(b(4));\r\n};\r\n\r\n")
+			,  new Example("Length Test", "a <= [1, 2, 3, 4, 5] | print(length(a));")
+			,  new Example("Equals Test", "print(equals(1, 1));")
 		};
 
 		public static Example[] All

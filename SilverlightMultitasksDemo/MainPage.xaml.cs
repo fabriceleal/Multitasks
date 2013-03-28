@@ -23,11 +23,14 @@ namespace SilverlightMultitasksDemo
         public MainPage()
         {
             InitializeComponent();
-            
+
+            var content = new StackPanel();
+            PanelExamplesStack.Content = content;
+
             // Add examples
             foreach (var example in ExampleList.All)
             {
-                AddExample(example.Title, example.Source);                
+                AddExample(content, example.Title, example.Source);                
             }                
         }
 
@@ -35,12 +38,12 @@ namespace SilverlightMultitasksDemo
 
 #region Examples
 
-        private void AddExample(string title, string src)
+        private void AddExample(StackPanel owner, string title, string src)
         {
             var bt = new HyperlinkButton();
             bt.Content = title;
             bt.Click += GetHandlerForExample(src);
-            ExamplesStack.Children.Add(bt);
+            owner.Children.Add(bt);
         }
 
         RoutedEventHandler GetHandlerForExample(string srcExample)
