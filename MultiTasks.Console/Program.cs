@@ -36,6 +36,8 @@ namespace multitasks
             while (_e != null)
             {
                 Console.Error.WriteLine(e.Message);
+                Console.Error.WriteLine(e.Source);
+                Console.Error.WriteLine(e.StackTrace);
                 _e = _e.InnerException;
             }
 
@@ -84,7 +86,11 @@ namespace multitasks
 
                 // Evaluate program
                 var wait = app.Evaluate(src) as MtResult;
-                
+                if (wait == null)
+                {
+                    throw new Exception("Evaluate(src) returned null. WTF??");
+                }
+
                 // Wait for the end of the program
                 wait.GetValueSync((o) => { });                
             }
