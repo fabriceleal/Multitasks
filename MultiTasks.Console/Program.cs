@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using MultiTasks;
 using MultiTasks.RT;
 using System.IO;
@@ -51,6 +52,31 @@ namespace multitasks
 
             try
             {
+#if DEBUG
+                if (!Debugger.IsAttached)
+                {
+                    Console.Error.WriteLine("This is a debug exe.");
+                    
+                    Console.Error.WriteLine("Do you want to attach the debugger? (y/N)");                    
+                    var answer = Console.ReadLine();
+                    // I know this looks horrible
+                    if (answer.ToLower().StartsWith("y"))
+                    {
+                        Debugger.Launch();
+                    }
+
+                    Console.Error.WriteLine("Do you want redirect Debug.Print to Console.Error? (y/N)");
+                    answer = Console.ReadLine();
+                    // I know this also looks horrible
+                    if (answer.ToLower().StartsWith("y"))
+                    {
+                        // Redirect Debug.Print/WriteLines to console.error
+                        var consoleListener = new ConsoleTraceListener(true);
+                        Debug.Listeners.Add(consoleListener);
+                    }                    
+                }
+#endif
+
                 // Read file
                 var src = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, args[0]));
 
