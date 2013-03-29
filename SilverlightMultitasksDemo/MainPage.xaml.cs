@@ -136,7 +136,7 @@ namespace SilverlightMultitasksDemo
             {
                 // All is OK
                 t = null;
-                txCode.IsEnabled = true;
+                txCode.IsReadOnly = false;
                 btExecute.IsEnabled = true;
             });
         }
@@ -152,7 +152,7 @@ namespace SilverlightMultitasksDemo
             {
                 // Disable everything, to avoid click-heroes
                 // This will be re-enabled on Done()
-                txCode.IsEnabled = false;
+                txCode.IsReadOnly = true;
                 btExecute.IsEnabled = false;
 
                 txOutput.Text = "";
