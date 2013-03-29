@@ -64,14 +64,6 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Irony, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ca48ace7223ead47, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Vendors\Any Cpu\Irony.dll</HintPath>
-    </Reference>
-    <Reference Include="Irony.Interpreter, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ca48ace7223ead47, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Vendors\Any Cpu\Irony.Interpreter.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -125,7 +117,16 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Irony_2012_09_29\irony_1f7bdd8e9147\Irony.Interpreter\015.Irony.Interpreter.2010.csproj">
+      <Project>{321a7f5d-00c2-4095-9970-075cdee8c139}</Project>
+      <Name>015.Irony.Interpreter.2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Irony_2012_09_29\irony_1f7bdd8e9147\Irony\010.Irony.2010.csproj">
+      <Project>{d81f5c91-d7db-46e5-bc99-49488fb6814c}</Project>
+      <Name>010.Irony.2010</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
