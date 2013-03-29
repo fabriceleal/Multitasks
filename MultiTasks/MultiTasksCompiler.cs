@@ -57,20 +57,7 @@ namespace MultiTasks
             app.Globals.Add("FALSE", MtResult.False);
 
 #if DEBUG && !SILVERLIGHT
-
-            // Get thread pool info
-            {               
-                int workerThreads = -1, completionPortThreads = -1;
-
-                ThreadPool.GetMaxThreads(out workerThreads, out completionPortThreads);
-                Debug.Print("ThreadPool Info - Max threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
-
-                workerThreads = -1;
-                completionPortThreads = -1;
-
-                ThreadPool.GetMinThreads(out workerThreads, out completionPortThreads);
-                Debug.Print("ThreadPool Info - Min threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
-            }
+            MultiTasksRuntime.DebugDisplayInfo();
 #endif
 
             return new MtCompiler(app);

@@ -13,6 +13,27 @@ namespace MultiTasks
 {
     public partial class MultiTasksRuntime : LanguageRuntime
     {
+        #region Helpers
+
+        static internal void DebugDisplayInfo()
+        {
+            // Thread pool info            
+            int workerThreads = -1, completionPortThreads = -1;
+            ThreadPool.GetAvailableThreads(out workerThreads, out completionPortThreads);
+            Debug.Print("ThreadPool Info - Available threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
+
+            workerThreads = completionPortThreads = -1;
+            ThreadPool.GetMinThreads(out workerThreads, out completionPortThreads);
+            Debug.Print("ThreadPool Info - Min threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
+
+            workerThreads = completionPortThreads = -1;
+            ThreadPool.GetMaxThreads(out workerThreads, out completionPortThreads);
+            Debug.Print("ThreadPool Info - Max threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
+            
+        }
+
+        #endregion
+
         public MultiTasksRuntime(LanguageData lang) : base(lang) { }
                 
         public Stream OutputStream { get; set; }

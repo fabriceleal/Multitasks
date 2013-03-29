@@ -111,15 +111,8 @@ namespace MultiTasks.RT
                 //_stream.Position = ctx._position;
                 // TODO Fix this, for now ignore (assume cursor on the right place)
 
-#if DEBUG && !SILVERLIGHT
-
-                // Get thread pool info
-                {
-                    int workerThreads = -1, completionPortThreads = -1;
-
-                    ThreadPool.GetAvailableThreads(out workerThreads, out completionPortThreads);
-                    Debug.Print("ThreadPool Info - Available threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
-                }
+#if DEBUG && !SILVERLIGHT                
+                MultiTasksRuntime.DebugDisplayInfo();
 #endif
                 _stream.BeginWrite(stuff, 0, stuff.Length, wroteCallback, null);
             }
@@ -151,14 +144,7 @@ namespace MultiTasks.RT
                 _stream.Position = ctx._position;
 
 #if DEBUG && !SILVERLIGHT
-
-                // Get thread pool info
-                {
-                    int workerThreads = -1, completionPortThreads = -1;
-
-                    ThreadPool.GetAvailableThreads(out workerThreads, out completionPortThreads);
-                    Debug.Print("ThreadPool Info - Available threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
-                }
+                MultiTasksRuntime.DebugDisplayInfo();
 #endif
                 _stream.BeginWrite(stuff, 0, stuff.Length, wroteCallback, null);
             }
@@ -216,14 +202,7 @@ namespace MultiTasks.RT
                 _stream.Position = ctx._position;
 
 #if DEBUG && !SILVERLIGHT
-
-                // Get thread pool info
-                {
-                    int workerThreads = -1, completionPortThreads = -1;
-
-                    ThreadPool.GetAvailableThreads(out workerThreads, out completionPortThreads);
-                    Debug.Print("ThreadPool Info - Available threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
-                }
+                MultiTasksRuntime.DebugDisplayInfo();
 #endif
                 _stream.BeginRead(buffer, 0, ReadBufferSize, readCallback, null);    
             }
