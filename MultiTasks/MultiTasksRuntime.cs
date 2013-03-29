@@ -19,16 +19,21 @@ namespace MultiTasks
         {
             // Thread pool info            
             int workerThreads = -1, completionPortThreads = -1;
+            
+#if !SILVERLIGHT
+            // Its not possible to get this information in Silverlight. Go figure.
+
             ThreadPool.GetAvailableThreads(out workerThreads, out completionPortThreads);
-            Debug.Print("ThreadPool Info - Available threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
+            Debug.WriteLine("ThreadPool Info - Available threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
+#endif
 
             workerThreads = completionPortThreads = -1;
             ThreadPool.GetMinThreads(out workerThreads, out completionPortThreads);
-            Debug.Print("ThreadPool Info - Min threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
+            Debug.WriteLine("ThreadPool Info - Min threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
 
             workerThreads = completionPortThreads = -1;
             ThreadPool.GetMaxThreads(out workerThreads, out completionPortThreads);
-            Debug.Print("ThreadPool Info - Max threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
+            Debug.WriteLine("ThreadPool Info - Max threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
             
         }
 
