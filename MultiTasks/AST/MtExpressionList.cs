@@ -41,6 +41,11 @@ namespace MultiTasks.AST
                     var subthread = _args[i].NewScriptThread(thread);
                     var evalResult = _args[i].Evaluate(subthread);
 
+                    if (evalResult == null)
+                    {
+                        throw new Exception(string.Format("Argument {0} evaluated to null!", i));
+                    }
+
                     if (evalResult is MtResult)
                     {
                         result[i] = evalResult as MtResult;

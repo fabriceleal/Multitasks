@@ -2,6 +2,9 @@
 using Irony.Interpreter.Ast;
 using Irony.Interpreter;
 using MultiTasks.RT;
+using System.Diagnostics;
+using Irony.Ast;
+using Irony.Parsing;
 
 namespace MultiTasks.AST
 {
@@ -11,7 +14,7 @@ namespace MultiTasks.AST
         private AstNode _head;
         private MtExpressionList _args;
 
-        public override void Init(Irony.Ast.AstContext context, Irony.Parsing.ParseTreeNode treeNode)
+        public override void Init(AstContext context, ParseTreeNode treeNode)
         {
             base.Init(context, treeNode);
 
@@ -45,6 +48,19 @@ namespace MultiTasks.AST
                 
                 MtFunctionObjectBase.ExtractAsFunction(headResult, (wrkFun) =>
                 {
+
+#if DEBUG && !SILVERLIGHT
+                    if (wrkFun is BuiltInCallTarget)
+                    {
+                        var builtin = wrkFun as BuiltInCallTarget;
+                        Debug.Print("Calling builtin: {0}", builtin.Name);
+                    }
+                    else
+                    {
+                        Debug.Print("Calling user function");
+                    }
+#endif
+
                     var resultFun = wrkFun.Call(thread, args) as MtResult;
                     resultFun.GetValue((r3) =>
                     {

@@ -17,6 +17,8 @@ namespace MultiTasks
 
         static internal void DebugDisplayInfo()
         {
+#if !ALL_SYNC
+
             // Thread pool info            
             int workerThreads = -1, completionPortThreads = -1;
             
@@ -25,7 +27,7 @@ namespace MultiTasks
 
             ThreadPool.GetAvailableThreads(out workerThreads, out completionPortThreads);
             Debug.WriteLine("ThreadPool Info - Available threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
-#endif
+#endif // !SILVERLIGHT
 
             workerThreads = completionPortThreads = -1;
             ThreadPool.GetMinThreads(out workerThreads, out completionPortThreads);
@@ -34,7 +36,8 @@ namespace MultiTasks
             workerThreads = completionPortThreads = -1;
             ThreadPool.GetMaxThreads(out workerThreads, out completionPortThreads);
             Debug.WriteLine("ThreadPool Info - Max threads - Worker: {0} Completion Port: {1}", workerThreads, completionPortThreads);
-            
+
+#endif // !ALL_SYNC
         }
 
         #endregion
@@ -164,12 +167,12 @@ namespace MultiTasks
 
             the_list.GetValue(o_list =>
             {
+                var arr = o_list.Value as MtResult[];
+                if (arr == null)
+                    throw new Exception("slice_from expected a list!");
+
                 the_idx.GetValue(o_idx =>
                 {
-                    var arr = o_list.Value as MtResult[];
-                    if (arr == null)
-                        throw new Exception("slice_from expected a list!");
-
                     var idx = (int)o_idx.Value;
                     idx = idx < 0 ? 0 : idx;
 
@@ -202,12 +205,12 @@ namespace MultiTasks
 
             the_list.GetValue(o_list =>
             {
+                var arr = o_list.Value as MtResult[];
+                if (arr == null)
+                    throw new Exception("slice_until expected a list!");
+
                 the_idx.GetValue(o_idx =>
                 {
-                    var arr = o_list.Value as MtResult[];
-                    if (arr == null)
-                        throw new Exception("slice_until expected a list!");
-
                     var idx = (int)o_idx.Value;
 
                     var ret_arr = new MtResult[idx];

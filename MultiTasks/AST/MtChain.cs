@@ -73,7 +73,38 @@ namespace MultiTasks.AST
 
                 return result;
 
-#else
+#else // SILVERLIGHT
+
+#if ALL_SYNC
+                // synchronous eval :(
+                var headResult = _head.Evaluate(thread);
+
+                // Wrap it if necessary.
+                if (headResult as ICallTarget != null)
+                {
+                    headResult = MtResult.CreateAndWrap(headResult);
+                }
+
+                if (headResult as MtResult == null)
+                {
+                    throw new Exception("Head of chain evaluated to null!");
+                }
+
+                var subthread = _tail.NewScriptThread(thread);
+                var accessor = subthread.Bind("_", BindingRequestFlags.Write | BindingRequestFlags.ExistingOrNew);
+                accessor.SetValueRef(subthread, headResult);
+
+                var _tailResult = _tail.Evaluate(subthread) as MtResult;
+
+                if (_tailResult == null)
+                {
+                    throw new Exception("tail of chain evaluated to null!");
+                }
+
+                return _tailResult;
+
+#else // ALL_SYNC
+
                 MtResult chainResult = new MtResult();
 
                 _head.Evaluate.BeginInvoke(thread, iar =>
@@ -110,7 +141,9 @@ namespace MultiTasks.AST
                 }, null);
 
                 return chainResult;
-#endif
+#endif // ALL_SYNC
+
+#endif // SILVERLIGHT
 
             }
             catch (Exception e)

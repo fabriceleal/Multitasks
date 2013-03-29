@@ -70,16 +70,26 @@ namespace MultiTasks.RT
                     MultiTasksRuntime.DebugDisplayInfo();
 #endif
 
+#if ALL_SYNC
+
+                    {
+                        var o = generateO(null);
+#else // ALL_SYNC
                     ThreadPool.QueueUserWorkItem(state =>
                     {
-                        var o = generateO(state);
-                        
+                        var o = generateO(state);    
+#endif // ALL_SYNC
+
                         _o = o;
                         _hasValue = true;
 
                         // Raise event!
                         _receivedValue.Set();
+#if ALL_SYNC
+                    }
+#else // ALL_SYNC
                     });
+#endif // ALL_SYNC
 
                     return this;
                 }
@@ -114,8 +124,13 @@ namespace MultiTasks.RT
 #if DEBUG && !SILVERLIGHT
                 MultiTasksRuntime.DebugDisplayInfo();
 #endif
+
+#if ALL_SYNC
+                {
+#else // ALL_SYNC
                 ThreadPool.QueueUserWorkItem(state =>
                 {
+#endif // ALL_SYNC
 
 #if DEBUG && !SILVERLIGHT
                     Debug.Print("MtResult.WaitForValue {0} #2 Thread {1} wait signal.", _id, Thread.CurrentThread.ManagedThreadId);
@@ -141,7 +156,12 @@ namespace MultiTasks.RT
                     {
                         throw new Exception("Exception on MtResult.WaitForValue callback.", e);
                     }
+
+#if ALL_SYNC
+                }
+#else // ALL_SYNC
                 });
+#endif
 
                 return this;
             }
@@ -166,8 +186,14 @@ namespace MultiTasks.RT
 #if DEBUG && !SILVERLIGHT
                 MultiTasksRuntime.DebugDisplayInfo();
 #endif
+
+#if ALL_SYNC
+                {
+#else // ALL_SYNC
                 ThreadPool.QueueUserWorkItem(state =>
                 {
+#endif // ALL_SYNC
+
 
 #if DEBUG && !SILVERLIGHT
                     Debug.Print("MtResult.GetValue {0} #2 Thread {1} wait signal.", _id, Thread.CurrentThread.ManagedThreadId);
@@ -193,8 +219,11 @@ namespace MultiTasks.RT
                     {
                         throw new Exception("Exception on MtResult.GetValue callback.", e);
                     }
+#if ALL_SYNC
+                }
+#else // ALL_SYNC
                 });
-
+#endif // ALL_SYNC
                 return this;
             }
             catch (Exception e)
