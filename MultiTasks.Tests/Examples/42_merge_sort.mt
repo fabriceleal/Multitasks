@@ -1,4 +1,4 @@
-a <= [3,5,2] |
+a <= [1,2,3,4,5] |
     fst <= L(l) => car(l); |
     snd <= L(l) => car(cdr(l)); |
    
@@ -20,22 +20,22 @@ a <= [3,5,2] |
             ;
         ; |
    
-   merge_sort <= L (b) =>
-        len_b <= length(b) |
+   merge_sort <= L (ls) =>
+        len_b <= length(ls) |
         if equals(len_b, 1)
-            b;
+            ls;
             if equals(len_b, 2)
-                fst_b <= fst(b) | snd_b <= snd(b) | 
+                fst_b <= fst(ls) | snd_b <= snd(ls) |
                         if greater(fst_b, snd_b)
                             [snd_b, fst_b];
-                            b;
+                            ls;
                         ;
 
                 half <= div(len_b, 2) |
-                    fst_half <= slice_until(b, half) |
-                    snd_half <= slice_from(b, half)  |
+                    fst_half <= slice_until(ls, half) |
+                    snd_half <= slice_from(ls, half)  | wait(fst_half, snd_half) |
                     fst_half_s <= merge_sort(fst_half) | 
-                    snd_half_s <= merge_sort(snd_half) |
+                    snd_half_s <= merge_sort(snd_half) | wait(fst_half_s, snd_half_s) |
                     merge(fst_half_s, snd_half_s);
 
             ;
