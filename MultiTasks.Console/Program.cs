@@ -24,6 +24,7 @@ namespace multitasks
             Environment.Exit(exitCode);
         }
 
+        private static string _SEP = new String('*', 10);
         /// <summary>
         /// Exits with exit code -2
         /// </summary>
@@ -32,12 +33,13 @@ namespace multitasks
         {
             Exception _e = e;
 
-            Console.Error.WriteLine("Exception!");
+            Console.Error.WriteLine("Exception:");
             while (_e != null)
             {
-                Console.Error.WriteLine(e.Message);
-                Console.Error.WriteLine(e.Source);
-                Console.Error.WriteLine(e.StackTrace);
+                Console.Error.WriteLine(_e.Message);
+                Console.Error.WriteLine(_e.Source);
+                Console.Error.WriteLine(_e.StackTrace);
+                Console.Error.WriteLine(_SEP);
                 _e = _e.InnerException;
             }
 

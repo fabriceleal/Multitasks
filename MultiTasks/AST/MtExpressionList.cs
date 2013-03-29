@@ -38,27 +38,34 @@ namespace MultiTasks.AST
 
                 for (var i = 0; i < _args.Count; ++i)
                 {
-                    var subthread = _args[i].NewScriptThread(thread);
-                    var evalResult = _args[i].Evaluate(subthread);
+                    try
+                    {
+                        var subthread = _args[i].NewScriptThread(thread);
+                        var evalResult = _args[i].Evaluate(subthread);
 
-                    if (evalResult == null)
-                    {
-                        throw new Exception(string.Format("Argument {0} evaluated to null!", i));
-                    }
+                        if (evalResult == null)
+                        {
+                            throw new Exception(string.Format("_args[{0}].Evaluate evaluated to null!", i));
+                        }
 
-                    if (evalResult is MtResult)
-                    {
-                        result[i] = evalResult as MtResult;
+                        if (evalResult is MtResult)
+                        {
+                            result[i] = evalResult as MtResult;
+                        }
+                        else
+                        {
+                            // A function, wrap it!
+                            result[i] = MtResult.CreateAndWrap(evalResult);
+                        }
+
+                        if (result[i] == null)
+                        {
+                            throw new Exception("Result is a non-MtResult!");
+                        }
                     }
-                    else
+                    catch (Exception e)
                     {
-                        // A function, wrap it!
-                        result[i] = MtResult.CreateAndWrap(evalResult);
-                    }
-                                        
-                    if (result[i] == null)
-                    {
-                        throw new Exception("Argument evaluated to null!");
+                        throw new Exception(string.Format("There was a problem evaluating arg {0}", i), e);
                     }
                 }
 

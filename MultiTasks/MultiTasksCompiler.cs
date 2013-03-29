@@ -21,7 +21,17 @@ namespace MultiTasks
         {
             try
             {
-                return _scriptApp.Evaluate(str) as MtResult;
+                var ret = _scriptApp.Evaluate(str);
+                if (ret == null)
+                {
+                    throw new Exception("scriptApp.Evalute returned null.");
+                }
+                var wrkRet = ret as MtResult;
+                if (wrkRet == null)
+                {
+                    throw new Exception("scriptApp.Evalute returned a non-MtResult.");
+                }
+                return wrkRet;
             }
             catch (Exception e)
             {
