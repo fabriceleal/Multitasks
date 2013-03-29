@@ -43,13 +43,13 @@ namespace MultiTasks
         #endregion
 
         public MultiTasksRuntime(LanguageData lang) : base(lang) { }
-                
+
         public Stream OutputStream { get; set; }
 
         public override void Init()
         {
             base.Init();
-                                                
+
             BuiltIns.AddMethod(MtPrint, "print", 1);
             BuiltIns.AddMethod(MtFalse, "false");
             BuiltIns.AddMethod(MtTrue, "true");
@@ -74,7 +74,8 @@ namespace MultiTasks
             BuiltIns.AddMethod(MtSliceFrom, "slice_from", 2);
             BuiltIns.AddMethod(MtCons, "cons", 2);
             BuiltIns.AddMethod(MtAnd, "and", 2);
-            
+            BuiltIns.AddMethod(MtNot, "not", 1);
+
 #if !SILVERLIGHT
 
             // JSON
@@ -90,7 +91,7 @@ namespace MultiTasks
             BuiltIns.AddMethod(MtHttpEnd, "http_end", 1, 1);
 #endif
             // TODO
-            
+
             // Get request/response stream             
             // Get/Set request/response header value
 
@@ -158,6 +159,26 @@ namespace MultiTasks
             return ret;
         }
 
+        private object MtNot(ScriptThread thread, object[] args)
+        {
+            var ret = new MtResult();
+
+            var the_arg = args[0] as MtResult;
+            the_arg.GetValue(o =>
+            {
+                if (o.Value == MtObject.False.Value)
+                {
+                    ret.SetValue(MtObject.True);
+                }
+                else
+                {
+                    ret.SetValue(MtObject.False);
+                }
+            });
+
+            return ret;
+        }
+
         private object MtSliceFrom(ScriptThread thread, object[] args)
         {
             var ret = new MtResult();
@@ -199,7 +220,7 @@ namespace MultiTasks
         private object MtSliceUntil(ScriptThread thread, object[] args)
         {
             var ret = new MtResult();
-            
+
             var the_list = args[0] as MtResult;
             var the_idx = args[1] as MtResult;
 
@@ -260,9 +281,9 @@ namespace MultiTasks
             arg0.GetValue(o1 =>
             {
                 arg1.GetValue(o2 =>
-                {                    
+                {
                     //if (o1.GetType().Equals(o2.GetType()) && o1.Value == o2.Value)
-                    if(object.Equals(o1.Value, o2.Value))
+                    if (object.Equals(o1.Value, o2.Value))
                     {
                         ret.SetValue(MtObject.True);
                     }
@@ -280,7 +301,7 @@ namespace MultiTasks
         {
             var ret = new MtResult();
             var arg0 = args[0] as MtResult;
-            
+
             arg0.GetValue((o) =>
             {
                 var arr = o.Value as MtResult[];
@@ -304,7 +325,8 @@ namespace MultiTasks
             var ret = new MtResult();
             var arg0 = arguments[0] as MtResult;
 
-            arg0.GetValue((o) => { 
+            arg0.GetValue((o) =>
+            {
                 var s = o.Value == null ? "null" : o.Value.ToString();
                 var reader = new Newtonsoft.Json.JsonTextReader(new StringReader(s));
 
@@ -320,7 +342,7 @@ namespace MultiTasks
                         Debug.Print("Token: {0}", reader.Value);
                         Debug.Print("Value Type: {0}", reader.ValueType);
                         Debug.Print("Token Type: {0}", reader.TokenType);
-#endif                     
+#endif
                         readStuff();
                     }
                     else
@@ -330,9 +352,9 @@ namespace MultiTasks
                     }
                 };
 
-                readStuff();                
+                readStuff();
             });
-            
+
             return ret;
         }
 
@@ -346,7 +368,7 @@ namespace MultiTasks
         public object MtHttpEnd(ScriptThread thread, object[] arguments)
         {
             var result = new MtResult();
-            
+
             var arg0 = arguments[0] as MtResult;
             arg0.GetValue(response =>
             {
@@ -357,7 +379,7 @@ namespace MultiTasks
                 }
                 wrkResponse.Close();
             });
-            
+
             return result;
         }
 
@@ -376,7 +398,7 @@ namespace MultiTasks
                 else if (httpstuff.Value is HttpListenerResponse)
                 {
                     var wrkValue = httpstuff.Value as HttpListenerResponse;
-                    result.SetValue(new MtObject(new MtStreamWrapper(wrkValue.OutputStream)));                    
+                    result.SetValue(new MtObject(new MtStreamWrapper(wrkValue.OutputStream)));
                 }
                 else
                 {
@@ -467,12 +489,14 @@ namespace MultiTasks
                     wrkArg.GetValue(o =>
                     {
                         var server = o.Value as MtServerHttp;
-                        server.Start(() => {
+                        server.Start(() =>
+                        {
                             results[copy_i] = MtResult.True;
 
                             done();
 
-                        }, e => {
+                        }, e =>
+                        {
                             results[copy_i] = MtResult.False;
 
                             done();
@@ -591,13 +615,13 @@ namespace MultiTasks
 
             arg0.GetValue(o =>
             {
-                arg1.GetValue(code => 
+                arg1.GetValue(code =>
                 {
                     var response = o.Value as HttpListenerResponse;
                     response.StatusCode = (int)code.Value;
-                     
+
                     result.SetValue(MtObject.True);
-                });                
+                });
             });
 
             return result;
@@ -609,7 +633,7 @@ namespace MultiTasks
 
         // TODO
         public object MtCurry(ScriptThread thread, object[] arguments)
-        {            
+        {
             var arg0 = arguments[0] as MtResult; // arity
             var arg1 = arguments[1] as MtResult; // ICallTarget
             return MtResult.True;
@@ -642,7 +666,7 @@ namespace MultiTasks
         {
 #if DEBUG && !SILVERLIGHT
             Debug.Print("Create stream from string");
-#endif            
+#endif
 
             try
             {
@@ -664,7 +688,7 @@ namespace MultiTasks
         {
 #if DEBUG && !SILVERLIGHT
             Debug.Print("Create stream from uri");
-#endif            
+#endif
 
             try
             {
@@ -709,7 +733,7 @@ namespace MultiTasks
         {
 #if DEBUG && !SILVERLIGHT
             Debug.Print("Close streams");
-#endif            
+#endif
 
             try
             {
@@ -788,7 +812,7 @@ namespace MultiTasks
         #region Runtime builtin functions
 
         #region Lists
-             
+
         private MtResult MtMap(ScriptThread thread, object[] args)
         {
             var result = new MtResult();
@@ -820,7 +844,7 @@ namespace MultiTasks
                             int copy_i = i;
 
                             var ret = wrkFun.Call(thread, new object[] { wrkArr[i] });
-                            if(ret == null)
+                            if (ret == null)
                             {
                                 throw new Exception("Return of application in map is null!");
                             }
@@ -841,7 +865,7 @@ namespace MultiTasks
                     }
 
                     result.SetValue(new MtObject(res));
-                    
+
                 });
 
             });
@@ -864,7 +888,7 @@ namespace MultiTasks
                 wrkArr[0].GetValue((head) =>
                 {
                     ret.SetValue(head);
-                });                
+                });
             });
             return ret;
         }
@@ -896,7 +920,7 @@ namespace MultiTasks
                         return new MtObject(tail);
                     });
                 }
-                
+
             });
             return ret;
         }
@@ -912,7 +936,7 @@ namespace MultiTasks
             var sleepEval = args.Length > 1 ? args[1] as MtResult : MtResult.True;
 
             var waitValue = new ManualResetEvent(false);
-            
+
             // eval number of milliseconds to wait
             sleepMs.GetValue((waitPeriod) =>
             {
@@ -931,7 +955,7 @@ namespace MultiTasks
 #if DEBUG && !SILVERLIGHT
                     Debug.Print("MtSleep #1 Thread {0} {1:mm:ss.ffff} start sleep", Thread.CurrentThread.ManagedThreadId, DateTime.Now);
 #endif
-                    
+
                     // Wait period and, if need be, wait for sleepResult
                     var to_wait = (int)waitPeriod.Value;
                     if (to_wait > 0)
@@ -954,9 +978,9 @@ namespace MultiTasks
 
                     return sleepResult;
                 });
-                
+
             });
-            
+
             return result;
         }
 
@@ -1061,7 +1085,7 @@ namespace MultiTasks
             catch (Exception e)
             {
                 throw new Exception("Exception on Runtime function: identity", e);
-            }            
+            }
         }
 
         private MtResult MtZero(ScriptThread thread, object[] args)
