@@ -7,13 +7,13 @@
     mc:Ignorable="d"
     d:DesignHeight="300" d:DesignWidth="400">
 
-    <Grid x:Name="LayoutRoot" Background="#FFF2F2F2" Margin="0,0,-426,-226">
+    <Grid x:Name="LayoutRoot" Background="#FFF2F2F2" Margin="0,0,-324,-226">
         <Button x:Name="btExecute" Content="Execute" HorizontalAlignment="Left" Height="23" Margin="349,78,0,0" VerticalAlignment="Top" Width="86" RenderTransformOrigin="0.644,0.595" Click="btExecute_Click" FontSize="13"/>
         <TextBox x:Name="txCode" HorizontalAlignment="Left" Height="147" Margin="10,106,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="425" AcceptsReturn="True"/>
         <TextBox x:Name="txOutput" HorizontalAlignment="Left" Height="249" Margin="10,267,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="425" IsReadOnly="True"/>
         <sdk:Label HorizontalAlignment="Left" Height="23" Margin="450,10,0,0" VerticalAlignment="Top" Width="120" Content="Examples" FontSize="13"/>
         <sdk:Label HorizontalAlignment="Left" Height="63" Margin="10,10,0,0" VerticalAlignment="Top" Width="425" Content="Type or pick an example from the right; some examples might take a while &#xA;for the first time they're run. Cortesy from the .Net 4.0 / Silverlight security&#xA;model (no Thread.Abort from unprivileged code), if this breaks / takes &#xD;&#xA;too long, there's no cancel; reload the page!" HorizontalContentAlignment="Left"/>
-        <ScrollViewer x:Name="PanelExamplesStack" HorizontalAlignment="Left" Height="478" VerticalAlignment="Top" Width="366" Margin="450,38,0,0"/>
+        <ScrollViewer x:Name="PanelExamplesStack" HorizontalAlignment="Left" Height="478" VerticalAlignment="Top" Width="265" Margin="450,38,0,0"/>
 
     </Grid>
 </UserControl>
