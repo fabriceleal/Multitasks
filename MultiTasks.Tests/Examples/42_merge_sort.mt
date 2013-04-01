@@ -1,4 +1,4 @@
-a <= [1,2,3,4,5] |
+a <= [4,11,1,15,3,10,7,14,2,8,16,5,12,9,13,6] |
     fst <= L(l) => car(l); |
     snd <= L(l) => car(cdr(l)); |
    
@@ -18,7 +18,7 @@ a <= [1,2,3,4,5] |
                             ;
                 ;
             ;
-        ; |
+        ;  |
    
    merge_sort <= L (ls) =>
         len_b <= length(ls) |
@@ -36,7 +36,7 @@ a <= [1,2,3,4,5] |
                     snd_half <= slice_from(ls, half)  | wait(fst_half, snd_half) |
                     fst_half_s <= merge_sort(fst_half) | 
                     snd_half_s <= merge_sort(snd_half) | wait(fst_half_s, snd_half_s) |
-                    merge(fst_half_s, snd_half_s);
+                    ret <= merge(fst_half_s, snd_half_s) | wait(_) | ret;
 
             ;
-        ; | merge_sort(a) | map(_, print) ;
+        ;| merge_sort(a) | map(_, print) ;

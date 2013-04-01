@@ -66,14 +66,6 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Irony, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ca48ace7223ead47, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Vendors\Any Cpu\Irony.dll</HintPath>
-    </Reference>
-    <Reference Include="Irony.Interpreter, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ca48ace7223ead47, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Vendors\Any Cpu\Irony.Interpreter.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -101,6 +93,14 @@
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Irony_2013_03_31\irony_e79458979314\Irony.Interpreter\015.Irony.Interpreter.2010.csproj">
+      <Project>{79d55f54-df8f-40d0-9edf-7bc13a85fc84}</Project>
+      <Name>015.Irony.Interpreter.2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Irony_2013_03_31\irony_e79458979314\Irony\010.Irony.2010.csproj">
+      <Project>{e10ab1ca-2a18-45a7-bb53-adb24b22ee65}</Project>
+      <Name>010.Irony.2010</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MultiTasks\MultiTasks.csproj">
       <Project>{48D5B9DD-FD74-45EF-88D1-2549AC88FC52}</Project>
       <Name>MultiTasks</Name>
