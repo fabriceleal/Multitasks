@@ -53,6 +53,9 @@ namespace MultiTasks.RT
                     accessor.SetValueRef(subthread, this);
                 }
 
+                // FIXME Clone _body!
+
+
                 // 2.3 Call body in this new context
                 var res = _body.Evaluate(subthread) as MtResult;
                 if (res == null)

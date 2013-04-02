@@ -29,16 +29,16 @@ namespace MultiTasks.AST
             _body = AddChild(string.Empty, nodes[1]) as AstNode;
             if (_body == null)
             {
-                throw new Exception("Body of function can't be null!");/*v*/
+                throw new Exception("Body of function can't be null!");
             }
-                        
+            
         }
 
         protected override object DoEvaluate(Irony.Interpreter.ScriptThread thread)
         {
             thread.CurrentNode = this;
             try
-            {
+            {   
                 var ret = new MtResult();
 
                 ret.SetValue(new MtObject(new MtFunctionObject(_body, _arguments, thread)));
@@ -51,7 +51,7 @@ namespace MultiTasks.AST
             }
             finally
             {
-                thread.CurrentNode = Parent;
+                //thread.CurrentNode = Parent;
             }
         }
     }

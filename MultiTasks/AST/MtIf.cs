@@ -82,7 +82,7 @@ namespace MultiTasks.AST
             }
             finally
             {
-                thread.CurrentNode = Parent;
+                //thread.CurrentNode = Parent;
             }
         }
 

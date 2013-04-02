@@ -12,7 +12,7 @@ namespace MultiTasks.AST
     {
 
         private AstNode _head;
-        private MtExpressionList _args;
+        private MtExpressionList _args;        
 
         public override void Init(AstContext context, ParseTreeNode treeNode)
         {
@@ -23,6 +23,7 @@ namespace MultiTasks.AST
             _args = AddChild(string.Empty, treeNode.ChildNodes[1]) as MtExpressionList;
 
             AsString = "Application";
+
         }
 
         protected override object DoEvaluate(Irony.Interpreter.ScriptThread thread)
@@ -77,7 +78,7 @@ namespace MultiTasks.AST
             finally
             {
                 // EPILOG
-                thread.CurrentNode = Parent;
+                //thread.CurrentNode = Parent;
             }
         }
 

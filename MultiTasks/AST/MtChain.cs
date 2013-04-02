@@ -153,7 +153,7 @@ namespace MultiTasks.AST
             finally
             {
                 // EPILOG
-                thread.CurrentNode = Parent;
+                //thread.CurrentNode = Parent;
             }            
         }
 

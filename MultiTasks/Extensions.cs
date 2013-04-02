@@ -27,25 +27,33 @@ namespace MultiTasks
             try
             {
                 var subthread = new ScriptThread(current.App);
-                subthread.CurrentScope = current.CurrentScope;
-
-                var localScopeInfo = new ScopeInfo(_this, true);
-
+                
                 if (_this.DependentScopeInfo != null)
                     throw new Exception("Unexpected condition (AstNode has dependentScopeInfo when it shouldnt), handle this!");
 
                 if (subthread.CurrentScope == null)
                     throw new Exception("Unexpected condition (new ScriptThread has no current scope), handle this!");
 
-                _this.DependentScopeInfo = localScopeInfo;
-                
-                //subthread.CurrentScope = current.CurrentScope;                
-                //subthread.PushClosureScope(localScopeInfo, subthread.CurrentScope, new object[] { });
-                
-                //subthread.PushScope(current.CurrentScope.Info, new object[] { });                
-                subthread.PushScope(_this.DependentScopeInfo, new object[] { });
+                // subthread.CurrentScope is, at creation, the base scope which is at
+                // ScriptApp (root of all scopes). We can override it like this.
+                subthread.CurrentScope = current.CurrentScope;
 
-                //subthread.PushClosureScope(_this.DependentScopeInfo, current.CurrentScope, new object[] { });
+                // We'll try to mimic the behavior of LambdaNode-FunctionCallNode
+                // used by the mini-python sample in the Irony's samples
+                
+                // We create a new ScopeInfo.
+                var localScopeInfo = new ScopeInfo(_this, true);
+
+                // Now we put this in the AstNode. This is needed so Scope.GetParent()
+                // works properly. This is atrocious, and will force us to clone
+                // a functions body each time it's evaluated
+                _this.DependentScopeInfo = localScopeInfo;
+
+                // Now we push the new ScopeInfo.
+                subthread.PushScope(localScopeInfo, new object[] { });
+
+                // I think this is superfluous, because I'm doing this in the begining of each
+                // AstNode.DoEvaluate(), but wont touch it in the meanwhile
                 subthread.CurrentNode = _this;
             
                 return subthread;
