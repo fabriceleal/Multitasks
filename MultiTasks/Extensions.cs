@@ -27,12 +27,25 @@ namespace MultiTasks
             try
             {
                 var subthread = new ScriptThread(current.App);
+                subthread.CurrentScope = current.CurrentScope;
+
                 var localScopeInfo = new ScopeInfo(_this, true);
-                
+
+                if (_this.DependentScopeInfo != null)
+                    throw new Exception("Unexpected condition (AstNode has dependentScopeInfo when it shouldnt), handle this!");
+
+                if (subthread.CurrentScope == null)
+                    throw new Exception("Unexpected condition (new ScriptThread has no current scope), handle this!");
+
                 _this.DependentScopeInfo = localScopeInfo;
                 
-                subthread.CurrentScope = current.CurrentScope;                
-                subthread.PushClosureScope(localScopeInfo, subthread.CurrentScope, new object[] { });
+                //subthread.CurrentScope = current.CurrentScope;                
+                //subthread.PushClosureScope(localScopeInfo, subthread.CurrentScope, new object[] { });
+                
+                //subthread.PushScope(current.CurrentScope.Info, new object[] { });                
+                subthread.PushScope(_this.DependentScopeInfo, new object[] { });
+
+                //subthread.PushClosureScope(_this.DependentScopeInfo, current.CurrentScope, new object[] { });
                 subthread.CurrentNode = _this;
             
                 return subthread;

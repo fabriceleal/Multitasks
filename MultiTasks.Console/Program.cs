@@ -62,7 +62,7 @@ namespace multitasks
                     Console.Error.WriteLine("This is a debug exe.");
                     
                     Console.Error.WriteLine("Do you want to attach the debugger? (y/N)");                    
-                    var answer = Console.ReadLine();
+                    var answer = Console.ReadLine();                    
                     // I know this looks horrible
                     if (answer.ToLower().StartsWith("y"))
                     {
