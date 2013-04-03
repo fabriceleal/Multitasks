@@ -28,8 +28,8 @@ namespace MultiTasks
             {
                 var subthread = new ScriptThread(current.App);
                 
-                if (_this.DependentScopeInfo != null)
-                    throw new Exception("Unexpected condition (AstNode has dependentScopeInfo when it shouldnt), handle this!");
+                //if (_this.DependentScopeInfo != null)
+                //    throw new Exception("Unexpected condition (AstNode has dependentScopeInfo when it shouldnt), handle this!");
 
                 if (subthread.CurrentScope == null)
                     throw new Exception("Unexpected condition (new ScriptThread has no current scope), handle this!");
@@ -42,15 +42,15 @@ namespace MultiTasks
                 // used by the mini-python sample in the Irony's samples
                 
                 // We create a new ScopeInfo.
-                var localScopeInfo = new ScopeInfo(_this, true);
+                //var localScopeInfo = new ScopeInfo(_this, true);
 
                 // Now we put this in the AstNode. This is needed so Scope.GetParent()
                 // works properly. This is atrocious, and will force us to clone
                 // a functions body each time it's evaluated
-                _this.DependentScopeInfo = localScopeInfo;
+                //_this.DependentScopeInfo = localScopeInfo;
 
                 // Now we push the new ScopeInfo.
-                subthread.PushScope(localScopeInfo, new object[] { });
+                //subthread.PushScope(localScopeInfo, new object[] { });
 
                 // I think this is superfluous, because I'm doing this in the begining of each
                 // AstNode.DoEvaluate(), but wont touch it in the meanwhile

@@ -91,7 +91,7 @@ namespace MultiTasks.AST
                 }
 
                 var subthread = _tail.NewScriptThread(thread);
-                var accessor = subthread.Bind("_", BindingRequestFlags.Write | BindingRequestFlags.NewOnly);
+                var accessor = subthread.Bind("_", BindingRequestFlags.Write | BindingRequestFlags.ExistingOrNew);
                 accessor.SetValueRef(subthread, headResult);
                 
                 var _tailResult = _tail.Evaluate(subthread) as MtResult;
