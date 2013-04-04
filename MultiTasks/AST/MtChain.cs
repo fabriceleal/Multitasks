@@ -8,9 +8,10 @@ namespace MultiTasks.AST
 {
     public class MtChain : MtAstNode
     {
-        private AstNode _head;
-        private AstNode _tail;
+        protected AstNode _head;
+        protected AstNode _tail;
 
+        
         public override void Init(Irony.Ast.AstContext context, Irony.Parsing.ParseTreeNode treeNode)
         {
             base.Init(context, treeNode);
@@ -153,7 +154,7 @@ namespace MultiTasks.AST
             finally
             {
                 // EPILOG
-                thread.CurrentNode = Parent;
+                //thread.CurrentNode = Parent;
             }            
         }
 

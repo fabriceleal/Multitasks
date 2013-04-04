@@ -14,6 +14,17 @@ namespace MultiTasks.AST
 
         List<AstNode> _args = new List<AstNode>();
 
+        public override AstNode ToTS()
+        {
+            var x = new MtExpressionList();
+            x._args = new List<AstNode>();
+            foreach(var a in _args)
+            {
+                x._args.Add(a.ConvertToTS());
+            }
+            return x;
+        }
+
         public override void Init(Irony.Ast.AstContext context, Irony.Parsing.ParseTreeNode treeNode)
         {            
             base.Init(context, treeNode);
@@ -77,7 +88,7 @@ namespace MultiTasks.AST
             }
             finally
             {
-                thread.CurrentNode = Parent;
+                //thread.CurrentNode = Parent;
             }
         }
     }

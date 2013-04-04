@@ -2,6 +2,7 @@
 using Irony.Interpreter.Ast;
 using Irony.Interpreter;
 using MultiTasks.AST;
+using MultiTasks;
 
 namespace MultiTasks.RT
 {
@@ -34,9 +35,11 @@ namespace MultiTasks.RT
                     thread = _thread;
                 }
 
+                var body_to_eval = _body.ConvertToTS(); // Cloners.Convert(_body);
+
                 // 2. Function object is responsable for:
                 // 2.1 Create a new context
-                var subthread = _body.NewScriptThread(thread);
+                var subthread = body_to_eval.NewScriptThread(thread);
 
                 // 2.2 For each parameter, bind its correspondent argument  
                 // (ignore extra parameters, set missing to Empty)
@@ -54,7 +57,7 @@ namespace MultiTasks.RT
                 }
 
                 // 2.3 Call body in this new context
-                var res = _body.Evaluate(subthread) as MtResult;
+                var res = body_to_eval.Evaluate(subthread) as MtResult;
                 if (res == null)
                     throw new Exception("Function can't evaluate to null!");
                 return res;

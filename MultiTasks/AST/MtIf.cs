@@ -7,14 +7,23 @@ namespace MultiTasks.AST
 {
     public class MtIf : MtAstNode
     {
-        private AstNode _expression;
-        private AstNode _trueBranch;
-        private AstNode _falseBranch;
+        protected AstNode _expression;
+        protected AstNode _trueBranch;
+        protected AstNode _falseBranch;
+
+        public override AstNode ToTS()
+        {
+            var x = new MtIf();
+            x._expression = _expression.ConvertToTS();
+            x._trueBranch = _trueBranch.ConvertToTS();
+            x._falseBranch = _falseBranch.ConvertToTS();
+            return x;
+        }
 
         public override void Init(Irony.Ast.AstContext context, Irony.Parsing.ParseTreeNode treeNode)
         {
             base.Init(context, treeNode);
-            
+
             var nodes = treeNode.ChildNodes;
 
             if (nodes.Count != 3)
@@ -82,7 +91,7 @@ namespace MultiTasks.AST
             }
             finally
             {
-                thread.CurrentNode = Parent;
+                //thread.CurrentNode = Parent;
             }
         }
 

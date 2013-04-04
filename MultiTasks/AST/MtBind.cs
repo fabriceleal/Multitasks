@@ -7,9 +7,10 @@ namespace MultiTasks.AST
 {
     public class MtBind : MtAstNode
     {
-        private AstNode _targetName;
-        private MtAstNode _expression;
+        internal AstNode _targetName;
+        internal MtAstNode _expression;
 
+    
         public override void Init(Irony.Ast.AstContext context, Irony.Parsing.ParseTreeNode treeNode)
         {            
             base.Init(context, treeNode);
@@ -64,7 +65,7 @@ namespace MultiTasks.AST
             }
             finally
             {
-                thread.CurrentNode = Parent;
+                //thread.CurrentNode = Parent;
             }
         }
     }

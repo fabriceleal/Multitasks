@@ -1,13 +1,23 @@
-﻿using System;
-using Irony.Interpreter.Ast;
-using Irony.Ast;
-using Irony.Parsing;
+﻿using Irony.Ast;
 using Irony.Interpreter;
+using Irony.Interpreter.Ast;
+using Irony.Parsing;
+using MultiTasks.AST;
+using System;
 
 namespace MultiTasks
 {
     static class _
     {
+        public static AstNode ConvertToTS(this AstNode _this)
+        {
+            if (_this as MtAstNode != null)
+            {
+                return ((MtAstNode)_this).ToTS();
+            }
+
+            return _this;
+        }
 
         public static ScriptThread SelectMany(this ScriptThread _this)
         {

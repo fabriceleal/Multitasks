@@ -11,8 +11,16 @@ namespace MultiTasks.AST
     public class MtApplication : MtAstNode
     {
 
-        private AstNode _head;
-        private MtExpressionList _args;
+        protected AstNode _head;
+        protected MtExpressionList _args;
+
+        public override AstNode ToTS()
+        {
+            var x = new MtApplication();
+            x._head = _head.ConvertToTS();
+            x._args = (MtExpressionList) (_args.ConvertToTS());
+            return x;
+        }
 
         public override void Init(AstContext context, ParseTreeNode treeNode)
         {
@@ -77,7 +85,7 @@ namespace MultiTasks.AST
             finally
             {
                 // EPILOG
-                thread.CurrentNode = Parent;
+                //thread.CurrentNode = Parent;
             }
         }
 
