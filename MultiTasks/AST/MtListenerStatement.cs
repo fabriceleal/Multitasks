@@ -1,9 +1,9 @@
 ﻿using Irony.Ast;
-using Irony.Parsing;
 using Irony.Interpreter;
-using System;
-using MultiTasks.RT;
 using Irony.Interpreter.Ast;
+using Irony.Parsing;
+using MultiTasks.RT;
+using System;
 using System.Diagnostics;
 using System.Threading;
 
@@ -11,9 +11,9 @@ namespace MultiTasks.AST
 {
     public class MtListenerStatement : MtAstNode
     {
-        private AstNode _eventEmitter;
-        private string _eventName;
-        private AstNode _listener;
+        protected AstNode _eventEmitter;
+        protected string _eventName;
+        protected AstNode _listener;
 
         public override void Init(AstContext context, ParseTreeNode treeNode)
         {

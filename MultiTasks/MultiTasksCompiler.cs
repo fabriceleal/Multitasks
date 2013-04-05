@@ -24,7 +24,7 @@ namespace MultiTasks
                 var ret = _scriptApp.Evaluate(str);
                 if (ret == null)
                 {
-                    throw new Exception("scriptApp.Evalute returned null.");
+                    throw new Exception("scriptApp.Evalute returned null.", _scriptApp.LastException);
                 }
                 var wrkRet = ret as MtResult;
                 if (wrkRet == null)

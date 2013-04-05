@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Irony.Interpreter.Ast;
 using MultiTasks.RT;
-using Irony.Interpreter.Ast;
+using System;
+using System.Collections.Generic;
 
 namespace MultiTasks.AST
 {
@@ -22,6 +22,7 @@ namespace MultiTasks.AST
             {
                 x._args.Add(a.ConvertToTS());
             }
+            x.ModuleNode = ModuleNode;
             return x;
         }
 

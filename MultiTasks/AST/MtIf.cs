@@ -1,7 +1,7 @@
-﻿using System;
-using Irony.Interpreter;
+﻿using Irony.Interpreter;
 using Irony.Interpreter.Ast;
 using MultiTasks.RT;
+using System;
 
 namespace MultiTasks.AST
 {
@@ -14,6 +14,7 @@ namespace MultiTasks.AST
         public override AstNode ToTS()
         {
             var x = new MtIf();
+            x.ModuleNode = ModuleNode;
             x._expression = _expression.ConvertToTS();
             x._trueBranch = _trueBranch.ConvertToTS();
             x._falseBranch = _falseBranch.ConvertToTS();

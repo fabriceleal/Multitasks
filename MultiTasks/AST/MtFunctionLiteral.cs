@@ -1,14 +1,23 @@
-﻿using MultiTasks.RT;
-using System;
-using Irony.Interpreter;
+﻿using Irony.Interpreter;
 using Irony.Interpreter.Ast;
+using MultiTasks.RT;
+using System;
 
 namespace MultiTasks.AST
 {
     public class MtFunctionLiteral : MtAstNode
     {
-        private MtArgListForDecl _arguments;
-        private AstNode _body;       
+        protected MtArgListForDecl _arguments;
+        protected AstNode _body;
+        
+        public override AstNode ToTS()
+        {
+            var i = new MtFunctionLiteral();
+            i._arguments = _arguments;
+            i._body = _body;
+            i.ModuleNode = ModuleNode;
+            return i;
+        }
 
         public override void Init(Irony.Ast.AstContext context, Irony.Parsing.ParseTreeNode treeNode)
         {

@@ -1,8 +1,7 @@
-﻿using System;
-using Irony.Interpreter;
+﻿using Irony.Interpreter;
 using Irony.Interpreter.Ast;
 using MultiTasks.RT;
-using System.Threading;
+using System;
 
 namespace MultiTasks.AST
 {
@@ -11,7 +10,15 @@ namespace MultiTasks.AST
         protected AstNode _head;
         protected AstNode _tail;
 
-        
+        public override AstNode ToTS()
+        {
+            var x = new MtChain();
+            x._head = _head.ConvertToTS();
+            x._tail = _tail.ConvertToTS();
+            x.ModuleNode = ModuleNode;
+            return x;
+        }
+
         public override void Init(Irony.Ast.AstContext context, Irony.Parsing.ParseTreeNode treeNode)
         {
             base.Init(context, treeNode);

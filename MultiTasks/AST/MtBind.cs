@@ -1,15 +1,23 @@
-﻿using System;
+﻿using Irony.Interpreter;
 using Irony.Interpreter.Ast;
-using Irony.Interpreter;
 using MultiTasks.RT;
+using System;
 
 namespace MultiTasks.AST
 {
     public class MtBind : MtAstNode
     {
-        internal AstNode _targetName;
-        internal MtAstNode _expression;
+        protected AstNode _targetName;
+        protected MtAstNode _expression;
 
+        public override AstNode ToTS()
+        {
+            var i = new MtBind();
+            i._targetName = _targetName.ConvertToTS();
+            i._expression = (MtAstNode)_expression.ToTS();            
+            i.ModuleNode = ModuleNode;
+            return i;
+        }
     
         public override void Init(Irony.Ast.AstContext context, Irony.Parsing.ParseTreeNode treeNode)
         {            

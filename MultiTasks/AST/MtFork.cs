@@ -1,16 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using Irony.Ast;
-using Irony.Parsing;
-using System.Threading;
+﻿using Irony.Ast;
 using Irony.Interpreter;
+using Irony.Interpreter.Ast;
+using Irony.Parsing;
 using MultiTasks.RT;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace MultiTasks.AST
 {
     public class MtFork : MtAstNode
     {
-        private List<MtAstNode> _chains = new List<MtAstNode>();
+        protected List<MtAstNode> _chains = new List<MtAstNode>();
+
+        public override AstNode ToTS()
+        {
+            var i = new MtFork();
+            i._chains = new List<MtAstNode>();
+            
+            foreach(var c in _chains)
+            {
+                i._chains.Add((MtAstNode) c.ToTS());
+            }
+
+            i.ModuleNode = ModuleNode;
+            return i;
+        }
 
         public override void Init(AstContext context, ParseTreeNode treeNode)
         {

@@ -1,9 +1,9 @@
-﻿using System;
-using Irony.Parsing;
+﻿using Irony.Ast;
 using Irony.Interpreter;
-using Irony.Ast;
 using Irony.Interpreter.Ast;
+using Irony.Parsing;
 using MultiTasks.AST;
+using System;
 
 namespace MultiTasks
 {
@@ -100,16 +100,19 @@ namespace MultiTasks
                 {
                     treeNode.AstNode = _.NewAndInit<MtListenerStatement>(context, possibleValid);
                 }
-                else if (tag == "identifier")
+                else if (tag == "IDENTIFIER")
                 {
                     // Do nothing here ...
-                    treeNode.AstNode = _.NewAndInit<Irony.Interpreter.Ast.IdentifierNode>(context, possibleValid);
+                    //treeNode.AstNode = _.NewAndInit<Irony.Interpreter.Ast.IdentifierNode>(context, possibleValid);
+                    treeNode.AstNode = _.NewAndInit<MtIdentifier>(context, possibleValid);
                 }
                 else
                 {
                     throw new Exception("Unexpected tag in Expression child: {0}".SafeFormat(tag));
                 }
             };
+
+            var IDENTIFIER = new NonTerminal("IDENTIFIER", typeof(MtIdentifier));
 
             var TOP_CHAIN = new NonTerminal("TOP_CHAIN", delegate(AstContext context, ParseTreeNode treeNode)
             {
@@ -169,13 +172,14 @@ namespace MultiTasks
                 {
                     treeNode.AstNode = _.NewAndInit<MtApplication>(context, possibleValid);
                 }
-                else if (tag == "identifier")
+                else if (tag == "IDENTIFIER")
                 {                    
                     // This is ugly as fuck, but works
-                    Type t = identifier.AstConfig.NodeType;
-                    treeNode.AstNode = t.GetConstructors()[0].Invoke(new object[]{ });
-                    (treeNode.AstNode as AstNode).Init(context, possibleValid);
-                    // _.NewAndInit<t>(context, possibleValid);
+                    //Type t = identifier.AstConfig.NodeType;
+                    //treeNode.AstNode = t.GetConstructors()[0].Invoke(new object[]{ });
+                    //(treeNode.AstNode as AstNode).Init(context, possibleValid);
+                    //// _.NewAndInit<t>(context, possibleValid);
+                    treeNode.AstNode = _.NewAndInit<MtIdentifier>(context, possibleValid);
                 }
                 else if (tag == "FUNCTION_LITERAL")
                 {
@@ -197,6 +201,8 @@ namespace MultiTasks
 
             // TODO: FUNCTION LITERALS / LAMBDAS
             // TODO: SWITCH
+
+            IDENTIFIER.Rule = identifier;
                         
             NCHAINS.Rule = MakePlusRule(NCHAINS, TOP_CHAIN);
                         
@@ -208,34 +214,34 @@ namespace MultiTasks
 
             EXPRESSION.Rule = ARRAY | FORK | IF | BIND | 
                     FUNCTION_LITERAL | APPLICATION |
-                    LISTENER_STATEMENT | FLOW_RIGHT_TO_LEFT | 
-                    ATOM | identifier;
+                    LISTENER_STATEMENT | FLOW_RIGHT_TO_LEFT |
+                    ATOM | IDENTIFIER;
 
             FORK.Rule = openbrace + NCHAINS + closebrace;
 
-            LISTENER_STATEMENT.Rule = identifier + listenerOp + identifier + FUNCTION;
+            LISTENER_STATEMENT.Rule = IDENTIFIER + listenerOp + IDENTIFIER + FUNCTION;
 
             ATOM.Rule =
                       nbrLiteral |
                       stringLiteral /*|
                       identifier*/;
 
-            FLOW_RIGHT_TO_LEFT.Rule = identifier + flowRightToLeft + identifier;
+            FLOW_RIGHT_TO_LEFT.Rule = IDENTIFIER + flowRightToLeft + IDENTIFIER;
 
             APPLICATION.Rule = FUNCTION + openparen + EXPRESSION_LIST + closeparen;
 
             EXPRESSION_LIST.Rule = MakeStarRule(EXPRESSION_LIST, comma, EXPRESSION);
 
-            FUNCTION.Rule = identifier | FUNCTION_LITERAL | APPLICATION;
+            FUNCTION.Rule = IDENTIFIER | FUNCTION_LITERAL | APPLICATION;
 
-            BIND.Rule = identifier + bind + EXPRESSION;
+            BIND.Rule = IDENTIFIER + bind + EXPRESSION;
 
             IF.Rule = ift + EXPRESSION + TOP_CHAIN + TOP_CHAIN;
 
             ARRAY.Rule = openbracket + EXPRESSION_LIST + closebracket;
 
             // For function literals
-            ARG_LIST_FOR_DECL.Rule = MakeStarRule(ARG_LIST_FOR_DECL, comma, identifier);
+            ARG_LIST_FOR_DECL.Rule = MakeStarRule(ARG_LIST_FOR_DECL, comma, IDENTIFIER);
 
             FUNCTION_LITERAL.Rule = lambda + openparen + ARG_LIST_FOR_DECL + closeparen + argsBodySeparator + TOP_CHAIN;            
         }

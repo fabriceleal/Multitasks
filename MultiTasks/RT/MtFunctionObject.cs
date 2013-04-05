@@ -46,7 +46,7 @@ namespace MultiTasks.RT
                 for (var i = 0; i < _args.ArgList.Length; ++i)
                 {
                     var argDecl = _args.ArgList[i];
-                    var accessor = subthread.Bind(argDecl.AsString, BindingRequestFlags.Write | BindingRequestFlags.ExistingOrNew);
+                    var accessor = subthread.Bind(argDecl.AsString, BindingRequestFlags.Write | BindingRequestFlags.NewOnly);
                     accessor.SetValueRef(subthread, parameters[i]);
                 }
 

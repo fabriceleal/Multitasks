@@ -1,10 +1,10 @@
-﻿using System;
-using Irony.Interpreter.Ast;
+﻿using Irony.Ast;
 using Irony.Interpreter;
-using MultiTasks.RT;
-using System.Diagnostics;
-using Irony.Ast;
+using Irony.Interpreter.Ast;
 using Irony.Parsing;
+using MultiTasks.RT;
+using System;
+using System.Diagnostics;
 
 namespace MultiTasks.AST
 {
@@ -16,9 +16,10 @@ namespace MultiTasks.AST
 
         public override AstNode ToTS()
         {
-            var x = new MtApplication();
-            x._head = _head.ConvertToTS();
+            var x = new MtApplication();            
+            x._head = _head.ConvertToTS();            
             x._args = (MtExpressionList) (_args.ConvertToTS());
+            x.ModuleNode = ModuleNode;
             return x;
         }
 
