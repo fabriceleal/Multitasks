@@ -39,3 +39,7 @@ For more examples, check the sources used for testing: https://github.com/fabric
 ## Irony
 
 Built using Irony http://irony.codeplex.com/; binaries for Irony provided in the Vendors dir, because seems that they change frequently.
+
+### About Irony
+
+Do not use irony. Who the hell whould tight an AST with a scope????
