@@ -42,4 +42,4 @@ Built using Irony http://irony.codeplex.com/; binaries for Irony provided in the
 
 ### About Irony
 
-Do not use irony. Who the hell whould tight an AST with a scope????
+Do not use irony. Who the hell would tight an AST with a scope????
